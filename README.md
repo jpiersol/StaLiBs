@@ -57,7 +57,13 @@ The release workflow validates that the `upstream/tcpdump` submodule is pinned t
 
 ## Build approach
 
-CI builds in Alpine Linux containers for each target architecture using QEMU for non-native architectures. Alpine/musl is used because static musl-linked binaries are significantly more portable than static glibc-linked binaries.
+CI builds in Alpine Linux containers for each target architecture. It uses native GitHub-hosted runners where available and target-native userspaces for compatibility with Autoconf feature checks and Alpine's target static dependency packages. Alpine/musl is used because static musl-linked binaries are significantly more portable than static glibc-linked binaries.
+
+| Target | GitHub runner | Container platform | Notes |
+| --- | --- | --- | --- |
+| `x86_64` | `ubuntu-24.04` | `linux/amd64` | native |
+| `aarch64` | `ubuntu-24.04-arm` | `linux/arm64/v8` | native ARM64 runner, no QEMU |
+| `armv7` | `ubuntu-24.04` | `linux/arm/v7` | ARMv7 Alpine under QEMU; slower than cross-compilation but more target-compatible |
 
 Build preferences:
 

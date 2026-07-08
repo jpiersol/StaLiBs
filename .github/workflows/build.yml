@@ -15,16 +15,22 @@ permissions:
 jobs:
   build-tcpdump:
     name: tcpdump (${{ matrix.arch }})
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
     strategy:
       fail-fast: false
       matrix:
-        arch:
-          - x86_64
-          - aarch64
-          - armv7
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+            qemu: false
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+            qemu: false
+          - arch: armv7
+            runner: ubuntu-24.04
+            qemu: true
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -33,7 +39,10 @@ jobs:
           submodules: recursive
 
       - name: Set up QEMU
+        if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
+        with:
+          platforms: arm
 
       - name: Build tcpdump
         env:

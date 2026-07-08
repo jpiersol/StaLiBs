@@ -2,6 +2,7 @@
 set -euo pipefail
 
 arch="${1:-x86_64}"
+build_script="${2:-scripts/build-tcpdump-alpine.sh}"
 alpine_version="${ALPINE_VERSION:-3.20}"
 
 case "$arch" in
@@ -22,6 +23,11 @@ esac
 
 repo_root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
+if [ ! -f "$repo_root/$build_script" ]; then
+  echo "Build script not found: $build_script" >&2
+  exit 66
+fi
+
 if ! command -v docker >/dev/null 2>&1; then
   echo "Docker is required for this build entrypoint." >&2
   exit 127
@@ -39,4 +45,4 @@ docker run --rm \
   -v "$repo_root:/work" \
   -w /work \
   "alpine:${alpine_version}" \
-  /bin/sh -c "scripts/build-tcpdump-alpine.sh '$arch'"
+  /bin/sh -c "'$build_script' '$arch'"

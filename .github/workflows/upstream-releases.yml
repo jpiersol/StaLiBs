@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   check-upstream:
-    name: Check tcpdump/libpcap releases
+    name: Check upstream releases
     runs-on: ubuntu-24.04
     steps:
       - name: Check out source
@@ -30,12 +30,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TCPDUMP_TAG: ${{ steps.update.outputs.tcpdump_tag }}
           LIBPCAP_TAG: ${{ steps.update.outputs.libpcap_tag }}
+          STRACE_TAG: ${{ steps.update.outputs.strace_tag }}
         shell: bash
         run: |
           set -euo pipefail
 
-          branch="automation/update-${TCPDUMP_TAG}"
-          title="Update tcpdump to ${TCPDUMP_TAG}"
+          branch="automation/update-upstreams"
+          title="Update upstream static binary sources"
           body_file="/tmp/upstream-update-pr.md"
 
           cat > "$body_file" <<EOF_BODY
@@ -43,8 +44,9 @@ jobs:
 
           - tcpdump: \`${TCPDUMP_TAG}\`
           - libpcap: \`${LIBPCAP_TAG}\`
+          - strace: \`${STRACE_TAG}\`
 
-          After this PR is merged, create and push a StaLiBs release tag that matches the upstream tcpdump tag:
+          StaLiBs release tags currently follow the upstream tcpdump release tag. After this PR is merged, create and push a release tag that matches the upstream tcpdump tag when you want to publish a new bundle:
 
           \`\`\`sh
           git tag -a ${TCPDUMP_TAG} -m "StaLiBs ${TCPDUMP_TAG}"
@@ -55,7 +57,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git checkout -B "$branch"
-          git commit -m "Update upstream tcpdump to ${TCPDUMP_TAG}"
+          git commit -m "Update upstream static binary sources"
           git push --force-with-lease origin "$branch"
 
           existing_pr="$(gh pr list --head "$branch" --json number --jq '.[0].number // empty')"

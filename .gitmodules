@@ -4,3 +4,6 @@
 [submodule "upstream/libpcap"]
 	path = upstream/libpcap
 	url = https://github.com/the-tcpdump-group/libpcap.git
+[submodule "upstream/strace"]
+	path = upstream/strace
+	url = https://github.com/strace/strace.git

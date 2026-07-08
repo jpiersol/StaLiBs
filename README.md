@@ -2,7 +2,7 @@
 
 **Sta**tically **Li**nked **B**inarie**s** built from visible upstream source with GitHub Actions provenance.
 
-The first supported tool is `tcpdump`; `strace` is planned next.
+The first supported tools are `tcpdump` and `strace`.
 
 ## Goals
 
@@ -22,11 +22,13 @@ stalibs-tcpdump-4.99.6-linux-aarch64.zip
 stalibs-tcpdump-4.99.6-linux-armv7.zip
 ```
 
-Each bundle contains only the executable for that platform:
+Each bundle contains only the executables for that platform, using the original upstream binary names:
 
 ```text
 bin/tcpdump
+bin/strace
 metadata/tcpdump.buildinfo.txt
+metadata/strace.buildinfo.txt
 licenses/*
 SHA256SUMS
 README.txt
@@ -46,6 +48,7 @@ Upstream projects are checked in as Git submodules:
 
 - `upstream/tcpdump`: <https://github.com/the-tcpdump-group/tcpdump>
 - `upstream/libpcap`: <https://github.com/the-tcpdump-group/libpcap>
+- `upstream/strace`: <https://github.com/strace/strace>
 
 StaLiBs release tags for tcpdump intentionally match upstream tcpdump release tags, for example:
 
@@ -73,6 +76,7 @@ Build preferences:
   - libpcap remote capture is enabled.
   - Linux USB, Bluetooth, D-Bus, RDMA, libnl, OpenSSL, libcap-ng, and libsmi support are attempted when static Alpine packages are available.
   - Vendor/proprietary capture SDKs such as DAG, DPDK, Septel, SNF, and TurboCap are not bundled by default.
+- strace is built statically with `--enable-mpers=check`, so multiple-personality decoding is enabled when the target build environment can support it.
 
 ## Verifying a release
 
@@ -96,6 +100,7 @@ sha256sum -c SHA256SUMS
 unzip stalibs-tcpdump-4.99.6-linux-x86_64.zip
 chmod +x bin/tcpdump
 sudo ./bin/tcpdump -i any
+./bin/strace -V
 ```
 
 Packet capture generally requires root or Linux capabilities:
@@ -120,7 +125,7 @@ make build ARCH=armv7
 make package ARCH=armv7 VERSION=tcpdump-4.99.6
 ```
 
-The resulting binaries are written to `dist/bin/`; platform zips are written to `dist/`.
+The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64` and `strace-linux-x86_64`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
 
 ## Releasing tcpdump
 
@@ -136,4 +141,4 @@ The resulting binaries are written to `dist/bin/`; platform zips are written to 
 
 ## Upstream release detection
 
-`.github/workflows/upstream-releases.yml` runs daily and can also be run manually. It checks for new stable upstream tcpdump/libpcap release tags, updates the submodules, and opens or updates a PR.
+`.github/workflows/upstream-releases.yml` runs daily and can also be run manually. It checks for new stable upstream tcpdump, libpcap, and strace release tags, updates the submodules, and opens or updates a PR.

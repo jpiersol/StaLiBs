@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "$#" -lt 2 || "$#" -gt 4 ]]; then
+  echo "Usage: $0 <x86_64|aarch64|armv7> <version> [input-root] [output-dir]" >&2
+  exit 64
+fi
+
+arch="$1"
+version="$2"
+input_root="${3:-package-root}"
+out_dir="${4:-dist}"
+
+case "$arch" in
+  x86_64|aarch64|armv7) ;;
+  *)
+    echo "Unsupported architecture: $arch" >&2
+    exit 64
+    ;;
+esac
+
+safe_version="$(printf '%s' "$version" | tr '/ ' '--')"
+zip_name="stalibs-${safe_version}-linux-${arch}.zip"
+zip_path="${out_dir}/${zip_name}"
+zip_abs_path="$(pwd)/${zip_path}"
+staging_dir=".build/package/${safe_version}/linux-${arch}"
+
+find_tool_binary() {
+  local tool="$1"
+  local -a candidates=(
+    "${input_root}/${tool}/bin/${tool}"
+    "${input_root}/${tool}/artifact-root/bin/${tool}"
+    "${input_root}/bin/${tool}"
+    "${input_root}/artifact-root/bin/${tool}"
+    "${input_root}/bin/${tool}-linux-${arch}"
+  )
+
+  local candidate
+  for candidate in "${candidates[@]}"; do
+    if [[ -f "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+
+  echo "Missing executable artifact for ${tool}. Expected ${input_root}/${tool}/bin/${tool}" >&2
+  return 1
+}
+
+find_tool_buildinfo() {
+  local tool="$1"
+  local -a candidates=(
+    "${input_root}/${tool}/metadata/${tool}.buildinfo.txt"
+    "${input_root}/${tool}/artifact-root/metadata/${tool}.buildinfo.txt"
+    "${input_root}/metadata/${tool}.buildinfo.txt"
+    "${input_root}/artifact-root/metadata/${tool}.buildinfo.txt"
+    "${input_root}/metadata/${tool}-linux-${arch}.buildinfo.txt"
+  )
+
+  local candidate
+  for candidate in "${candidates[@]}"; do
+    if [[ -f "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+
+  echo "Missing build metadata artifact for ${tool}. Expected ${input_root}/${tool}/metadata/${tool}.buildinfo.txt" >&2
+  return 1
+}
+
+tcpdump_binary="$(find_tool_binary tcpdump)"
+tcpdump_buildinfo="$(find_tool_buildinfo tcpdump)"
+strace_binary="$(find_tool_binary strace)"
+strace_buildinfo="$(find_tool_buildinfo strace)"
+
+rm -rf "$staging_dir"
+mkdir -p "$staging_dir/bin" "$staging_dir/metadata" "$staging_dir/licenses" "$out_dir"
+
+cp "$tcpdump_binary" "$staging_dir/bin/tcpdump"
+cp "$tcpdump_buildinfo" "$staging_dir/metadata/tcpdump.buildinfo.txt"
+cp "$strace_binary" "$staging_dir/bin/strace"
+cp "$strace_buildinfo" "$staging_dir/metadata/strace.buildinfo.txt"
+chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace"
+
+cp upstream/tcpdump/LICENSE "$staging_dir/licenses/tcpdump-LICENSE.txt"
+cp upstream/libpcap/LICENSE "$staging_dir/licenses/libpcap-LICENSE.txt"
+cp upstream/strace/COPYING "$staging_dir/licenses/strace-COPYING.txt"
+cp upstream/strace/LGPL-2.1-or-later "$staging_dir/licenses/strace-LGPL-2.1-or-later.txt"
+cp upstream/strace/bundled/linux/COPYING "$staging_dir/licenses/strace-bundled-linux-COPYING.txt"
+cp LICENSE "$staging_dir/LICENSE.txt"
+cp LICENSES.md "$staging_dir/LICENSES.md"
+
+cat > "$staging_dir/README.txt" <<EOF_README
+StaLiBs static binary bundle
+
+Source repository: https://github.com/jpiersol/StaLiBs
+Git ref: ${GITHUB_REF_NAME:-unknown}
+Git sha: ${GITHUB_SHA:-unknown}
+Target platform: linux-${arch}
+Kernel target: Linux >= 4.4
+Executables:
+  bin/tcpdump
+  bin/strace
+
+Verify provenance:
+  gh attestation verify ./${zip_name} --repo jpiersol/StaLiBs
+
+Verify bundle checksums after unzipping:
+  sha256sum -c SHA256SUMS
+EOF_README
+
+(
+  cd "$staging_dir"
+  find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+  zip -r "$zip_abs_path" .
+)
+
+if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
+  {
+    echo "zip_name=$zip_name"
+    echo "zip_path=$zip_path"
+  } >> "$GITHUB_OUTPUT"
+fi
+
+printf '%s\n' "$zip_path"

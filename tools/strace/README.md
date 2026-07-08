@@ -1,10 +1,13 @@
 # strace
 
-Planned next StaLiBs tool. No build is wired yet.
+StaLiBs builds strace from the pinned submodule in:
 
-Expected future work:
+- `upstream/strace`
 
-- add `upstream/strace` as a submodule;
-- define supported architectures;
-- add a static musl build script;
-- include strace binaries in the single StaLiBs release zip.
+The release zip for each platform contains the executable as `bin/strace`.
+
+Current build notes:
+
+- statically linked against musl;
+- optimized with `-O3 -pipe`;
+- configured with `--enable-mpers=check` so multiple-personality decoding is enabled when the target build environment can support it.

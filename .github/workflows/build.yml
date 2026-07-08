@@ -126,7 +126,7 @@ jobs:
 
       - name: Attest bundle provenance
         if: github.event_name != 'pull_request'
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: ${{ steps.package.outputs.zip_path }}
 

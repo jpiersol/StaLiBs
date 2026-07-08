@@ -54,6 +54,8 @@ apk_add_optional_group "RDMA" rdma-core-dev rdma-core-static
 
 jobs="${JOBS:-$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 2)}"
 repo_root="$(pwd)"
+git config --global --add safe.directory "$repo_root" 2>/dev/null || true
+
 work_dir="$repo_root/.build/$arch/tcpdump"
 src_dir="$work_dir/src"
 dist_bin="$repo_root/dist/bin"

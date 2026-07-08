@@ -20,6 +20,7 @@ apk add --no-cache \
   automake \
   binutils \
   build-base \
+  coreutils \
   file \
   gawk \
   git \
@@ -30,6 +31,10 @@ apk add --no-cache \
 
 jobs="${JOBS:-$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 2)}"
 repo_root="$(pwd)"
+git config --global --add safe.directory "$repo_root" 2>/dev/null || true
+
+git_tag="$(git -C "$repo_root/upstream/strace" describe --tags --exact-match 2>/dev/null || git -C "$repo_root/upstream/strace" describe --tags --always 2>/dev/null || echo unknown)"
+strace_version="$(printf '%s' "$git_tag" | sed 's/^v//')"
 work_dir="$repo_root/.build/$arch/strace"
 src_dir="$work_dir/src"
 dist_bin="$repo_root/dist/bin"
@@ -42,6 +47,13 @@ cp -a "$repo_root/upstream/strace" "$src_dir/strace"
 rm -f "$src_dir/strace/.git"
 
 strace_src="$src_dir/strace"
+
+# strace's git bootstrap scripts derive version/date metadata from git when
+# these files are absent.  The copied build tree intentionally has no .git, and
+# Alpine's BusyBox date is not GNU-compatible, so provide tarball-style metadata
+# explicitly for a deterministic source-submodule build.
+printf '%s\n' "$strace_version" > "$strace_src/.tarball-version"
+date -u +%Y > "$strace_src/.year"
 
 export CFLAGS="${CFLAGS:--O3 -pipe}"
 export LDFLAGS="${LDFLAGS:--static}"
@@ -76,7 +88,7 @@ buildinfo="$dist_meta/strace-linux-$arch.buildinfo.txt"
   echo "cflags=$CFLAGS"
   echo "ldflags=$LDFLAGS"
   echo "cc=$({ cc --version 2>/dev/null || true; } | head -n 1)"
-  echo "strace_tag=$(git -C "$repo_root/upstream/strace" describe --tags --exact-match 2>/dev/null || git -C "$repo_root/upstream/strace" describe --tags --always 2>/dev/null || true)"
+  echo "strace_tag=$git_tag"
   echo "strace_commit=$(git -C "$repo_root/upstream/strace" rev-parse HEAD 2>/dev/null || true)"
   echo "repo_commit=$(git -C "$repo_root" rev-parse HEAD 2>/dev/null || true)"
   echo "file=$(file "$out")"

@@ -1,0 +1,6 @@
+[submodule "upstream/tcpdump"]
+	path = upstream/tcpdump
+	url = https://github.com/the-tcpdump-group/tcpdump.git
+[submodule "upstream/libpcap"]
+	path = upstream/libpcap
+	url = https://github.com/the-tcpdump-group/libpcap.git

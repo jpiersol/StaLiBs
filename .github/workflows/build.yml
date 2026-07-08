@@ -1,0 +1,158 @@
+name: Build static binaries
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-tcpdump:
+    name: tcpdump (${{ matrix.arch }})
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - x86_64
+          - aarch64
+          - armv7
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Build tcpdump
+        env:
+          ALPINE_VERSION: '3.20'
+          CFLAGS: -O3 -pipe
+        run: ./scripts/ci-build-in-docker.sh '${{ matrix.arch }}'
+
+      - name: Upload tcpdump artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tcpdump-linux-${{ matrix.arch }}
+          if-no-files-found: error
+          path: |
+            dist/bin/tcpdump-linux-${{ matrix.arch }}
+            dist/metadata/tcpdump-linux-${{ matrix.arch }}.buildinfo.txt
+
+  package:
+    name: Package bundle
+    runs-on: ubuntu-24.04
+    needs:
+      - build-tcpdump
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Download per-architecture artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: package-root
+          merge-multiple: true
+
+      - name: Package single zip
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p package-root/licenses dist
+          cp upstream/tcpdump/LICENSE package-root/licenses/tcpdump-LICENSE.txt
+          cp upstream/libpcap/LICENSE package-root/licenses/libpcap-LICENSE.txt
+          cp LICENSE package-root/LICENSE.txt
+          cp LICENSES.md package-root/LICENSES.md
+
+          if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+            version="$GITHUB_REF_NAME"
+          else
+            version="${GITHUB_SHA::12}"
+          fi
+          safe_version="$(printf '%s' "$version" | tr '/ ' '--')"
+          zip_name="stalibs-${safe_version}.zip"
+          zip_path="dist/${zip_name}"
+
+          cat > package-root/README.txt <<EOF_README
+          StaLiBs static binary bundle
+
+          Source repository: https://github.com/jpiersol/StaLiBs
+          Git ref: ${GITHUB_REF_NAME:-unknown}
+          Git sha: ${GITHUB_SHA:-unknown}
+          Kernel target: Linux >= 4.4
+
+          Verify provenance:
+            gh attestation verify ./${zip_name} --repo jpiersol/StaLiBs
+
+          Verify bundle checksums after unzipping:
+            sha256sum -c SHA256SUMS
+          EOF_README
+
+          (
+            cd package-root
+            find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+            zip -r "../${zip_path}" .
+          )
+
+          echo "zip_name=${zip_name}" >> "$GITHUB_OUTPUT"
+          echo "zip_path=${zip_path}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: stalibs-bundle
+          if-no-files-found: error
+          path: ${{ steps.package.outputs.zip_path }}
+
+      - name: Attest bundle provenance
+        if: github.event_name != 'pull_request'
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: ${{ steps.package.outputs.zip_path }}
+
+      - name: Publish GitHub Release asset
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          ZIP_NAME: ${{ steps.package.outputs.zip_name }}
+          ZIP_PATH: ${{ steps.package.outputs.zip_path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ ! "$TAG" =~ ^tcpdump-[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Skipping release: $TAG is not a stable upstream tcpdump release tag."
+            exit 0
+          fi
+
+          ./scripts/validate-release-tag.sh "$TAG"
+          ./scripts/write-release-notes.sh "$TAG" "$ZIP_NAME" > release-notes.md
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$ZIP_PATH" --clobber
+          else
+            gh release create "$TAG" "$ZIP_PATH" \
+              --title "StaLiBs $TAG" \
+              --notes-file release-notes.md
+          fi

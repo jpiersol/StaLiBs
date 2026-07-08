@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/sh
+set -eu
 
 if [ "$#" -lt 1 ]; then
   echo "Usage: $0 <binary> [binary ...]" >&2

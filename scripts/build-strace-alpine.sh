@@ -65,7 +65,7 @@ printf '%s\n' "==> Building strace for $arch"
   ./configure \
     --enable-gcc-Werror=no \
     --enable-mpers=check
-  make -j"$jobs" -C src strace
+  make -j"$jobs" -C src
 )
 
 binary="$strace_src/src/strace"

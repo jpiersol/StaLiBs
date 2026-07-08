@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-tag="${1:?usage: write-release-notes.sh <tag> <zip-name>}"
-zip_name="${2:?usage: write-release-notes.sh <tag> <zip-name>}"
+tag="${1:?usage: write-release-notes.sh <tag>}"
+
+zip_x86_64="stalibs-${tag}-linux-x86_64.zip"
+zip_aarch64="stalibs-${tag}-linux-aarch64.zip"
+zip_armv7="stalibs-${tag}-linux-armv7.zip"
 
 tcpdump_tag="$(git -C upstream/tcpdump describe --tags --exact-match 2>/dev/null || git -C upstream/tcpdump describe --tags --always)"
 tcpdump_commit="$(git -C upstream/tcpdump rev-parse HEAD)"
@@ -12,14 +15,15 @@ libpcap_commit="$(git -C upstream/libpcap rev-parse HEAD)"
 cat <<EOF_NOTES
 # StaLiBs $tag
 
-Static tcpdump bundle built by GitHub Actions from pinned upstream submodules.
+Static tcpdump platform bundles built by GitHub Actions from pinned upstream submodules.
 
-## Contents
+## Assets
 
-- \`bin/tcpdump-linux-x86_64\`
-- \`bin/tcpdump-linux-aarch64\`
-- \`bin/tcpdump-linux-armv7\`
-- build metadata, upstream licenses, and SHA256 checksums
+- \`$zip_x86_64\` - x86_64 Linux
+- \`$zip_aarch64\` - aarch64 Linux
+- \`$zip_armv7\` - ARMv7 hard-float Linux
+
+Each zip contains one platform-specific executable at \`bin/tcpdump\`, build metadata, upstream licenses, and SHA256 checksums.
 
 ## Upstream pins
 
@@ -28,12 +32,14 @@ Static tcpdump bundle built by GitHub Actions from pinned upstream submodules.
 
 ## Verification
 
-Download \`$zip_name\`, then run:
+Download the zip for your platform, then run:
 
 \`\`\`sh
-gh attestation verify ./$zip_name --repo jpiersol/StaLiBs
-unzip $zip_name -d ${zip_name%.zip}
-cd ${zip_name%.zip}
+gh attestation verify ./$zip_x86_64 --repo jpiersol/StaLiBs
+unzip $zip_x86_64 -d ${zip_x86_64%.zip}
+cd ${zip_x86_64%.zip}
 sha256sum -c SHA256SUMS
 \`\`\`
+
+Replace \`$zip_x86_64\` with the aarch64 or armv7 asset name as appropriate.
 EOF_NOTES

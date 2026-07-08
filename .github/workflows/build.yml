@@ -50,24 +50,37 @@ jobs:
           CFLAGS: -O3 -pipe
         run: ./scripts/ci-build-in-docker.sh '${{ matrix.arch }}'
 
+      - name: Stage platform artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifact-root/bin artifact-root/metadata
+          cp 'dist/bin/tcpdump-linux-${{ matrix.arch }}' artifact-root/bin/tcpdump
+          cp 'dist/metadata/tcpdump-linux-${{ matrix.arch }}.buildinfo.txt' artifact-root/metadata/tcpdump.buildinfo.txt
+
       - name: Upload tcpdump artifact
         uses: actions/upload-artifact@v7
         with:
           name: tcpdump-linux-${{ matrix.arch }}
           if-no-files-found: error
-          path: |
-            dist/bin/tcpdump-linux-${{ matrix.arch }}
-            dist/metadata/tcpdump-linux-${{ matrix.arch }}.buildinfo.txt
+          path: artifact-root
 
   package:
-    name: Package bundle
+    name: Package bundle (${{ matrix.arch }})
     runs-on: ubuntu-24.04
     needs:
       - build-tcpdump
     permissions:
-      contents: write
+      contents: read
       id-token: write
       attestations: write
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - x86_64
+          - aarch64
+          - armv7
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -75,77 +88,65 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Download per-architecture artifacts
+      - name: Download platform artifact
         uses: actions/download-artifact@v8
         with:
+          name: tcpdump-linux-${{ matrix.arch }}
           path: package-root
-          merge-multiple: true
 
-      - name: Package single zip
+      - name: Package platform zip
         id: package
         shell: bash
         run: |
           set -euo pipefail
 
-          mkdir -p package-root/licenses dist
-          cp upstream/tcpdump/LICENSE package-root/licenses/tcpdump-LICENSE.txt
-          cp upstream/libpcap/LICENSE package-root/licenses/libpcap-LICENSE.txt
-          cp LICENSE package-root/LICENSE.txt
-          cp LICENSES.md package-root/LICENSES.md
-
           if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
             version="$GITHUB_REF_NAME"
           else
-            version="${GITHUB_SHA::12}"
+            version="tcpdump-${GITHUB_SHA::12}"
           fi
-          safe_version="$(printf '%s' "$version" | tr '/ ' '--')"
-          zip_name="stalibs-${safe_version}.zip"
-          zip_path="dist/${zip_name}"
 
-          cat > package-root/README.txt <<EOF_README
-          StaLiBs static binary bundle
+          ./scripts/package-tcpdump-platform.sh '${{ matrix.arch }}' "$version" package-root dist
 
-          Source repository: https://github.com/jpiersol/StaLiBs
-          Git ref: ${GITHUB_REF_NAME:-unknown}
-          Git sha: ${GITHUB_SHA:-unknown}
-          Kernel target: Linux >= 4.4
-
-          Verify provenance:
-            gh attestation verify ./${zip_name} --repo jpiersol/StaLiBs
-
-          Verify bundle checksums after unzipping:
-            sha256sum -c SHA256SUMS
-          EOF_README
-
-          (
-            cd package-root
-            find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
-            zip -r "../${zip_path}" .
-          )
-
-          echo "zip_name=${zip_name}" >> "$GITHUB_OUTPUT"
-          echo "zip_path=${zip_path}" >> "$GITHUB_OUTPUT"
-
-      - name: Upload bundle artifact
+      - name: Upload platform bundle artifact
         uses: actions/upload-artifact@v7
         with:
-          name: stalibs-bundle
+          name: stalibs-tcpdump-linux-${{ matrix.arch }}
           if-no-files-found: error
           path: ${{ steps.package.outputs.zip_path }}
 
-      - name: Attest bundle provenance
+      - name: Attest platform bundle provenance
         if: github.event_name != 'pull_request'
         uses: actions/attest-build-provenance@v4
         with:
           subject-path: ${{ steps.package.outputs.zip_path }}
 
-      - name: Publish GitHub Release asset
-        if: github.ref_type == 'tag'
+  publish-release:
+    name: Publish GitHub Release assets
+    runs-on: ubuntu-24.04
+    needs:
+      - package
+    if: github.ref_type == 'tag'
+    permissions:
+      contents: write
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Download platform bundle artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: stalibs-tcpdump-linux-*
+          path: release-assets
+          merge-multiple: true
+
+      - name: Publish GitHub Release assets
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
-          ZIP_NAME: ${{ steps.package.outputs.zip_name }}
-          ZIP_PATH: ${{ steps.package.outputs.zip_path }}
         shell: bash
         run: |
           set -euo pipefail
@@ -156,12 +157,18 @@ jobs:
           fi
 
           ./scripts/validate-release-tag.sh "$TAG"
-          ./scripts/write-release-notes.sh "$TAG" "$ZIP_NAME" > release-notes.md
+          ./scripts/write-release-notes.sh "$TAG" > release-notes.md
+
+          mapfile -t zip_files < <(find release-assets -maxdepth 1 -type f -name '*.zip' | sort)
+          if [[ "${#zip_files[@]}" -eq 0 ]]; then
+            echo "No platform zip assets found." >&2
+            exit 1
+          fi
 
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" "$ZIP_PATH" --clobber
+            gh release upload "$TAG" "${zip_files[@]}" --clobber
           else
-            gh release create "$TAG" "$ZIP_PATH" \
+            gh release create "$TAG" "${zip_files[@]}" \
               --title "StaLiBs $TAG" \
               --notes-file release-notes.md
           fi

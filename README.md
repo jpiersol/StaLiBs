@@ -9,24 +9,24 @@ The first supported tool is `tcpdump`; `strace` is planned next.
 - Produce portable Linux binaries that do not depend on host shared libraries.
 - Target Linux kernel 4.4 and newer.
 - Build x86_64 and ARM Linux artifacts from pinned upstream source submodules.
-- Publish a single zip bundle per release.
-- Attach GitHub artifact attestations so consumers can verify that the bundle was built by this repository's CI for a given tag.
+- Publish separate zip bundles per target platform.
+- Attach GitHub artifact attestations so consumers can verify that each platform bundle was built by this repository's CI for a given tag.
 
 ## Current artifact contents
 
 Release bundles are named like:
 
 ```text
-stalibs-tcpdump-4.99.6.zip
+stalibs-tcpdump-4.99.6-linux-x86_64.zip
+stalibs-tcpdump-4.99.6-linux-aarch64.zip
+stalibs-tcpdump-4.99.6-linux-armv7.zip
 ```
 
-The bundle contains:
+Each bundle contains only the executable for that platform:
 
 ```text
-bin/tcpdump-linux-x86_64
-bin/tcpdump-linux-aarch64
-bin/tcpdump-linux-armv7
-metadata/*.buildinfo.txt
+bin/tcpdump
+metadata/tcpdump.buildinfo.txt
 licenses/*
 SHA256SUMS
 README.txt
@@ -34,11 +34,11 @@ README.txt
 
 Architecture targets:
 
-| Artifact | Platform |
+| Bundle | Platform |
 | --- | --- |
-| `tcpdump-linux-x86_64` | 64-bit x86 Linux |
-| `tcpdump-linux-aarch64` | 64-bit ARM Linux |
-| `tcpdump-linux-armv7` | 32-bit ARMv7 hard-float Linux |
+| `stalibs-*-linux-x86_64.zip` | 64-bit x86 Linux |
+| `stalibs-*-linux-aarch64.zip` | 64-bit ARM Linux |
+| `stalibs-*-linux-armv7.zip` | 32-bit ARMv7 hard-float Linux |
 
 ## Upstream source
 
@@ -53,7 +53,7 @@ StaLiBs release tags for tcpdump intentionally match upstream tcpdump release ta
 tcpdump-4.99.6
 ```
 
-The release workflow validates that the `upstream/tcpdump` submodule is pinned to the same upstream tcpdump tag before publishing a GitHub Release asset.
+The release workflow validates that the `upstream/tcpdump` submodule is pinned to the same upstream tcpdump tag before publishing GitHub Release assets.
 
 ## Build approach
 
@@ -76,32 +76,32 @@ Build preferences:
 
 ## Verifying a release
 
-Download the zip from the GitHub Release, then verify the GitHub artifact attestation:
+Download the zip for your platform from the GitHub Release, then verify the GitHub artifact attestation:
 
 ```sh
-gh attestation verify ./stalibs-tcpdump-4.99.6.zip --repo jpiersol/StaLiBs
+gh attestation verify ./stalibs-tcpdump-4.99.6-linux-x86_64.zip --repo jpiersol/StaLiBs
 ```
 
 Then verify the internal checksums:
 
 ```sh
-unzip stalibs-tcpdump-4.99.6.zip -d stalibs-tcpdump-4.99.6
-cd stalibs-tcpdump-4.99.6
+unzip stalibs-tcpdump-4.99.6-linux-x86_64.zip -d stalibs-tcpdump-4.99.6-linux-x86_64
+cd stalibs-tcpdump-4.99.6-linux-x86_64
 sha256sum -c SHA256SUMS
 ```
 
 ## Using tcpdump
 
 ```sh
-unzip stalibs-tcpdump-4.99.6.zip
-chmod +x bin/tcpdump-linux-x86_64
-sudo ./bin/tcpdump-linux-x86_64 -i any
+unzip stalibs-tcpdump-4.99.6-linux-x86_64.zip
+chmod +x bin/tcpdump
+sudo ./bin/tcpdump -i any
 ```
 
 Packet capture generally requires root or Linux capabilities:
 
 ```sh
-sudo setcap cap_net_raw,cap_net_admin=eip ./bin/tcpdump-linux-x86_64
+sudo setcap cap_net_raw,cap_net_admin=eip ./bin/tcpdump
 ```
 
 ## Local build
@@ -111,11 +111,16 @@ Docker is required for the same build path used by CI.
 ```sh
 git submodule update --init --recursive
 make build ARCH=x86_64
+make package ARCH=x86_64 VERSION=tcpdump-4.99.6
+
 make build ARCH=aarch64
+make package ARCH=aarch64 VERSION=tcpdump-4.99.6
+
 make build ARCH=armv7
+make package ARCH=armv7 VERSION=tcpdump-4.99.6
 ```
 
-The resulting binaries are written to `dist/bin/`.
+The resulting binaries are written to `dist/bin/`; platform zips are written to `dist/`.
 
 ## Releasing tcpdump
 
@@ -127,7 +132,7 @@ The resulting binaries are written to `dist/bin/`.
    git push origin tcpdump-4.99.6
    ```
 
-3. The build workflow publishes one zip asset to the matching GitHub Release and creates a GitHub artifact attestation for that zip.
+3. The build workflow publishes one zip asset per target platform to the matching GitHub Release and creates GitHub artifact attestations for those zips.
 
 ## Upstream release detection
 

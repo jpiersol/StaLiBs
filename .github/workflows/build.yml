@@ -67,7 +67,7 @@ jobs:
           submodules: recursive
 
       - name: Download per-architecture artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: package-root
           merge-multiple: true

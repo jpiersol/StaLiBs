@@ -14,6 +14,7 @@ Current tools:
 - `nmap`
 - `jq`
 - `curl`
+- `openssl`
 
 Supported targets:
 
@@ -33,6 +34,7 @@ The portability target is Linux kernel 4.4 and newer. Builds use Alpine/musl for
 - `scripts/build-nmap-alpine.sh` - target-native nmap build inside Alpine
 - `scripts/build-jq-alpine.sh` - target-native jq build inside Alpine
 - `scripts/build-curl-alpine.sh` - target-native curl build inside Alpine
+- `scripts/build-openssl-alpine.sh` - target-native OpenSSL build inside Alpine
 - `scripts/ci-build-in-docker.sh` - Docker wrapper used locally and by CI
 - `scripts/package-platform.sh` - creates one platform zip containing original binary names
 - `scripts/verify-static.sh` - validates ELF binaries are static
@@ -43,6 +45,7 @@ The portability target is Linux kernel 4.4 and newer. Builds use Alpine/musl for
 - `upstream/nmap` - nmap submodule
 - `upstream/jq` - jq submodule
 - `upstream/curl` - curl submodule
+- `upstream/openssl` - OpenSSL submodule
 - `tools/*/README.md` - tool-specific notes
 
 ## Artifact rules
@@ -61,6 +64,7 @@ Each zip must contain one top-level directory named after the zip without `.zip`
 - `bin/nmap`
 - `bin/jq`
 - `bin/curl`
+- `bin/openssl`
 
 Nmap runtime data should be included at `share/nmap`.
 
@@ -102,8 +106,8 @@ Use the same pattern for `aarch64` and `armv7`.
 Run syntax checks after shell/YAML changes:
 
 ```sh
-bash -n scripts/ci-build-in-docker.sh scripts/install-release.sh scripts/update-upstream-tags.sh scripts/write-release-notes.sh scripts/package-platform.sh scripts/build-curl-alpine.sh
-sh -n scripts/build-tcpdump-alpine.sh scripts/build-strace-alpine.sh scripts/build-gdb-alpine.sh scripts/build-nmap-alpine.sh scripts/build-jq-alpine.sh scripts/build-curl-alpine.sh scripts/verify-static.sh
+bash -n scripts/ci-build-in-docker.sh scripts/install-release.sh scripts/update-upstream-tags.sh scripts/write-release-notes.sh scripts/package-platform.sh scripts/build-curl-alpine.sh scripts/build-openssl-alpine.sh
+sh -n scripts/build-tcpdump-alpine.sh scripts/build-strace-alpine.sh scripts/build-gdb-alpine.sh scripts/build-nmap-alpine.sh scripts/build-jq-alpine.sh scripts/build-curl-alpine.sh scripts/build-openssl-alpine.sh scripts/verify-static.sh
 python3 - <<'PY'
 from pathlib import Path
 import yaml
@@ -150,6 +154,7 @@ Current submodule purposes:
 - `upstream/nmap`: nmap source; upstream does not publish Git release tags, so automation tracks the pinned master commit
 - `upstream/jq`: jq source, pinned to an official release tag
 - `upstream/curl`: curl source, pinned to an official release tag
+- `upstream/openssl`: OpenSSL source, pinned to an official release tag
 
 Use `scripts/update-upstream-tags.sh` or the scheduled workflow to update upstream pins.
 

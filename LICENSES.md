@@ -11,5 +11,6 @@ The generated StaLiBs bundles contain software from upstream projects with their
 - nmap: see `upstream/nmap/LICENSE` and bundled dependency license files under `upstream/nmap/*`
 - jq: see `upstream/jq/COPYING` and the vendored Oniguruma license at `upstream/jq/vendor/oniguruma/COPYING`
 - curl: see `upstream/curl/COPYING` and the license notices under `upstream/curl/LICENSES/`
+- OpenSSL: see `upstream/openssl/LICENSE.txt`
 
 Release zip bundles include copies of the relevant upstream license files under `licenses/`.

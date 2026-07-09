@@ -23,3 +23,7 @@
 	path = upstream/curl
 	url = https://github.com/curl/curl.git
 	shallow = true
+[submodule "upstream/openssl"]
+	path = upstream/openssl
+	url = https://github.com/openssl/openssl.git
+	shallow = true

@@ -67,7 +67,7 @@ export PKG_CONFIG="${PKG_CONFIG:-pkg-config --static}"
 export PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1
 export PKG_CONFIG_ALLOW_SYSTEM_LIBS=1
 
-configure_args="--prefix=/usr --disable-nls --with-libdnet=included --with-liblinear=included --with-liblua=included --with-libpcap=included --with-libpcre=included --with-libz=included --with-openssl=/usr --without-libssh2 --without-ncat --without-ndiff --without-nping --without-zenmap"
+configure_args="--prefix=/usr --disable-nls --with-libdnet=included --with-liblinear=included --with-liblua=included --with-libpcap=included --with-libpcre=included --with-libz=/usr --with-openssl=/usr --without-libssh2 --without-ncat --without-ndiff --without-nping --without-zenmap"
 
 printf '%s\n' "==> Building nmap for $arch"
 (

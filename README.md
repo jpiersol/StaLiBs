@@ -85,7 +85,7 @@ Build preferences:
   - Vendor/proprietary capture SDKs such as DAG, DPDK, Septel, SNF, and TurboCap are not bundled by default.
 - strace is built statically with `--enable-mpers=check`, so multiple-personality decoding is enabled when the target build environment can support it.
 - gdb is built statically without Python, Guile, debuginfod, Intel PT, Babeltrace, or the GDB compile subsystem to keep the binary self-contained. LZMA, Zstd, and xxHash support are enabled when Alpine static packages are available.
-- nmap is built statically with bundled libpcap, libdnet, liblinear, liblua, libpcre, and zlib, plus Alpine's static OpenSSL libraries. Ncat, Ndiff, Nping, Zenmap, and libssh2 are not bundled by default. Nmap runtime data is included under `share/nmap`.
+- nmap is built statically with bundled libpcap, libdnet, liblinear, liblua, and libpcre, plus Alpine's static OpenSSL and zlib libraries. Ncat, Ndiff, Nping, Zenmap, and libssh2 are not bundled by default. Nmap runtime data is included under `share/nmap`.
 
 ## Verifying a release
 

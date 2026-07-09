@@ -79,6 +79,8 @@ gdb_binary="$(find_tool_binary gdb)"
 gdb_buildinfo="$(find_tool_buildinfo gdb)"
 nmap_binary="$(find_tool_binary nmap)"
 nmap_buildinfo="$(find_tool_buildinfo nmap)"
+jq_binary="$(find_tool_binary jq)"
+jq_buildinfo="$(find_tool_buildinfo jq)"
 
 find_nmap_data() {
   local -a candidates=(
@@ -113,9 +115,11 @@ cp "$gdb_binary" "$staging_dir/bin/gdb"
 cp "$gdb_buildinfo" "$staging_dir/metadata/gdb.buildinfo.txt"
 cp "$nmap_binary" "$staging_dir/bin/nmap"
 cp "$nmap_buildinfo" "$staging_dir/metadata/nmap.buildinfo.txt"
+cp "$jq_binary" "$staging_dir/bin/jq"
+cp "$jq_buildinfo" "$staging_dir/metadata/jq.buildinfo.txt"
 cp -a "$nmap_data" "$staging_dir/share/nmap"
 cp scripts/install-release.sh "$staging_dir/install.sh"
-chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/nmap" "$staging_dir/install.sh"
+chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/nmap" "$staging_dir/bin/jq" "$staging_dir/install.sh"
 
 cp upstream/tcpdump/LICENSE "$staging_dir/licenses/tcpdump-LICENSE.txt"
 cp upstream/libpcap/LICENSE "$staging_dir/licenses/libpcap-LICENSE.txt"
@@ -135,6 +139,8 @@ cp upstream/nmap/liblua/lua.h "$staging_dir/licenses/nmap-liblua-lua.h.txt"
 cp upstream/nmap/libpcap/LICENSE "$staging_dir/licenses/nmap-libpcap-LICENSE.txt"
 cp upstream/nmap/libpcre/LICENCE.md "$staging_dir/licenses/nmap-libpcre-LICENCE.md"
 cp upstream/nmap/libz/LICENSE "$staging_dir/licenses/nmap-libz-LICENSE.txt"
+cp upstream/jq/COPYING "$staging_dir/licenses/jq-COPYING.txt"
+cp upstream/jq/vendor/oniguruma/COPYING "$staging_dir/licenses/jq-oniguruma-COPYING.txt"
 cp LICENSE "$staging_dir/LICENSE.txt"
 cp LICENSES.md "$staging_dir/LICENSES.md"
 
@@ -151,6 +157,7 @@ Executables:
   bin/strace
   bin/gdb
   bin/nmap
+  bin/jq
 Runtime data:
   share/nmap
 

@@ -2,7 +2,7 @@
 
 **Sta**tically **Li**nked **B**inarie**s** built from visible upstream source with GitHub Actions provenance.
 
-The supported tools are `tcpdump`, `strace`, `gdb`, and `nmap`.
+The supported tools are `tcpdump`, `strace`, `gdb`, `nmap`, and `jq`.
 
 ## Goals
 
@@ -22,7 +22,7 @@ stalibs-<tag>-linux-aarch64.zip
 stalibs-<tag>-linux-armv7.zip
 ```
 
-Each bundle extracts into a top-level directory named after the archive without `.zip`. That directory contains the executables for that platform, using the original upstream binary names, plus Nmap runtime data:
+Each bundle extracts into a top-level directory named after the archive without `.zip`. That directory contains the executables for that platform, using the original upstream binary names, plus Nmap runtime data and the `jq` JSON processor:
 
 ```text
 stalibs-<tag>-linux-<arch>/
@@ -30,6 +30,7 @@ stalibs-<tag>-linux-<arch>/
 ├── bin/strace
 ├── bin/gdb
 ├── bin/nmap
+├── bin/jq
 ├── share/nmap/*
 ├── metadata/*.buildinfo.txt
 ├── licenses/*
@@ -55,6 +56,7 @@ Upstream projects are checked in as Git submodules:
 - `upstream/strace`: <https://github.com/strace/strace>
 - `upstream/gdb`: <https://github.com/gnutools/binutils-gdb.git>
 - `upstream/nmap`: <https://github.com/nmap/nmap.git>
+- `upstream/jq`: <https://github.com/jqlang/jq.git>
 
 StaLiBs releases are produced from the pinned submodule commits in the repository at the pushed Git tag. Release tags do not need to match any upstream project tag.
 
@@ -79,6 +81,7 @@ Build preferences:
 - strace is built statically with `--enable-mpers=check`, so multiple-personality decoding is enabled when the target build environment can support it.
 - gdb is built statically without Python, Guile, debuginfod, Intel PT, Babeltrace, or the GDB compile subsystem to keep the binary self-contained. LZMA, Zstd, and xxHash support are enabled when Alpine static packages are available.
 - nmap is built statically with bundled libpcap, libdnet, liblinear, liblua, and libpcre, plus Alpine's static OpenSSL and zlib libraries. Ncat, Ndiff, Nping, Zenmap, and libssh2 are not bundled by default. Nmap runtime data is included under `share/nmap`.
+- jq is built statically with its vendored Oniguruma regular-expression library.
 
 ## Verifying a release
 
@@ -113,6 +116,7 @@ tcpdump -i any
 strace -V
 gdb --version
 nmap --version
+jq --version
 ```
 
 Packet capture and some Nmap scan modes generally require root or Linux capabilities:
@@ -137,7 +141,7 @@ make build ARCH=armv7
 make package ARCH=armv7 VERSION=v2026.07.0
 ```
 
-The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, and `nmap-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
+The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, `nmap-linux-x86_64`, and `jq-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
 
 ## Releasing
 
@@ -153,4 +157,4 @@ The resulting binaries are written to `dist/bin/` as architecture-qualified work
 
 ## Upstream release detection
 
-`.github/workflows/upstream-releases.yml` runs daily and can also be run manually. It checks for new stable upstream tcpdump, libpcap, strace, and gdb release tags plus the latest Nmap `master` commit, updates the submodules, and opens or updates a PR.
+`.github/workflows/upstream-releases.yml` runs daily and can also be run manually. It checks for new stable upstream tcpdump, libpcap, strace, gdb, and jq release tags plus the latest Nmap `master` commit, updates the submodules, and opens or updates a PR.

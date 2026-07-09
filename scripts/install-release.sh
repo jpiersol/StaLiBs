@@ -8,7 +8,7 @@ fail() {
 
 bundle_dir="$(CDPATH= cd "$(dirname "$0")" && pwd)"
 
-for tool in tcpdump strace gdb nmap; do
+for tool in tcpdump strace gdb nmap jq; do
   [ -f "$bundle_dir/bin/$tool" ] || fail "missing bundle executable: bin/$tool"
 done
 [ -d "$bundle_dir/share/nmap" ] || fail "missing Nmap runtime data: share/nmap"
@@ -25,14 +25,14 @@ share_dir="$prefix/share"
 
 mkdir -p "$bin_dir" "$share_dir"
 
-for tool in tcpdump strace gdb nmap; do
+for tool in tcpdump strace gdb nmap jq; do
   install -m 0755 "$bundle_dir/bin/$tool" "$bin_dir/$tool"
 done
 
 rm -rf "$share_dir/nmap"
 cp -R "$bundle_dir/share/nmap" "$share_dir/nmap"
 
-echo "Installed tcpdump, strace, gdb, and nmap in $bin_dir"
+echo "Installed tcpdump, strace, gdb, nmap, and jq in $bin_dir"
 echo "Installed Nmap runtime data in $share_dir/nmap"
 
 case ":${PATH:-}:" in

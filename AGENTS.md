@@ -12,6 +12,7 @@ Current tools:
 - `strace`
 - `gdb`
 - `nmap`
+- `jq`
 
 Supported targets:
 
@@ -29,6 +30,7 @@ The portability target is Linux kernel 4.4 and newer. Builds use Alpine/musl for
 - `scripts/build-strace-alpine.sh` - target-native strace build inside Alpine
 - `scripts/build-gdb-alpine.sh` - target-native gdb build inside Alpine
 - `scripts/build-nmap-alpine.sh` - target-native nmap build inside Alpine
+- `scripts/build-jq-alpine.sh` - target-native jq build inside Alpine
 - `scripts/ci-build-in-docker.sh` - Docker wrapper used locally and by CI
 - `scripts/package-platform.sh` - creates one platform zip containing original binary names
 - `scripts/verify-static.sh` - validates ELF binaries are static
@@ -37,6 +39,7 @@ The portability target is Linux kernel 4.4 and newer. Builds use Alpine/musl for
 - `upstream/strace` - strace submodule
 - `upstream/gdb` - binutils-gdb submodule used to build gdb
 - `upstream/nmap` - nmap submodule
+- `upstream/jq` - jq submodule
 - `tools/*/README.md` - tool-specific notes
 
 ## Artifact rules
@@ -53,6 +56,7 @@ Each zip must contain one top-level directory named after the zip without `.zip`
 - `bin/strace`
 - `bin/gdb`
 - `bin/nmap`
+- `bin/jq`
 
 Nmap runtime data should be included at `share/nmap`.
 
@@ -94,8 +98,8 @@ Use the same pattern for `aarch64` and `armv7`.
 Run syntax checks after shell/YAML changes:
 
 ```sh
-bash -n scripts/ci-build-in-docker.sh scripts/update-upstream-tags.sh scripts/write-release-notes.sh scripts/package-platform.sh
-sh -n scripts/build-tcpdump-alpine.sh scripts/build-strace-alpine.sh scripts/build-gdb-alpine.sh scripts/build-nmap-alpine.sh scripts/verify-static.sh
+bash -n scripts/ci-build-in-docker.sh scripts/install-release.sh scripts/update-upstream-tags.sh scripts/write-release-notes.sh scripts/package-platform.sh
+sh -n scripts/build-tcpdump-alpine.sh scripts/build-strace-alpine.sh scripts/build-gdb-alpine.sh scripts/build-nmap-alpine.sh scripts/build-jq-alpine.sh scripts/verify-static.sh
 python3 - <<'PY'
 from pathlib import Path
 import yaml
@@ -140,6 +144,7 @@ Current submodule purposes:
 - `upstream/strace`: strace source
 - `upstream/gdb`: binutils-gdb source for gdb
 - `upstream/nmap`: nmap source; upstream does not publish Git release tags, so automation tracks the pinned master commit
+- `upstream/jq`: jq source, pinned to an official release tag
 
 Use `scripts/update-upstream-tags.sh` or the scheduled workflow to update upstream pins.
 

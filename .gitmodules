@@ -15,3 +15,7 @@
 	path = upstream/nmap
 	url = https://github.com/nmap/nmap.git
 	shallow = true
+[submodule "upstream/jq"]
+	path = upstream/jq
+	url = https://github.com/jqlang/jq.git
+	shallow = true

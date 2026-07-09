@@ -2,7 +2,7 @@
 
 **Sta**tically **Li**nked **B**inarie**s** built from visible upstream source with GitHub Actions provenance.
 
-The supported tools are `tcpdump`, `strace`, and `gdb`.
+The supported tools are `tcpdump`, `strace`, `gdb`, and `nmap`.
 
 ## Goals
 
@@ -22,15 +22,18 @@ stalibs-tcpdump-4.99.6-linux-aarch64.zip
 stalibs-tcpdump-4.99.6-linux-armv7.zip
 ```
 
-Each bundle contains only the executables for that platform, using the original upstream binary names:
+Each bundle contains the executables for that platform, using the original upstream binary names, plus Nmap runtime data:
 
 ```text
 bin/tcpdump
 bin/strace
 bin/gdb
+bin/nmap
+share/nmap/*
 metadata/tcpdump.buildinfo.txt
 metadata/strace.buildinfo.txt
 metadata/gdb.buildinfo.txt
+metadata/nmap.buildinfo.txt
 licenses/*
 SHA256SUMS
 README.txt
@@ -52,6 +55,7 @@ Upstream projects are checked in as Git submodules:
 - `upstream/libpcap`: <https://github.com/the-tcpdump-group/libpcap>
 - `upstream/strace`: <https://github.com/strace/strace>
 - `upstream/gdb`: <https://github.com/gnutools/binutils-gdb.git>
+- `upstream/nmap`: <https://github.com/nmap/nmap.git>
 
 StaLiBs release tags for tcpdump intentionally match upstream tcpdump release tags, for example:
 
@@ -81,6 +85,7 @@ Build preferences:
   - Vendor/proprietary capture SDKs such as DAG, DPDK, Septel, SNF, and TurboCap are not bundled by default.
 - strace is built statically with `--enable-mpers=check`, so multiple-personality decoding is enabled when the target build environment can support it.
 - gdb is built statically without Python, Guile, debuginfod, Intel PT, Babeltrace, or the GDB compile subsystem to keep the binary self-contained. LZMA, Zstd, and xxHash support are enabled when Alpine static packages are available.
+- nmap is built statically with bundled libpcap, libdnet, liblinear, liblua, libpcre, and zlib, plus Alpine's static OpenSSL libraries. Ncat, Ndiff, Nping, Zenmap, and libssh2 are not bundled by default. Nmap runtime data is included under `share/nmap`.
 
 ## Verifying a release
 
@@ -106,12 +111,13 @@ chmod +x bin/*
 sudo ./bin/tcpdump -i any
 ./bin/strace -V
 ./bin/gdb --version
+./bin/nmap --version
 ```
 
-Packet capture generally requires root or Linux capabilities:
+Packet capture and some Nmap scan modes generally require root or Linux capabilities:
 
 ```sh
-sudo setcap cap_net_raw,cap_net_admin=eip ./bin/tcpdump
+sudo setcap cap_net_raw,cap_net_admin=eip ./bin/tcpdump ./bin/nmap
 ```
 
 ## Local build
@@ -130,7 +136,7 @@ make build ARCH=armv7
 make package ARCH=armv7 VERSION=tcpdump-4.99.6
 ```
 
-The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, and `gdb-linux-x86_64`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
+The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, and `nmap-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
 
 ## Releasing tcpdump
 
@@ -146,4 +152,4 @@ The resulting binaries are written to `dist/bin/` as architecture-qualified work
 
 ## Upstream release detection
 
-`.github/workflows/upstream-releases.yml` runs daily and can also be run manually. It checks for new stable upstream tcpdump, libpcap, strace, and gdb release tags, updates the submodules, and opens or updates a PR.
+`.github/workflows/upstream-releases.yml` runs daily and can also be run manually. It checks for new stable upstream tcpdump, libpcap, strace, and gdb release tags plus the latest Nmap `master` commit, updates the submodules, and opens or updates a PR.

@@ -11,3 +11,7 @@
 	path = upstream/gdb
 	url = https://github.com/gnutools/binutils-gdb.git
 	shallow = true
+[submodule "upstream/nmap"]
+	path = upstream/nmap
+	url = https://github.com/nmap/nmap.git
+	shallow = true

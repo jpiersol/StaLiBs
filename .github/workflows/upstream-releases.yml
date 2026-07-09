@@ -32,6 +32,7 @@ jobs:
           LIBPCAP_TAG: ${{ steps.update.outputs.libpcap_tag }}
           STRACE_TAG: ${{ steps.update.outputs.strace_tag }}
           GDB_TAG: ${{ steps.update.outputs.gdb_tag }}
+          NMAP_REF: ${{ steps.update.outputs.nmap_ref }}
         shell: bash
         run: |
           set -euo pipefail
@@ -41,12 +42,13 @@ jobs:
           body_file="/tmp/upstream-update-pr.md"
 
           cat > "$body_file" <<EOF_BODY
-          Updates upstream submodules to the latest stable release tags detected by CI.
+          Updates upstream submodules to the latest stable release tags or branch heads detected by CI.
 
           - tcpdump: \`${TCPDUMP_TAG}\`
           - libpcap: \`${LIBPCAP_TAG}\`
           - strace: \`${STRACE_TAG}\`
           - gdb: \`${GDB_TAG}\`
+          - nmap: \`${NMAP_REF}\`
 
           StaLiBs release tags currently follow the upstream tcpdump release tag. After this PR is merged, create and push a release tag that matches the upstream tcpdump tag when you want to publish a new bundle:
 

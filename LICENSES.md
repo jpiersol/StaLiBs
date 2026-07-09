@@ -8,5 +8,6 @@ The generated StaLiBs bundles contain software from upstream projects with their
 - libpcap: see `upstream/libpcap/LICENSE`
 - strace: see `upstream/strace/COPYING` and `upstream/strace/LGPL-2.1-or-later`
 - gdb/binutils-gdb: see `upstream/gdb/COPYING`, `upstream/gdb/COPYING.LIB`, `upstream/gdb/COPYING3`, `upstream/gdb/COPYING3.LIB`, `upstream/gdb/gdb/COPYING`, and `upstream/gdb/readline/readline/COPYING`
+- nmap: see `upstream/nmap/LICENSE` and bundled dependency license files under `upstream/nmap/*`
 
 Release zip bundles include copies of the relevant upstream license files under `licenses/`.

@@ -15,6 +15,8 @@ strace_tag="$(git -C upstream/strace describe --tags --exact-match 2>/dev/null |
 strace_commit="$(git -C upstream/strace rev-parse HEAD)"
 gdb_tag="$(git -C upstream/gdb describe --tags --exact-match 2>/dev/null || git -C upstream/gdb describe --tags --always)"
 gdb_commit="$(git -C upstream/gdb rev-parse HEAD)"
+nmap_ref="$(git -C upstream/nmap describe --tags --exact-match 2>/dev/null || git -C upstream/nmap describe --tags --always)"
+nmap_commit="$(git -C upstream/nmap rev-parse HEAD)"
 
 cat <<EOF_NOTES
 # StaLiBs $tag
@@ -27,7 +29,7 @@ Static platform bundles built by GitHub Actions from pinned upstream submodules.
 - \`$zip_aarch64\` - aarch64 Linux
 - \`$zip_armv7\` - ARMv7 hard-float Linux
 
-Each zip contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, and \`bin/gdb\`, build metadata, upstream licenses, and SHA256 checksums.
+Each zip contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, and \`bin/nmap\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
 
 ## Upstream pins
 
@@ -35,6 +37,7 @@ Each zip contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace
 - libpcap: \`$libpcap_tag\` (\`$libpcap_commit\`)
 - strace: \`$strace_tag\` (\`$strace_commit\`)
 - gdb: \`$gdb_tag\` (\`$gdb_commit\`)
+- nmap: \`$nmap_ref\` (\`$nmap_commit\`)
 
 ## Verification
 

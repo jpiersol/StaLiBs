@@ -325,6 +325,9 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
+      - name: Fetch GDB tags for release notes
+        run: git -C upstream/gdb fetch --tags --force origin
+
       - name: Download platform bundle artifacts
         uses: actions/download-artifact@v8
         with:

@@ -43,3 +43,7 @@
 	path = upstream/lsof
 	url = https://github.com/lsof-org/lsof.git
 	shallow = true
+[submodule "upstream/iproute2"]
+	path = upstream/iproute2
+	url = https://github.com/iproute2/iproute2.git
+	shallow = true

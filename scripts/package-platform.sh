@@ -32,6 +32,8 @@ find_tool_binary() {
   local -a candidates=(
     "${input_root}/${tool}/bin/${tool}"
     "${input_root}/${tool}/artifact-root/bin/${tool}"
+    "${input_root}/iproute2/bin/${tool}"
+    "${input_root}/iproute2/artifact-root/bin/${tool}"
     "${input_root}/bin/${tool}"
     "${input_root}/artifact-root/bin/${tool}"
     "${input_root}/bin/${tool}-linux-${arch}"
@@ -54,6 +56,8 @@ find_tool_buildinfo() {
   local -a candidates=(
     "${input_root}/${tool}/metadata/${tool}.buildinfo.txt"
     "${input_root}/${tool}/artifact-root/metadata/${tool}.buildinfo.txt"
+    "${input_root}/iproute2/metadata/${tool}.buildinfo.txt"
+    "${input_root}/iproute2/artifact-root/metadata/${tool}.buildinfo.txt"
     "${input_root}/metadata/${tool}.buildinfo.txt"
     "${input_root}/artifact-root/metadata/${tool}.buildinfo.txt"
     "${input_root}/metadata/${tool}-linux-${arch}.buildinfo.txt"
@@ -93,6 +97,14 @@ mtr_binary="$(find_tool_binary mtr)"
 mtr_buildinfo="$(find_tool_buildinfo mtr)"
 lsof_binary="$(find_tool_binary lsof)"
 lsof_buildinfo="$(find_tool_buildinfo lsof)"
+ip_binary="$(find_tool_binary ip)"
+ip_buildinfo="$(find_tool_buildinfo ip)"
+ss_binary="$(find_tool_binary ss)"
+ss_buildinfo="$(find_tool_buildinfo ss)"
+bridge_binary="$(find_tool_binary bridge)"
+bridge_buildinfo="$(find_tool_buildinfo bridge)"
+tc_binary="$(find_tool_binary tc)"
+tc_buildinfo="$(find_tool_buildinfo tc)"
 
 find_nmap_data() {
   local -a candidates=(
@@ -141,9 +153,17 @@ cp "$mtr_binary" "$staging_dir/bin/mtr"
 cp "$mtr_buildinfo" "$staging_dir/metadata/mtr.buildinfo.txt"
 cp "$lsof_binary" "$staging_dir/bin/lsof"
 cp "$lsof_buildinfo" "$staging_dir/metadata/lsof.buildinfo.txt"
+cp "$ip_binary" "$staging_dir/bin/ip"
+cp "$ip_buildinfo" "$staging_dir/metadata/ip.buildinfo.txt"
+cp "$ss_binary" "$staging_dir/bin/ss"
+cp "$ss_buildinfo" "$staging_dir/metadata/ss.buildinfo.txt"
+cp "$bridge_binary" "$staging_dir/bin/bridge"
+cp "$bridge_buildinfo" "$staging_dir/metadata/bridge.buildinfo.txt"
+cp "$tc_binary" "$staging_dir/bin/tc"
+cp "$tc_buildinfo" "$staging_dir/metadata/tc.buildinfo.txt"
 cp -a "$nmap_data" "$staging_dir/share/nmap"
 cp scripts/install-release.sh "$staging_dir/install.sh"
-chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/nmap" "$staging_dir/bin/jq" "$staging_dir/bin/curl" "$staging_dir/bin/openssl" "$staging_dir/bin/socat" "$staging_dir/bin/dig" "$staging_dir/bin/mtr" "$staging_dir/bin/lsof" "$staging_dir/install.sh"
+chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/nmap" "$staging_dir/bin/jq" "$staging_dir/bin/curl" "$staging_dir/bin/openssl" "$staging_dir/bin/socat" "$staging_dir/bin/dig" "$staging_dir/bin/mtr" "$staging_dir/bin/lsof" "$staging_dir/bin/ip" "$staging_dir/bin/ss" "$staging_dir/bin/bridge" "$staging_dir/bin/tc" "$staging_dir/install.sh"
 
 cp upstream/tcpdump/LICENSE "$staging_dir/licenses/tcpdump-LICENSE.txt"
 cp upstream/libpcap/LICENSE "$staging_dir/licenses/libpcap-LICENSE.txt"
@@ -175,6 +195,7 @@ cp upstream/bind9/LICENSE "$staging_dir/licenses/bind9-LICENSE.txt"
 cp upstream/mtr/COPYING "$staging_dir/licenses/mtr-COPYING.txt"
 cp upstream/mtr/BSDCOPYING "$staging_dir/licenses/mtr-BSDCOPYING.txt"
 cp upstream/lsof/COPYING "$staging_dir/licenses/lsof-COPYING.txt"
+cp upstream/iproute2/COPYING "$staging_dir/licenses/iproute2-COPYING.txt"
 cp LICENSE "$staging_dir/LICENSE.txt"
 cp LICENSES.md "$staging_dir/LICENSES.md"
 
@@ -198,6 +219,10 @@ Executables:
   bin/dig
   bin/mtr
   bin/lsof
+  bin/ip
+  bin/ss
+  bin/bridge
+  bin/tc
 Runtime data:
   share/nmap
 

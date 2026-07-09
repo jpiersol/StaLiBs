@@ -2,7 +2,7 @@
 
 **Sta**tically **Li**nked **B**inarie**s** built from visible upstream source with GitHub Actions provenance.
 
-The supported tools are `tcpdump`, `strace`, `gdb`, `nmap`, `jq`, `curl`, `openssl`, `socat`, `dig`, `mtr`, and `lsof`.
+The supported tools are `tcpdump`, `strace`, `gdb`, `nmap`, `jq`, `curl`, `openssl`, `socat`, `dig`, `mtr`, `lsof`, and the `iproute2` commands `ip`, `ss`, `bridge`, and `tc`.
 
 ## Goals
 
@@ -37,6 +37,10 @@ stalibs-<tag>-linux-<arch>/
 ├── bin/dig
 ├── bin/mtr
 ├── bin/lsof
+├── bin/ip
+├── bin/ss
+├── bin/bridge
+├── bin/tc
 ├── share/nmap/*
 ├── metadata/*.buildinfo.txt
 ├── licenses/*
@@ -69,6 +73,7 @@ Upstream projects are checked in as Git submodules:
 - `upstream/bind9`: <https://github.com/isc-projects/bind9.git>
 - `upstream/mtr`: <https://github.com/traviscross/mtr.git>
 - `upstream/lsof`: <https://github.com/lsof-org/lsof.git>
+- `upstream/iproute2`: <https://github.com/iproute2/iproute2.git>
 
 StaLiBs releases are produced from the pinned submodule commits in the repository at the pushed Git tag. Release tags do not need to match any upstream project tag.
 
@@ -100,6 +105,7 @@ Build preferences:
 - `dig` is built statically from BIND 9 with optional server, resolver, and documentation features disabled.
 - mtr is built statically with its terminal interface and without GTK or JSON output.
 - lsof is built statically for Linux from the upstream portable source.
+- iproute2 supplies statically linked `ip`, `ss`, `bridge`, and `tc` commands without dynamically loaded plugins.
 
 ## Verifying a release
 
@@ -141,6 +147,10 @@ socat -V
 dig -v
 mtr --version
 lsof -v
+ip -Version
+ss -V
+bridge -V
+tc -V
 ```
 
 Packet capture and some Nmap scan modes generally require root or Linux capabilities:
@@ -165,7 +175,7 @@ make build ARCH=armv7
 make package ARCH=armv7 VERSION=v2026.07.0
 ```
 
-The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, `nmap-linux-x86_64`, `jq-linux-x86_64`, `curl-linux-x86_64`, `openssl-linux-x86_64`, `socat-linux-x86_64`, `dig-linux-x86_64`, `mtr-linux-x86_64`, and `lsof-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
+The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, `nmap-linux-x86_64`, `jq-linux-x86_64`, `curl-linux-x86_64`, `openssl-linux-x86_64`, `socat-linux-x86_64`, `dig-linux-x86_64`, `mtr-linux-x86_64`, `lsof-linux-x86_64`, `ip-linux-x86_64`, `ss-linux-x86_64`, `bridge-linux-x86_64`, and `tc-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
 
 ## Releasing
 

@@ -40,6 +40,7 @@ jobs:
           BIND9_TAG: ${{ steps.update.outputs.bind9_tag }}
           MTR_TAG: ${{ steps.update.outputs.mtr_tag }}
           LSOF_TAG: ${{ steps.update.outputs.lsof_tag }}
+          IPROUTE2_TAG: ${{ steps.update.outputs.iproute2_tag }}
         shell: bash
         run: |
           set -euo pipefail
@@ -63,6 +64,7 @@ jobs:
           - BIND 9: \`${BIND9_TAG}\`
           - mtr: \`${MTR_TAG}\`
           - lsof: \`${LSOF_TAG}\`
+          - iproute2: \`${IPROUTE2_TAG}\`
 
           After this PR is merged, create and push any StaLiBs release tag when you want to publish a new bundle. The release will be built from the pinned submodule commits at that tag:
 

@@ -16,5 +16,6 @@ The generated StaLiBs bundles contain software from upstream projects with their
 - dig/BIND 9: see `upstream/bind9/COPYING` and `upstream/bind9/LICENSE`
 - mtr: see `upstream/mtr/COPYING` and `upstream/mtr/BSDCOPYING`
 - lsof: see `upstream/lsof/COPYING`
+- iproute2: see `upstream/iproute2/COPYING`
 
 Release zip bundles include copies of the relevant upstream license files under `licenses/`.

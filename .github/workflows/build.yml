@@ -175,6 +175,65 @@ jobs:
           if-no-files-found: error
           path: artifact-root
 
+  build-iproute2:
+    name: iproute2 (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+            qemu: false
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+            qemu: false
+          - arch: armv7
+            runner: ubuntu-24.04
+            qemu: true
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check out iproute2 submodule
+        run: git submodule update --init --recursive upstream/iproute2
+
+      - name: Fetch iproute2 tags
+        run: git -C upstream/iproute2 fetch --tags --force origin
+
+      - name: Set up QEMU
+        if: ${{ matrix.qemu }}
+        uses: docker/setup-qemu-action@v4
+        with:
+          platforms: arm
+
+      - name: Build iproute2 tools
+        env:
+          ALPINE_VERSION: '3.20'
+          CFLAGS: -O3 -pipe
+        run: ./scripts/ci-build-in-docker.sh '${{ matrix.arch }}' scripts/build-iproute2-alpine.sh
+
+      - name: Stage platform artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifact-root/bin artifact-root/metadata
+          for tool in ip ss bridge tc; do
+            cp "dist/bin/${tool}-linux-${{ matrix.arch }}" "artifact-root/bin/$tool"
+            cp "dist/metadata/${tool}-linux-${{ matrix.arch }}.buildinfo.txt" "artifact-root/metadata/$tool.buildinfo.txt"
+          done
+
+      - name: Upload iproute2 artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: iproute2-linux-${{ matrix.arch }}
+          if-no-files-found: error
+          path: artifact-root
+
   build-lsof:
     name: lsof (${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
@@ -644,6 +703,7 @@ jobs:
       - build-dig
       - build-mtr
       - build-lsof
+      - build-iproute2
     permissions:
       contents: read
       id-token: write
@@ -728,6 +788,12 @@ jobs:
           name: lsof-linux-${{ matrix.arch }}
           path: package-root/lsof
 
+      - name: Download iproute2 artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: iproute2-linux-${{ matrix.arch }}
+          path: package-root/iproute2
+
       - name: List downloaded artifacts
         run: find package-root -maxdepth 4 -type f -print | sort
 
@@ -783,6 +849,7 @@ jobs:
           git -C upstream/bind9 fetch --tags --force origin
           git -C upstream/mtr fetch --tags --force origin
           git -C upstream/lsof fetch --tags --force origin
+          git -C upstream/iproute2 fetch --tags --force origin
 
       - name: Download platform bundle artifacts
         uses: actions/download-artifact@v8

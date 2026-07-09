@@ -31,6 +31,8 @@ bind9_tag="$(git -C upstream/bind9 describe --tags --exact-match 2>/dev/null || 
 bind9_commit="$(git -C upstream/bind9 rev-parse HEAD)"
 mtr_tag="$(git -C upstream/mtr describe --tags --exact-match 2>/dev/null || git -C upstream/mtr describe --tags --always)"
 mtr_commit="$(git -C upstream/mtr rev-parse HEAD)"
+lsof_tag="$(git -C upstream/lsof describe --tags --exact-match 2>/dev/null || git -C upstream/lsof describe --tags --always)"
+lsof_commit="$(git -C upstream/lsof rev-parse HEAD)"
 
 cat <<EOF_NOTES
 # StaLiBs $tag
@@ -43,7 +45,7 @@ Static platform bundles built by GitHub Actions from pinned upstream submodules.
 - \`$zip_aarch64\` - aarch64 Linux
 - \`$zip_armv7\` - ARMv7 hard-float Linux
 
-Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, \`bin/nmap\`, and \`bin/jq\` and \`bin/curl\` and \`bin/openssl\` and \`bin/socat\` and \`bin/dig\` and \`bin/mtr\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
+Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, \`bin/nmap\`, and \`bin/jq\` and \`bin/curl\` and \`bin/openssl\` and \`bin/socat\` and \`bin/dig\` and \`bin/mtr\` and \`bin/lsof\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
 
 ## Installation
 
@@ -62,6 +64,7 @@ After extracting the archive, run \`sudo ./install.sh\` to install the tools sys
 - socat: \`$socat_tag\` (\`$socat_commit\`)
 - BIND 9: \`$bind9_tag\` (\`$bind9_commit\`)
 - mtr: \`$mtr_tag\` (\`$mtr_commit\`)
+- lsof: \`$lsof_tag\` (\`$lsof_commit\`)
 
 ## Verification
 

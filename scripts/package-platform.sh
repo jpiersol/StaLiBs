@@ -91,6 +91,8 @@ dig_binary="$(find_tool_binary dig)"
 dig_buildinfo="$(find_tool_buildinfo dig)"
 mtr_binary="$(find_tool_binary mtr)"
 mtr_buildinfo="$(find_tool_buildinfo mtr)"
+lsof_binary="$(find_tool_binary lsof)"
+lsof_buildinfo="$(find_tool_buildinfo lsof)"
 
 find_nmap_data() {
   local -a candidates=(
@@ -137,9 +139,11 @@ cp "$dig_binary" "$staging_dir/bin/dig"
 cp "$dig_buildinfo" "$staging_dir/metadata/dig.buildinfo.txt"
 cp "$mtr_binary" "$staging_dir/bin/mtr"
 cp "$mtr_buildinfo" "$staging_dir/metadata/mtr.buildinfo.txt"
+cp "$lsof_binary" "$staging_dir/bin/lsof"
+cp "$lsof_buildinfo" "$staging_dir/metadata/lsof.buildinfo.txt"
 cp -a "$nmap_data" "$staging_dir/share/nmap"
 cp scripts/install-release.sh "$staging_dir/install.sh"
-chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/nmap" "$staging_dir/bin/jq" "$staging_dir/bin/curl" "$staging_dir/bin/openssl" "$staging_dir/bin/socat" "$staging_dir/bin/dig" "$staging_dir/bin/mtr" "$staging_dir/install.sh"
+chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/nmap" "$staging_dir/bin/jq" "$staging_dir/bin/curl" "$staging_dir/bin/openssl" "$staging_dir/bin/socat" "$staging_dir/bin/dig" "$staging_dir/bin/mtr" "$staging_dir/bin/lsof" "$staging_dir/install.sh"
 
 cp upstream/tcpdump/LICENSE "$staging_dir/licenses/tcpdump-LICENSE.txt"
 cp upstream/libpcap/LICENSE "$staging_dir/licenses/libpcap-LICENSE.txt"
@@ -170,6 +174,7 @@ cp upstream/bind9/COPYING "$staging_dir/licenses/bind9-COPYING.txt"
 cp upstream/bind9/LICENSE "$staging_dir/licenses/bind9-LICENSE.txt"
 cp upstream/mtr/COPYING "$staging_dir/licenses/mtr-COPYING.txt"
 cp upstream/mtr/BSDCOPYING "$staging_dir/licenses/mtr-BSDCOPYING.txt"
+cp upstream/lsof/COPYING "$staging_dir/licenses/lsof-COPYING.txt"
 cp LICENSE "$staging_dir/LICENSE.txt"
 cp LICENSES.md "$staging_dir/LICENSES.md"
 
@@ -192,6 +197,7 @@ Executables:
   bin/socat
   bin/dig
   bin/mtr
+  bin/lsof
 Runtime data:
   share/nmap
 

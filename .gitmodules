@@ -39,3 +39,7 @@
 	path = upstream/mtr
 	url = https://github.com/traviscross/mtr.git
 	shallow = true
+[submodule "upstream/lsof"]
+	path = upstream/lsof
+	url = https://github.com/lsof-org/lsof.git
+	shallow = true

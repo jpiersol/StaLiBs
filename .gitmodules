@@ -31,3 +31,7 @@
 	path = upstream/socat
 	url = https://repo.or.cz/socat.git
 	shallow = true
+[submodule "upstream/bind9"]
+	path = upstream/bind9
+	url = https://github.com/isc-projects/bind9.git
+	shallow = true

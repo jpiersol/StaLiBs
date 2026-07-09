@@ -27,6 +27,8 @@ openssl_tag="$(git -C upstream/openssl describe --tags --exact-match 2>/dev/null
 openssl_commit="$(git -C upstream/openssl rev-parse HEAD)"
 socat_tag="$(git -C upstream/socat describe --tags --exact-match 2>/dev/null || git -C upstream/socat describe --tags --always)"
 socat_commit="$(git -C upstream/socat rev-parse HEAD)"
+bind9_tag="$(git -C upstream/bind9 describe --tags --exact-match 2>/dev/null || git -C upstream/bind9 describe --tags --always)"
+bind9_commit="$(git -C upstream/bind9 rev-parse HEAD)"
 
 cat <<EOF_NOTES
 # StaLiBs $tag
@@ -39,7 +41,7 @@ Static platform bundles built by GitHub Actions from pinned upstream submodules.
 - \`$zip_aarch64\` - aarch64 Linux
 - \`$zip_armv7\` - ARMv7 hard-float Linux
 
-Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, \`bin/nmap\`, and \`bin/jq\` and \`bin/curl\` and \`bin/openssl\` and \`bin/socat\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
+Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, \`bin/nmap\`, and \`bin/jq\` and \`bin/curl\` and \`bin/openssl\` and \`bin/socat\` and \`bin/dig\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
 
 ## Installation
 
@@ -56,6 +58,7 @@ After extracting the archive, run \`sudo ./install.sh\` to install the tools sys
 - curl: \`$curl_tag\` (\`$curl_commit\`)
 - openssl: \`$openssl_tag\` (\`$openssl_commit\`)
 - socat: \`$socat_tag\` (\`$socat_commit\`)
+- BIND 9: \`$bind9_tag\` (\`$bind9_commit\`)
 
 ## Verification
 

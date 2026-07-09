@@ -21,9 +21,11 @@ esac
 
 safe_version="$(printf '%s' "$version" | tr '/ ' '--')"
 zip_name="stalibs-${safe_version}-linux-${arch}.zip"
+bundle_name="${zip_name%.zip}"
 zip_path="${out_dir}/${zip_name}"
 zip_abs_path="$(pwd)/${zip_path}"
-staging_dir=".build/package/${safe_version}/linux-${arch}"
+staging_parent=".build/package/${safe_version}/linux-${arch}"
+staging_dir="${staging_parent}/${bundle_name}"
 
 find_tool_binary() {
   local tool="$1"
@@ -161,7 +163,11 @@ EOF_README
 (
   cd "$staging_dir"
   find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
-  zip -r "$zip_abs_path" .
+)
+
+(
+  cd "$staging_parent"
+  zip -r "$zip_abs_path" "$bundle_name"
 )
 
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then

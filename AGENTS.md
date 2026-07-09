@@ -47,7 +47,7 @@ Release assets must be separate per platform, not one all-platform bundle:
 - `stalibs-<version>-linux-aarch64.zip`
 - `stalibs-<version>-linux-armv7.zip`
 
-Inside each zip, executables must use their original upstream names:
+Each zip must contain one top-level directory named after the zip without `.zip`. Within that directory, executables must use their original upstream names:
 
 - `bin/tcpdump`
 - `bin/strace`

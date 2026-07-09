@@ -22,21 +22,19 @@ stalibs-<tag>-linux-aarch64.zip
 stalibs-<tag>-linux-armv7.zip
 ```
 
-Each bundle contains the executables for that platform, using the original upstream binary names, plus Nmap runtime data:
+Each bundle extracts into a top-level directory named after the archive without `.zip`. That directory contains the executables for that platform, using the original upstream binary names, plus Nmap runtime data:
 
 ```text
-bin/tcpdump
-bin/strace
-bin/gdb
-bin/nmap
-share/nmap/*
-metadata/tcpdump.buildinfo.txt
-metadata/strace.buildinfo.txt
-metadata/gdb.buildinfo.txt
-metadata/nmap.buildinfo.txt
-licenses/*
-SHA256SUMS
-README.txt
+stalibs-<tag>-linux-<arch>/
+├── bin/tcpdump
+├── bin/strace
+├── bin/gdb
+├── bin/nmap
+├── share/nmap/*
+├── metadata/*.buildinfo.txt
+├── licenses/*
+├── SHA256SUMS
+└── README.txt
 ```
 
 Architecture targets:
@@ -92,7 +90,7 @@ gh attestation verify ./stalibs-v2026.07.0-linux-x86_64.zip --repo jpiersol/StaL
 Then verify the internal checksums:
 
 ```sh
-unzip stalibs-v2026.07.0-linux-x86_64.zip -d stalibs-v2026.07.0-linux-x86_64
+unzip stalibs-v2026.07.0-linux-x86_64.zip
 cd stalibs-v2026.07.0-linux-x86_64
 sha256sum -c SHA256SUMS
 ```
@@ -101,6 +99,7 @@ sha256sum -c SHA256SUMS
 
 ```sh
 unzip stalibs-v2026.07.0-linux-x86_64.zip
+cd stalibs-v2026.07.0-linux-x86_64
 chmod +x bin/*
 sudo ./bin/tcpdump -i any
 ./bin/strace -V

@@ -7,6 +7,7 @@ safe_tag="$(printf '%s' "$tag" | tr '/ ' '--')"
 zip_x86_64="stalibs-${safe_tag}-linux-x86_64.zip"
 zip_aarch64="stalibs-${safe_tag}-linux-aarch64.zip"
 zip_armv7="stalibs-${safe_tag}-linux-armv7.zip"
+bundle_x86_64="${zip_x86_64%.zip}"
 
 tcpdump_tag="$(git -C upstream/tcpdump describe --tags --exact-match 2>/dev/null || git -C upstream/tcpdump describe --tags --always)"
 tcpdump_commit="$(git -C upstream/tcpdump rev-parse HEAD)"
@@ -30,7 +31,7 @@ Static platform bundles built by GitHub Actions from pinned upstream submodules.
 - \`$zip_aarch64\` - aarch64 Linux
 - \`$zip_armv7\` - ARMv7 hard-float Linux
 
-Each zip contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, and \`bin/nmap\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
+Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, and \`bin/nmap\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
 
 ## Upstream pins
 
@@ -46,8 +47,8 @@ Download the zip for your platform, then run:
 
 \`\`\`sh
 gh attestation verify ./$zip_x86_64 --repo jpiersol/StaLiBs
-unzip $zip_x86_64 -d ${zip_x86_64%.zip}
-cd ${zip_x86_64%.zip}
+unzip $zip_x86_64
+cd $bundle_x86_64
 sha256sum -c SHA256SUMS
 \`\`\`
 

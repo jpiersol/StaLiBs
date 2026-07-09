@@ -175,6 +175,63 @@ jobs:
           if-no-files-found: error
           path: artifact-root
 
+  build-mtr:
+    name: mtr (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+            qemu: false
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+            qemu: false
+          - arch: armv7
+            runner: ubuntu-24.04
+            qemu: true
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check out mtr submodule
+        run: git submodule update --init --recursive upstream/mtr
+
+      - name: Fetch mtr tags
+        run: git -C upstream/mtr fetch --tags --force origin
+
+      - name: Set up QEMU
+        if: ${{ matrix.qemu }}
+        uses: docker/setup-qemu-action@v4
+        with:
+          platforms: arm
+
+      - name: Build mtr
+        env:
+          ALPINE_VERSION: '3.20'
+          CFLAGS: -O3 -pipe
+        run: ./scripts/ci-build-in-docker.sh '${{ matrix.arch }}' scripts/build-mtr-alpine.sh
+
+      - name: Stage platform artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifact-root/bin artifact-root/metadata
+          cp 'dist/bin/mtr-linux-${{ matrix.arch }}' artifact-root/bin/mtr
+          cp 'dist/metadata/mtr-linux-${{ matrix.arch }}.buildinfo.txt' artifact-root/metadata/mtr.buildinfo.txt
+
+      - name: Upload mtr artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: mtr-linux-${{ matrix.arch }}
+          if-no-files-found: error
+          path: artifact-root
+
   build-dig:
     name: dig (${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
@@ -528,6 +585,7 @@ jobs:
       - build-openssl
       - build-socat
       - build-dig
+      - build-mtr
     permissions:
       contents: read
       id-token: write
@@ -600,6 +658,12 @@ jobs:
           name: dig-linux-${{ matrix.arch }}
           path: package-root/dig
 
+      - name: Download mtr artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: mtr-linux-${{ matrix.arch }}
+          path: package-root/mtr
+
       - name: List downloaded artifacts
         run: find package-root -maxdepth 4 -type f -print | sort
 
@@ -653,6 +717,7 @@ jobs:
           git -C upstream/openssl fetch --tags --force origin
           git -C upstream/socat fetch --tags --force origin
           git -C upstream/bind9 fetch --tags --force origin
+          git -C upstream/mtr fetch --tags --force origin
 
       - name: Download platform bundle artifacts
         uses: actions/download-artifact@v8

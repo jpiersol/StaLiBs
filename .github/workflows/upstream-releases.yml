@@ -38,6 +38,7 @@ jobs:
           OPENSSL_TAG: ${{ steps.update.outputs.openssl_tag }}
           SOCAT_TAG: ${{ steps.update.outputs.socat_tag }}
           BIND9_TAG: ${{ steps.update.outputs.bind9_tag }}
+          MTR_TAG: ${{ steps.update.outputs.mtr_tag }}
         shell: bash
         run: |
           set -euo pipefail
@@ -59,6 +60,7 @@ jobs:
           - openssl: \`${OPENSSL_TAG}\`
           - socat: \`${SOCAT_TAG}\`
           - BIND 9: \`${BIND9_TAG}\`
+          - mtr: \`${MTR_TAG}\`
 
           After this PR is merged, create and push any StaLiBs release tag when you want to publish a new bundle. The release will be built from the pinned submodule commits at that tag:
 

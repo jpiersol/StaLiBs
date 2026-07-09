@@ -2,7 +2,7 @@
 
 **Sta**tically **Li**nked **B**inarie**s** built from visible upstream source with GitHub Actions provenance.
 
-The supported tools are `tcpdump`, `strace`, `gdb`, `nmap`, `jq`, `curl`, `openssl`, `socat`, and `dig`.
+The supported tools are `tcpdump`, `strace`, `gdb`, `nmap`, `jq`, `curl`, `openssl`, `socat`, `dig`, and `mtr`.
 
 ## Goals
 
@@ -35,6 +35,7 @@ stalibs-<tag>-linux-<arch>/
 ├── bin/openssl
 ├── bin/socat
 ├── bin/dig
+├── bin/mtr
 ├── share/nmap/*
 ├── metadata/*.buildinfo.txt
 ├── licenses/*
@@ -65,6 +66,7 @@ Upstream projects are checked in as Git submodules:
 - `upstream/openssl`: <https://github.com/openssl/openssl.git>
 - `upstream/socat`: <https://repo.or.cz/socat.git>
 - `upstream/bind9`: <https://github.com/isc-projects/bind9.git>
+- `upstream/mtr`: <https://github.com/traviscross/mtr.git>
 
 StaLiBs releases are produced from the pinned submodule commits in the repository at the pushed Git tag. Release tags do not need to match any upstream project tag.
 
@@ -94,6 +96,7 @@ Build preferences:
 - OpenSSL is built as a statically linked `openssl` command with shared libraries, tests, and runtime modules disabled.
 - socat is built statically with OpenSSL support and without readline or libwrap.
 - `dig` is built statically from BIND 9 with optional server, resolver, and documentation features disabled.
+- mtr is built statically with its terminal interface and without GTK or JSON output.
 
 ## Verifying a release
 
@@ -133,6 +136,7 @@ curl --version
 openssl version
 socat -V
 dig -v
+mtr --version
 ```
 
 Packet capture and some Nmap scan modes generally require root or Linux capabilities:
@@ -157,7 +161,7 @@ make build ARCH=armv7
 make package ARCH=armv7 VERSION=v2026.07.0
 ```
 
-The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, `nmap-linux-x86_64`, `jq-linux-x86_64`, `curl-linux-x86_64`, `openssl-linux-x86_64`, `socat-linux-x86_64`, and `dig-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
+The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, `nmap-linux-x86_64`, `jq-linux-x86_64`, `curl-linux-x86_64`, `openssl-linux-x86_64`, `socat-linux-x86_64`, `dig-linux-x86_64`, and `mtr-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
 
 ## Releasing
 
@@ -173,4 +177,4 @@ The resulting binaries are written to `dist/bin/` as architecture-qualified work
 
 ## Upstream release detection
 
-`.github/workflows/upstream-releases.yml` runs daily and can also be run manually. It checks for new stable upstream tcpdump, libpcap, strace, gdb, and jq release tags plus the latest Nmap `master` commit, updates the submodules, and opens or updates a PR.
+`.github/workflows/upstream-releases.yml` runs daily and can also be run manually. It checks for new stable upstream release tags and the latest Nmap `master` commit, updates the submodules, and opens or updates a PR.

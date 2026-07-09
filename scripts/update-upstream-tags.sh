@@ -11,6 +11,7 @@ curl_repo="https://github.com/curl/curl.git"
 openssl_repo="https://github.com/openssl/openssl.git"
 socat_repo="https://repo.or.cz/socat.git"
 bind9_repo="https://github.com/isc-projects/bind9.git"
+mtr_repo="https://github.com/traviscross/mtr.git"
 
 latest_tag() {
   local repo="$1"
@@ -34,8 +35,9 @@ latest_curl="$(latest_tag "$curl_repo" 'curl-*' '^curl-[0-9]+_[0-9]+_[0-9]+$')"
 latest_openssl="$(latest_tag "$openssl_repo" 'openssl-*' '^openssl-[0-9]+\.[0-9]+\.[0-9]+$')"
 latest_socat="$(latest_tag "$socat_repo" 'tag-*' '^tag-[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')"
 latest_bind9="$(latest_tag "$bind9_repo" 'v*' '^v[0-9]+\.[0-9]+\.[0-9]+$')"
+latest_mtr="$(latest_tag "$mtr_repo" 'v*' '^v[0-9]+\.[0-9]+$')"
 
-if [[ -z "$latest_tcpdump" || -z "$latest_libpcap" || -z "$latest_strace" || -z "$latest_gdb" || -z "$latest_nmap" || -z "$latest_jq" || -z "$latest_curl" || -z "$latest_openssl" || -z "$latest_socat" || -z "$latest_bind9" ]]; then
+if [[ -z "$latest_tcpdump" || -z "$latest_libpcap" || -z "$latest_strace" || -z "$latest_gdb" || -z "$latest_nmap" || -z "$latest_jq" || -z "$latest_curl" || -z "$latest_openssl" || -z "$latest_socat" || -z "$latest_bind9" || -z "$latest_mtr" ]]; then
   echo "ERROR: failed to resolve latest upstream tags" >&2
   exit 1
 fi
@@ -50,6 +52,7 @@ current_curl="$(git -C upstream/curl describe --tags --exact-match 2>/dev/null |
 current_openssl="$(git -C upstream/openssl describe --tags --exact-match 2>/dev/null || true)"
 current_socat="$(git -C upstream/socat describe --tags --exact-match 2>/dev/null || true)"
 current_bind9="$(git -C upstream/bind9 describe --tags --exact-match 2>/dev/null || true)"
+current_mtr="$(git -C upstream/mtr describe --tags --exact-match 2>/dev/null || true)"
 
 echo "Current tcpdump: ${current_tcpdump:-unknown}"
 echo "Latest tcpdump:  $latest_tcpdump"
@@ -71,6 +74,8 @@ echo "Current socat:    ${current_socat:-unknown}"
 echo "Latest socat:     $latest_socat"
 echo "Current BIND:     ${current_bind9:-unknown}"
 echo "Latest BIND:      $latest_bind9"
+echo "Current mtr:      ${current_mtr:-unknown}"
+echo "Latest mtr:       $latest_mtr"
 
 git -C upstream/tcpdump fetch --tags --force origin
 git -C upstream/libpcap fetch --tags --force origin
@@ -82,6 +87,7 @@ git -C upstream/curl fetch --tags --force origin
 git -C upstream/openssl fetch --tags --force origin
 git -C upstream/socat fetch --tags --force origin
 git -C upstream/bind9 fetch --tags --force origin
+git -C upstream/mtr fetch --tags --force origin
 git -C upstream/tcpdump checkout -q "$latest_tcpdump"
 git -C upstream/libpcap checkout -q "$latest_libpcap"
 git -C upstream/strace checkout -q "$latest_strace"
@@ -92,11 +98,12 @@ git -C upstream/curl checkout -q "$latest_curl"
 git -C upstream/openssl checkout -q "$latest_openssl"
 git -C upstream/socat checkout -q "$latest_socat"
 git -C upstream/bind9 checkout -q "$latest_bind9"
+git -C upstream/mtr checkout -q "$latest_mtr"
 
-git add upstream/tcpdump upstream/libpcap upstream/strace upstream/gdb upstream/nmap upstream/jq upstream/curl upstream/openssl upstream/socat upstream/bind9
+git add upstream/tcpdump upstream/libpcap upstream/strace upstream/gdb upstream/nmap upstream/jq upstream/curl upstream/openssl upstream/socat upstream/bind9 upstream/mtr
 
 changed=false
-if ! git diff --cached --quiet -- upstream/tcpdump upstream/libpcap upstream/strace upstream/gdb upstream/nmap upstream/jq upstream/curl upstream/openssl upstream/socat upstream/bind9; then
+if ! git diff --cached --quiet -- upstream/tcpdump upstream/libpcap upstream/strace upstream/gdb upstream/nmap upstream/jq upstream/curl upstream/openssl upstream/socat upstream/bind9 upstream/mtr; then
   changed=true
 fi
 
@@ -113,6 +120,7 @@ if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
     echo "openssl_tag=$latest_openssl"
     echo "socat_tag=$latest_socat"
     echo "bind9_tag=$latest_bind9"
+    echo "mtr_tag=$latest_mtr"
   } >> "$GITHUB_OUTPUT"
 fi
 

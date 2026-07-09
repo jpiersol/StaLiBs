@@ -35,3 +35,7 @@
 	path = upstream/bind9
 	url = https://github.com/isc-projects/bind9.git
 	shallow = true
+[submodule "upstream/mtr"]
+	path = upstream/mtr
+	url = https://github.com/traviscross/mtr.git
+	shallow = true

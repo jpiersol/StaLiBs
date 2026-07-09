@@ -17,6 +17,7 @@ Current tools:
 - `openssl`
 - `socat`
 - `dig`
+- `mtr`
 
 Supported targets:
 
@@ -39,6 +40,7 @@ The portability target is Linux kernel 4.4 and newer. Builds use Alpine/musl for
 - `scripts/build-openssl-alpine.sh` - target-native OpenSSL build inside Alpine
 - `scripts/build-socat-alpine.sh` - target-native socat build inside Alpine
 - `scripts/build-dig-alpine.sh` - target-native dig build inside Alpine
+- `scripts/build-mtr-alpine.sh` - target-native mtr build inside Alpine
 - `scripts/ci-build-in-docker.sh` - Docker wrapper used locally and by CI
 - `scripts/package-platform.sh` - creates one platform zip containing original binary names
 - `scripts/verify-static.sh` - validates ELF binaries are static
@@ -52,6 +54,7 @@ The portability target is Linux kernel 4.4 and newer. Builds use Alpine/musl for
 - `upstream/openssl` - OpenSSL submodule
 - `upstream/socat` - socat submodule
 - `upstream/bind9` - BIND 9 submodule used to build dig
+- `upstream/mtr` - mtr submodule
 - `tools/*/README.md` - tool-specific notes
 
 ## Artifact rules
@@ -73,6 +76,7 @@ Each zip must contain one top-level directory named after the zip without `.zip`
 - `bin/openssl`
 - `bin/socat`
 - `bin/dig`
+- `bin/mtr`
 
 Nmap runtime data should be included at `share/nmap`.
 
@@ -114,8 +118,8 @@ Use the same pattern for `aarch64` and `armv7`.
 Run syntax checks after shell/YAML changes:
 
 ```sh
-bash -n scripts/ci-build-in-docker.sh scripts/install-release.sh scripts/update-upstream-tags.sh scripts/write-release-notes.sh scripts/package-platform.sh scripts/build-curl-alpine.sh scripts/build-openssl-alpine.sh scripts/build-socat-alpine.sh scripts/build-dig-alpine.sh
-sh -n scripts/build-tcpdump-alpine.sh scripts/build-strace-alpine.sh scripts/build-gdb-alpine.sh scripts/build-nmap-alpine.sh scripts/build-jq-alpine.sh scripts/build-curl-alpine.sh scripts/build-openssl-alpine.sh scripts/build-socat-alpine.sh scripts/build-dig-alpine.sh scripts/verify-static.sh
+bash -n scripts/ci-build-in-docker.sh scripts/install-release.sh scripts/update-upstream-tags.sh scripts/write-release-notes.sh scripts/package-platform.sh scripts/build-curl-alpine.sh scripts/build-openssl-alpine.sh scripts/build-socat-alpine.sh scripts/build-dig-alpine.sh scripts/build-mtr-alpine.sh
+sh -n scripts/build-tcpdump-alpine.sh scripts/build-strace-alpine.sh scripts/build-gdb-alpine.sh scripts/build-nmap-alpine.sh scripts/build-jq-alpine.sh scripts/build-curl-alpine.sh scripts/build-openssl-alpine.sh scripts/build-socat-alpine.sh scripts/build-dig-alpine.sh scripts/build-mtr-alpine.sh scripts/verify-static.sh
 python3 - <<'PY'
 from pathlib import Path
 import yaml
@@ -165,6 +169,7 @@ Current submodule purposes:
 - `upstream/openssl`: OpenSSL source, pinned to an official release tag
 - `upstream/socat`: socat source, pinned to an official release tag
 - `upstream/bind9`: BIND 9 source, pinned to an official release tag
+- `upstream/mtr`: mtr source, pinned to an official release tag
 
 Use `scripts/update-upstream-tags.sh` or the scheduled workflow to update upstream pins.
 

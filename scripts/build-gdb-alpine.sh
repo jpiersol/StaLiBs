@@ -99,6 +99,14 @@ printf '%s\n' "==> Building gdb for $arch"
   make -j"$jobs" all-gdb
 )
 
+# The GDB link uses libtool, which consumes the compiler-driver -static flag
+# without necessarily making the final executable fully static.  Relink the
+# final executable with libtool's -all-static option after dependencies are
+# built so verify-static.sh can enforce the portable artifact contract.
+gdb_final_ldflags="$LDFLAGS -static-libstdc++ -static-libgcc -all-static"
+rm -f "$build_dir/gdb/gdb"
+make -j"$jobs" -C "$build_dir/gdb" LDFLAGS="$gdb_final_ldflags" gdb
+
 binary="$build_dir/gdb/gdb"
 out="$dist_bin/gdb-linux-$arch"
 cp "$binary" "$out"
@@ -120,6 +128,7 @@ buildinfo="$dist_meta/gdb-linux-$arch.buildinfo.txt"
   echo "cflags=$CFLAGS"
   echo "cxxflags=$CXXFLAGS"
   echo "ldflags=$LDFLAGS"
+  echo "gdb_final_ldflags=$gdb_final_ldflags"
   echo "configure_args=$configure_args"
   echo "cc=$({ cc --version 2>/dev/null || true; } | head -n 1)"
   echo "cxx=$({ c++ --version 2>/dev/null || true; } | head -n 1)"

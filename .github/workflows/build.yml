@@ -36,7 +36,9 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          submodules: recursive
+
+      - name: Check out tcpdump submodules
+        run: git submodule update --init --recursive upstream/tcpdump upstream/libpcap
 
       - name: Set up QEMU
         if: ${{ matrix.qemu }}
@@ -88,7 +90,9 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          submodules: recursive
+
+      - name: Check out strace submodule
+        run: git submodule update --init --recursive upstream/strace
 
       - name: Set up QEMU
         if: ${{ matrix.qemu }}
@@ -140,7 +144,9 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          submodules: recursive
+
+      - name: Check out gdb submodule
+        run: git submodule update --init --recursive upstream/gdb
 
       - name: Set up QEMU
         if: ${{ matrix.qemu }}

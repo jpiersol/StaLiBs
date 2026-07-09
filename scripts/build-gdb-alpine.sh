@@ -29,12 +29,10 @@ apk add --no-cache \
   gawk \
   git \
   gmp-dev \
-  gmp-static \
   linux-headers \
   m4 \
   make \
   mpfr-dev \
-  mpfr-static \
   ncurses-dev \
   ncurses-static \
   perl \

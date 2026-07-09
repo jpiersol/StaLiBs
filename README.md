@@ -51,7 +51,7 @@ Upstream projects are checked in as Git submodules:
 - `upstream/tcpdump`: <https://github.com/the-tcpdump-group/tcpdump>
 - `upstream/libpcap`: <https://github.com/the-tcpdump-group/libpcap>
 - `upstream/strace`: <https://github.com/strace/strace>
-- `upstream/gdb`: <https://sourceware.org/git/binutils-gdb.git>
+- `upstream/gdb`: <https://github.com/gnutools/binutils-gdb.git>
 
 StaLiBs release tags for tcpdump intentionally match upstream tcpdump release tags, for example:
 

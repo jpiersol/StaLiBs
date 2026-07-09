@@ -9,5 +9,5 @@
 	url = https://github.com/strace/strace.git
 [submodule "upstream/gdb"]
 	path = upstream/gdb
-	url = https://sourceware.org/git/binutils-gdb.git
+	url = https://github.com/gnutools/binutils-gdb.git
 	shallow = true

@@ -4,7 +4,7 @@ set -euo pipefail
 tcpdump_repo="https://github.com/the-tcpdump-group/tcpdump.git"
 libpcap_repo="https://github.com/the-tcpdump-group/libpcap.git"
 strace_repo="https://github.com/strace/strace.git"
-gdb_repo="https://sourceware.org/git/binutils-gdb.git"
+gdb_repo="https://github.com/gnutools/binutils-gdb.git"
 
 latest_tag() {
   local repo="$1"

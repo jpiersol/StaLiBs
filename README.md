@@ -33,6 +33,7 @@ stalibs-<tag>-linux-<arch>/
 ├── share/nmap/*
 ├── metadata/*.buildinfo.txt
 ├── licenses/*
+├── install.sh
 ├── SHA256SUMS
 └── README.txt
 ```
@@ -95,22 +96,29 @@ cd stalibs-v2026.07.0-linux-x86_64
 sha256sum -c SHA256SUMS
 ```
 
-## Using the tools
+## Installing and using the tools
+
+Extract the archive, then run its installer:
 
 ```sh
 unzip stalibs-v2026.07.0-linux-x86_64.zip
 cd stalibs-v2026.07.0-linux-x86_64
-chmod +x bin/*
-sudo ./bin/tcpdump -i any
-./bin/strace -V
-./bin/gdb --version
-./bin/nmap --version
+sudo ./install.sh # installs binaries in /usr/local/bin
+```
+
+Without `sudo`, the installer uses `~/.local/bin` and installs Nmap data in `~/.local/share/nmap`. Ensure `~/.local/bin` is on your `PATH`; the installer prints the required `PATH` setting when it is not.
+
+```sh
+tcpdump -i any
+strace -V
+gdb --version
+nmap --version
 ```
 
 Packet capture and some Nmap scan modes generally require root or Linux capabilities:
 
 ```sh
-sudo setcap cap_net_raw,cap_net_admin=eip ./bin/tcpdump ./bin/nmap
+sudo setcap cap_net_raw,cap_net_admin=eip "$(command -v tcpdump)" "$(command -v nmap)"
 ```
 
 ## Local build

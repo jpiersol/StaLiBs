@@ -33,6 +33,10 @@ Static platform bundles built by GitHub Actions from pinned upstream submodules.
 
 Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, and \`bin/nmap\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
 
+## Installation
+
+After extracting the archive, run \`sudo ./install.sh\` to install the tools system-wide in \`/usr/local/bin\`. Without \`sudo\`, \`./install.sh\` installs them in \`~/.local/bin\` and installs Nmap's runtime data in \`~/.local/share/nmap\`.
+
 ## Upstream pins
 
 - tcpdump: \`$tcpdump_tag\` (\`$tcpdump_commit\`)

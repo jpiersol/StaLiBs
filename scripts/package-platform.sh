@@ -114,7 +114,8 @@ cp "$gdb_buildinfo" "$staging_dir/metadata/gdb.buildinfo.txt"
 cp "$nmap_binary" "$staging_dir/bin/nmap"
 cp "$nmap_buildinfo" "$staging_dir/metadata/nmap.buildinfo.txt"
 cp -a "$nmap_data" "$staging_dir/share/nmap"
-chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/nmap"
+cp scripts/install-release.sh "$staging_dir/install.sh"
+chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/nmap" "$staging_dir/install.sh"
 
 cp upstream/tcpdump/LICENSE "$staging_dir/licenses/tcpdump-LICENSE.txt"
 cp upstream/libpcap/LICENSE "$staging_dir/licenses/libpcap-LICENSE.txt"
@@ -152,6 +153,10 @@ Executables:
   bin/nmap
 Runtime data:
   share/nmap
+
+Install the tools:
+  sudo ./install.sh  # system-wide: /usr/local/bin
+  ./install.sh       # user-local: ~/.local/bin
 
 Verify provenance:
   gh attestation verify ./${zip_name} --repo jpiersol/StaLiBs

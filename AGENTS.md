@@ -64,6 +64,7 @@ Each zip should also contain:
 - `licenses/*`
 - `SHA256SUMS`
 - `README.txt`
+- `install.sh`
 
 ## CI/build strategy
 

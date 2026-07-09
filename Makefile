@@ -1,9 +1,9 @@
 ARCH ?= x86_64
 VERSION ?= $(shell git -C upstream/tcpdump describe --tags --exact-match 2>/dev/null || git -C upstream/tcpdump describe --tags --always 2>/dev/null || echo tcpdump-local)
 
-.PHONY: build build-tcpdump build-strace build-gdb build-nmap build-jq build-curl build-openssl package verify clean update-upstream
+.PHONY: build build-tcpdump build-strace build-gdb build-nmap build-jq build-curl build-openssl build-socat package verify clean update-upstream
 
-build: build-tcpdump build-strace build-gdb build-nmap build-jq build-curl build-openssl
+build: build-tcpdump build-strace build-gdb build-nmap build-jq build-curl build-openssl build-socat
 
 build-tcpdump:
 	./scripts/ci-build-in-docker.sh $(ARCH) scripts/build-tcpdump-alpine.sh
@@ -26,11 +26,14 @@ build-curl:
 build-openssl:
 	./scripts/ci-build-in-docker.sh $(ARCH) scripts/build-openssl-alpine.sh
 
+build-socat:
+	./scripts/ci-build-in-docker.sh $(ARCH) scripts/build-socat-alpine.sh
+
 package:
 	./scripts/package-platform.sh $(ARCH) $(VERSION) dist dist
 
 verify:
-	./scripts/verify-static.sh dist/bin/tcpdump-linux-$(ARCH) dist/bin/strace-linux-$(ARCH) dist/bin/gdb-linux-$(ARCH) dist/bin/nmap-linux-$(ARCH) dist/bin/jq-linux-$(ARCH) dist/bin/curl-linux-$(ARCH) dist/bin/openssl-linux-$(ARCH)
+	./scripts/verify-static.sh dist/bin/tcpdump-linux-$(ARCH) dist/bin/strace-linux-$(ARCH) dist/bin/gdb-linux-$(ARCH) dist/bin/nmap-linux-$(ARCH) dist/bin/jq-linux-$(ARCH) dist/bin/curl-linux-$(ARCH) dist/bin/openssl-linux-$(ARCH) dist/bin/socat-linux-$(ARCH)
 
 update-upstream:
 	./scripts/update-upstream-tags.sh

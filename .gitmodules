@@ -27,3 +27,7 @@
 	path = upstream/openssl
 	url = https://github.com/openssl/openssl.git
 	shallow = true
+[submodule "upstream/socat"]
+	path = upstream/socat
+	url = https://repo.or.cz/socat.git
+	shallow = true

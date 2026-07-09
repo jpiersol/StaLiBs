@@ -2,7 +2,7 @@
 
 **Sta**tically **Li**nked **B**inarie**s** built from visible upstream source with GitHub Actions provenance.
 
-The supported tools are `tcpdump`, `strace`, `gdb`, `nmap`, `jq`, `curl`, and `openssl`.
+The supported tools are `tcpdump`, `strace`, `gdb`, `nmap`, `jq`, `curl`, `openssl`, and `socat`.
 
 ## Goals
 
@@ -33,6 +33,7 @@ stalibs-<tag>-linux-<arch>/
 ├── bin/jq
 ├── bin/curl
 ├── bin/openssl
+├── bin/socat
 ├── share/nmap/*
 ├── metadata/*.buildinfo.txt
 ├── licenses/*
@@ -61,6 +62,7 @@ Upstream projects are checked in as Git submodules:
 - `upstream/jq`: <https://github.com/jqlang/jq.git>
 - `upstream/curl`: <https://github.com/curl/curl.git>
 - `upstream/openssl`: <https://github.com/openssl/openssl.git>
+- `upstream/socat`: <https://repo.or.cz/socat.git>
 
 StaLiBs releases are produced from the pinned submodule commits in the repository at the pushed Git tag. Release tags do not need to match any upstream project tag.
 
@@ -88,6 +90,7 @@ Build preferences:
 - jq is built statically with its vendored Oniguruma regular-expression library.
 - curl is built statically with OpenSSL, while optional protocol and compression libraries are disabled for portability.
 - OpenSSL is built as a statically linked `openssl` command with shared libraries, tests, and runtime modules disabled.
+- socat is built statically with OpenSSL support and without readline or libwrap.
 
 ## Verifying a release
 
@@ -125,6 +128,7 @@ nmap --version
 jq --version
 curl --version
 openssl version
+socat -V
 ```
 
 Packet capture and some Nmap scan modes generally require root or Linux capabilities:
@@ -149,7 +153,7 @@ make build ARCH=armv7
 make package ARCH=armv7 VERSION=v2026.07.0
 ```
 
-The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, `nmap-linux-x86_64`, `jq-linux-x86_64`, `curl-linux-x86_64`, and `openssl-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
+The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, `nmap-linux-x86_64`, `jq-linux-x86_64`, `curl-linux-x86_64`, `openssl-linux-x86_64`, and `socat-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
 
 ## Releasing
 

@@ -36,6 +36,7 @@ jobs:
           JQ_TAG: ${{ steps.update.outputs.jq_tag }}
           CURL_TAG: ${{ steps.update.outputs.curl_tag }}
           OPENSSL_TAG: ${{ steps.update.outputs.openssl_tag }}
+          SOCAT_TAG: ${{ steps.update.outputs.socat_tag }}
         shell: bash
         run: |
           set -euo pipefail
@@ -55,6 +56,7 @@ jobs:
           - jq: \`${JQ_TAG}\`
           - curl: \`${CURL_TAG}\`
           - openssl: \`${OPENSSL_TAG}\`
+          - socat: \`${SOCAT_TAG}\`
 
           After this PR is merged, create and push any StaLiBs release tag when you want to publish a new bundle. The release will be built from the pinned submodule commits at that tag:
 

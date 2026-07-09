@@ -117,12 +117,65 @@ jobs:
           if-no-files-found: error
           path: artifact-root
 
+  build-gdb:
+    name: gdb (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+            qemu: false
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+            qemu: false
+          - arch: armv7
+            runner: ubuntu-24.04
+            qemu: true
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Set up QEMU
+        if: ${{ matrix.qemu }}
+        uses: docker/setup-qemu-action@v4
+        with:
+          platforms: arm
+
+      - name: Build gdb
+        env:
+          ALPINE_VERSION: '3.20'
+          CFLAGS: -O3 -pipe
+        run: ./scripts/ci-build-in-docker.sh '${{ matrix.arch }}' scripts/build-gdb-alpine.sh
+
+      - name: Stage platform artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifact-root/bin artifact-root/metadata
+          cp 'dist/bin/gdb-linux-${{ matrix.arch }}' artifact-root/bin/gdb
+          cp 'dist/metadata/gdb-linux-${{ matrix.arch }}.buildinfo.txt' artifact-root/metadata/gdb.buildinfo.txt
+
+      - name: Upload gdb artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: gdb-linux-${{ matrix.arch }}
+          if-no-files-found: error
+          path: artifact-root
+
   package:
     name: Package bundle (${{ matrix.arch }})
     runs-on: ubuntu-24.04
     needs:
       - build-tcpdump
       - build-strace
+      - build-gdb
     permissions:
       contents: read
       id-token: write
@@ -152,6 +205,12 @@ jobs:
         with:
           name: strace-linux-${{ matrix.arch }}
           path: package-root/strace
+
+      - name: Download gdb artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: gdb-linux-${{ matrix.arch }}
+          path: package-root/gdb
 
       - name: List downloaded artifacts
         run: find package-root -maxdepth 4 -type f -print | sort

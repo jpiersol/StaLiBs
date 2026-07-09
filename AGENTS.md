@@ -10,6 +10,7 @@ Current tools:
 
 - `tcpdump`, built with local static `libpcap`
 - `strace`
+- `gdb`
 
 Supported targets:
 
@@ -25,12 +26,14 @@ The portability target is Linux kernel 4.4 and newer. Builds use Alpine/musl for
 - `.github/workflows/upstream-releases.yml` - scheduled upstream tag detection and PR creation
 - `scripts/build-tcpdump-alpine.sh` - target-native tcpdump/libpcap build inside Alpine
 - `scripts/build-strace-alpine.sh` - target-native strace build inside Alpine
+- `scripts/build-gdb-alpine.sh` - target-native gdb build inside Alpine
 - `scripts/ci-build-in-docker.sh` - Docker wrapper used locally and by CI
 - `scripts/package-platform.sh` - creates one platform zip containing original binary names
 - `scripts/verify-static.sh` - validates ELF binaries are static
 - `upstream/tcpdump` - tcpdump submodule
 - `upstream/libpcap` - libpcap submodule
 - `upstream/strace` - strace submodule
+- `upstream/gdb` - binutils-gdb submodule used to build gdb
 - `tools/*/README.md` - tool-specific notes
 
 ## Artifact rules
@@ -45,8 +48,9 @@ Inside each zip, executables must use their original upstream names:
 
 - `bin/tcpdump`
 - `bin/strace`
+- `bin/gdb`
 
-Do not put architecture-qualified executable names inside release zips. Architecture-qualified names such as `tcpdump-linux-x86_64` and `strace-linux-x86_64` are acceptable only as intermediate files in `dist/bin/`.
+Do not put architecture-qualified executable names inside release zips. Architecture-qualified names such as `tcpdump-linux-x86_64`, `strace-linux-x86_64`, and `gdb-linux-x86_64` are acceptable only as intermediate files in `dist/bin/`.
 
 Each zip should also contain:
 
@@ -84,7 +88,7 @@ Run syntax checks after shell/YAML changes:
 
 ```sh
 bash -n scripts/ci-build-in-docker.sh scripts/update-upstream-tags.sh scripts/write-release-notes.sh scripts/package-platform.sh
-sh -n scripts/build-tcpdump-alpine.sh scripts/build-strace-alpine.sh scripts/verify-static.sh
+sh -n scripts/build-tcpdump-alpine.sh scripts/build-strace-alpine.sh scripts/build-gdb-alpine.sh scripts/verify-static.sh
 python3 - <<'PY'
 from pathlib import Path
 import yaml
@@ -127,6 +131,7 @@ Current submodule purposes:
 - `upstream/tcpdump`: tcpdump source, release tag must match StaLiBs release tag
 - `upstream/libpcap`: static libpcap for tcpdump
 - `upstream/strace`: strace source
+- `upstream/gdb`: binutils-gdb source for gdb
 
 Use `scripts/update-upstream-tags.sh` or the scheduled workflow to update upstream pins.
 

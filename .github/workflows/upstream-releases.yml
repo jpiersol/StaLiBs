@@ -31,6 +31,7 @@ jobs:
           TCPDUMP_TAG: ${{ steps.update.outputs.tcpdump_tag }}
           LIBPCAP_TAG: ${{ steps.update.outputs.libpcap_tag }}
           STRACE_TAG: ${{ steps.update.outputs.strace_tag }}
+          GDB_TAG: ${{ steps.update.outputs.gdb_tag }}
         shell: bash
         run: |
           set -euo pipefail
@@ -45,6 +46,7 @@ jobs:
           - tcpdump: \`${TCPDUMP_TAG}\`
           - libpcap: \`${LIBPCAP_TAG}\`
           - strace: \`${STRACE_TAG}\`
+          - gdb: \`${GDB_TAG}\`
 
           StaLiBs release tags currently follow the upstream tcpdump release tag. After this PR is merged, create and push a release tag that matches the upstream tcpdump tag when you want to publish a new bundle:
 

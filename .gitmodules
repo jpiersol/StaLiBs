@@ -7,3 +7,7 @@
 [submodule "upstream/strace"]
 	path = upstream/strace
 	url = https://github.com/strace/strace.git
+[submodule "upstream/gdb"]
+	path = upstream/gdb
+	url = https://sourceware.org/git/binutils-gdb.git
+	shallow = true

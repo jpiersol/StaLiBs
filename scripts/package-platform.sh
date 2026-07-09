@@ -73,6 +73,8 @@ tcpdump_binary="$(find_tool_binary tcpdump)"
 tcpdump_buildinfo="$(find_tool_buildinfo tcpdump)"
 strace_binary="$(find_tool_binary strace)"
 strace_buildinfo="$(find_tool_buildinfo strace)"
+gdb_binary="$(find_tool_binary gdb)"
+gdb_buildinfo="$(find_tool_buildinfo gdb)"
 
 rm -rf "$staging_dir"
 mkdir -p "$staging_dir/bin" "$staging_dir/metadata" "$staging_dir/licenses" "$out_dir"
@@ -81,13 +83,21 @@ cp "$tcpdump_binary" "$staging_dir/bin/tcpdump"
 cp "$tcpdump_buildinfo" "$staging_dir/metadata/tcpdump.buildinfo.txt"
 cp "$strace_binary" "$staging_dir/bin/strace"
 cp "$strace_buildinfo" "$staging_dir/metadata/strace.buildinfo.txt"
-chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace"
+cp "$gdb_binary" "$staging_dir/bin/gdb"
+cp "$gdb_buildinfo" "$staging_dir/metadata/gdb.buildinfo.txt"
+chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb"
 
 cp upstream/tcpdump/LICENSE "$staging_dir/licenses/tcpdump-LICENSE.txt"
 cp upstream/libpcap/LICENSE "$staging_dir/licenses/libpcap-LICENSE.txt"
 cp upstream/strace/COPYING "$staging_dir/licenses/strace-COPYING.txt"
 cp upstream/strace/LGPL-2.1-or-later "$staging_dir/licenses/strace-LGPL-2.1-or-later.txt"
 cp upstream/strace/bundled/linux/COPYING "$staging_dir/licenses/strace-bundled-linux-COPYING.txt"
+cp upstream/gdb/COPYING "$staging_dir/licenses/gdb-COPYING.txt"
+cp upstream/gdb/COPYING.LIB "$staging_dir/licenses/gdb-COPYING.LIB.txt"
+cp upstream/gdb/COPYING3 "$staging_dir/licenses/gdb-COPYING3.txt"
+cp upstream/gdb/COPYING3.LIB "$staging_dir/licenses/gdb-COPYING3.LIB.txt"
+cp upstream/gdb/gdb/COPYING "$staging_dir/licenses/gdb-gdb-COPYING.txt"
+cp upstream/gdb/readline/readline/COPYING "$staging_dir/licenses/gdb-readline-COPYING.txt"
 cp LICENSE "$staging_dir/LICENSE.txt"
 cp LICENSES.md "$staging_dir/LICENSES.md"
 
@@ -102,6 +112,7 @@ Kernel target: Linux >= 4.4
 Executables:
   bin/tcpdump
   bin/strace
+  bin/gdb
 
 Verify provenance:
   gh attestation verify ./${zip_name} --repo jpiersol/StaLiBs

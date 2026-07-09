@@ -2,7 +2,7 @@
 
 **Sta**tically **Li**nked **B**inarie**s** built from visible upstream source with GitHub Actions provenance.
 
-The first supported tools are `tcpdump` and `strace`.
+The supported tools are `tcpdump`, `strace`, and `gdb`.
 
 ## Goals
 
@@ -27,8 +27,10 @@ Each bundle contains only the executables for that platform, using the original 
 ```text
 bin/tcpdump
 bin/strace
+bin/gdb
 metadata/tcpdump.buildinfo.txt
 metadata/strace.buildinfo.txt
+metadata/gdb.buildinfo.txt
 licenses/*
 SHA256SUMS
 README.txt
@@ -49,6 +51,7 @@ Upstream projects are checked in as Git submodules:
 - `upstream/tcpdump`: <https://github.com/the-tcpdump-group/tcpdump>
 - `upstream/libpcap`: <https://github.com/the-tcpdump-group/libpcap>
 - `upstream/strace`: <https://github.com/strace/strace>
+- `upstream/gdb`: <https://sourceware.org/git/binutils-gdb.git>
 
 StaLiBs release tags for tcpdump intentionally match upstream tcpdump release tags, for example:
 
@@ -77,6 +80,7 @@ Build preferences:
   - Linux USB, Bluetooth, D-Bus, RDMA, libnl, OpenSSL, libcap-ng, and libsmi support are attempted when static Alpine packages are available.
   - Vendor/proprietary capture SDKs such as DAG, DPDK, Septel, SNF, and TurboCap are not bundled by default.
 - strace is built statically with `--enable-mpers=check`, so multiple-personality decoding is enabled when the target build environment can support it.
+- gdb is built statically without Python, Guile, debuginfod, Intel PT, Babeltrace, or the GDB compile subsystem to keep the binary self-contained. LZMA, Zstd, and xxHash support are enabled when Alpine static packages are available.
 
 ## Verifying a release
 
@@ -94,13 +98,14 @@ cd stalibs-tcpdump-4.99.6-linux-x86_64
 sha256sum -c SHA256SUMS
 ```
 
-## Using tcpdump
+## Using the tools
 
 ```sh
 unzip stalibs-tcpdump-4.99.6-linux-x86_64.zip
-chmod +x bin/tcpdump
+chmod +x bin/*
 sudo ./bin/tcpdump -i any
 ./bin/strace -V
+./bin/gdb --version
 ```
 
 Packet capture generally requires root or Linux capabilities:
@@ -125,7 +130,7 @@ make build ARCH=armv7
 make package ARCH=armv7 VERSION=tcpdump-4.99.6
 ```
 
-The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64` and `strace-linux-x86_64`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
+The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, and `gdb-linux-x86_64`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
 
 ## Releasing tcpdump
 
@@ -141,4 +146,4 @@ The resulting binaries are written to `dist/bin/` as architecture-qualified work
 
 ## Upstream release detection
 
-`.github/workflows/upstream-releases.yml` runs daily and can also be run manually. It checks for new stable upstream tcpdump, libpcap, and strace release tags, updates the submodules, and opens or updates a PR.
+`.github/workflows/upstream-releases.yml` runs daily and can also be run manually. It checks for new stable upstream tcpdump, libpcap, strace, and gdb release tags, updates the submodules, and opens or updates a PR.

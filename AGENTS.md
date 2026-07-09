@@ -82,7 +82,7 @@ Docker is required for local builds.
 ```sh
 git submodule update --init --recursive
 make build ARCH=x86_64
-make package ARCH=x86_64 VERSION=tcpdump-4.99.6
+make package ARCH=x86_64 VERSION=v2026.07.0
 make verify ARCH=x86_64
 ```
 
@@ -117,14 +117,14 @@ gh run view <run-id> --repo jpiersol/StaLiBs --log-failed
 
 ## Release rules
 
-StaLiBs release tags currently follow official stable upstream tcpdump tags, e.g.:
+StaLiBs publishes release assets for every pushed Git tag, e.g.:
 
 ```sh
-git tag -a tcpdump-4.99.6 -m "StaLiBs tcpdump-4.99.6"
-git push origin tcpdump-4.99.6
+git tag -a v2026.07.0 -m "StaLiBs v2026.07.0"
+git push origin v2026.07.0
 ```
 
-The release workflow validates that `upstream/tcpdump` is pinned to the same upstream tcpdump tag before publishing release assets.
+Release assets are built from the pinned submodule commits in the repository at that tag.
 
 GitHub artifact attestations are required for published platform zips. Do not remove the attestation step unless replacing it with an equivalent provenance mechanism.
 
@@ -134,7 +134,7 @@ Keep upstream projects pinned to official release tags where practical.
 
 Current submodule purposes:
 
-- `upstream/tcpdump`: tcpdump source, release tag must match StaLiBs release tag
+- `upstream/tcpdump`: tcpdump source
 - `upstream/libpcap`: static libpcap for tcpdump
 - `upstream/strace`: strace source
 - `upstream/gdb`: binutils-gdb source for gdb

@@ -50,11 +50,11 @@ jobs:
           - gdb: \`${GDB_TAG}\`
           - nmap: \`${NMAP_REF}\`
 
-          StaLiBs release tags currently follow the upstream tcpdump release tag. After this PR is merged, create and push a release tag that matches the upstream tcpdump tag when you want to publish a new bundle:
+          After this PR is merged, create and push any StaLiBs release tag when you want to publish a new bundle. The release will be built from the pinned submodule commits at that tag:
 
           \`\`\`sh
-          git tag -a ${TCPDUMP_TAG} -m "StaLiBs ${TCPDUMP_TAG}"
-          git push origin ${TCPDUMP_TAG}
+          git tag -a vYYYY.MM.DD -m "StaLiBs vYYYY.MM.DD"
+          git push origin vYYYY.MM.DD
           \`\`\`
           EOF_BODY
 

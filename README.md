@@ -14,12 +14,12 @@ The supported tools are `tcpdump`, `strace`, `gdb`, and `nmap`.
 
 ## Current artifact contents
 
-Release bundles are named like:
+Release bundles are named from the Git tag that produced them (`/` and spaces are written as `-` in filenames):
 
 ```text
-stalibs-tcpdump-4.99.6-linux-x86_64.zip
-stalibs-tcpdump-4.99.6-linux-aarch64.zip
-stalibs-tcpdump-4.99.6-linux-armv7.zip
+stalibs-<tag>-linux-x86_64.zip
+stalibs-<tag>-linux-aarch64.zip
+stalibs-<tag>-linux-armv7.zip
 ```
 
 Each bundle contains the executables for that platform, using the original upstream binary names, plus Nmap runtime data:
@@ -57,13 +57,7 @@ Upstream projects are checked in as Git submodules:
 - `upstream/gdb`: <https://github.com/gnutools/binutils-gdb.git>
 - `upstream/nmap`: <https://github.com/nmap/nmap.git>
 
-StaLiBs release tags for tcpdump intentionally match upstream tcpdump release tags, for example:
-
-```text
-tcpdump-4.99.6
-```
-
-The release workflow validates that the `upstream/tcpdump` submodule is pinned to the same upstream tcpdump tag before publishing GitHub Release assets.
+StaLiBs releases are produced from the pinned submodule commits in the repository at the pushed Git tag. Release tags do not need to match any upstream project tag.
 
 ## Build approach
 
@@ -92,21 +86,21 @@ Build preferences:
 Download the zip for your platform from the GitHub Release, then verify the GitHub artifact attestation:
 
 ```sh
-gh attestation verify ./stalibs-tcpdump-4.99.6-linux-x86_64.zip --repo jpiersol/StaLiBs
+gh attestation verify ./stalibs-v2026.07.0-linux-x86_64.zip --repo jpiersol/StaLiBs
 ```
 
 Then verify the internal checksums:
 
 ```sh
-unzip stalibs-tcpdump-4.99.6-linux-x86_64.zip -d stalibs-tcpdump-4.99.6-linux-x86_64
-cd stalibs-tcpdump-4.99.6-linux-x86_64
+unzip stalibs-v2026.07.0-linux-x86_64.zip -d stalibs-v2026.07.0-linux-x86_64
+cd stalibs-v2026.07.0-linux-x86_64
 sha256sum -c SHA256SUMS
 ```
 
 ## Using the tools
 
 ```sh
-unzip stalibs-tcpdump-4.99.6-linux-x86_64.zip
+unzip stalibs-v2026.07.0-linux-x86_64.zip
 chmod +x bin/*
 sudo ./bin/tcpdump -i any
 ./bin/strace -V
@@ -127,28 +121,28 @@ Docker is required for the same build path used by CI.
 ```sh
 git submodule update --init --recursive
 make build ARCH=x86_64
-make package ARCH=x86_64 VERSION=tcpdump-4.99.6
+make package ARCH=x86_64 VERSION=v2026.07.0
 
 make build ARCH=aarch64
-make package ARCH=aarch64 VERSION=tcpdump-4.99.6
+make package ARCH=aarch64 VERSION=v2026.07.0
 
 make build ARCH=armv7
-make package ARCH=armv7 VERSION=tcpdump-4.99.6
+make package ARCH=armv7 VERSION=v2026.07.0
 ```
 
 The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, and `nmap-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
 
-## Releasing tcpdump
+## Releasing
 
-1. Merge an upstream-update PR, or manually pin submodules to official upstream release tags.
-2. Create a StaLiBs tag matching the upstream tcpdump release tag:
+1. Merge an upstream-update PR, or manually pin submodules to the desired upstream commits or tags.
+2. Create and push any StaLiBs release tag:
 
    ```sh
-   git tag -a tcpdump-4.99.6 -m "StaLiBs tcpdump-4.99.6"
-   git push origin tcpdump-4.99.6
+   git tag -a v2026.07.0 -m "StaLiBs v2026.07.0"
+   git push origin v2026.07.0
    ```
 
-3. The build workflow publishes one zip asset per target platform to the matching GitHub Release and creates GitHub artifact attestations for those zips.
+3. The build workflow runs for every pushed tag, publishes one zip asset per target platform to the matching GitHub Release, and creates GitHub artifact attestations for those zips.
 
 ## Upstream release detection
 

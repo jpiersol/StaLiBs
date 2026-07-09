@@ -175,6 +175,63 @@ jobs:
           if-no-files-found: error
           path: artifact-root
 
+  build-curl:
+    name: curl (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+            qemu: false
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+            qemu: false
+          - arch: armv7
+            runner: ubuntu-24.04
+            qemu: true
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check out curl submodule
+        run: git submodule update --init --recursive upstream/curl
+
+      - name: Fetch curl tags
+        run: git -C upstream/curl fetch --tags --force origin
+
+      - name: Set up QEMU
+        if: ${{ matrix.qemu }}
+        uses: docker/setup-qemu-action@v4
+        with:
+          platforms: arm
+
+      - name: Build curl
+        env:
+          ALPINE_VERSION: '3.20'
+          CFLAGS: -O3 -pipe
+        run: ./scripts/ci-build-in-docker.sh '${{ matrix.arch }}' scripts/build-curl-alpine.sh
+
+      - name: Stage platform artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifact-root/bin artifact-root/metadata
+          cp 'dist/bin/curl-linux-${{ matrix.arch }}' artifact-root/bin/curl
+          cp 'dist/metadata/curl-linux-${{ matrix.arch }}.buildinfo.txt' artifact-root/metadata/curl.buildinfo.txt
+
+      - name: Upload curl artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: curl-linux-${{ matrix.arch }}
+          if-no-files-found: error
+          path: artifact-root
+
   build-jq:
     name: jq (${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
@@ -296,6 +353,7 @@ jobs:
       - build-gdb
       - build-nmap
       - build-jq
+      - build-curl
     permissions:
       contents: read
       id-token: write
@@ -343,6 +401,12 @@ jobs:
         with:
           name: jq-linux-${{ matrix.arch }}
           path: package-root/jq
+
+      - name: Download curl artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: curl-linux-${{ matrix.arch }}
+          path: package-root/curl
 
       - name: List downloaded artifacts
         run: find package-root -maxdepth 4 -type f -print | sort
@@ -393,6 +457,7 @@ jobs:
         run: |
           git -C upstream/gdb fetch --tags --force origin
           git -C upstream/jq fetch --tags --force origin
+          git -C upstream/curl fetch --tags --force origin
 
       - name: Download platform bundle artifacts
         uses: actions/download-artifact@v8

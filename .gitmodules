@@ -19,3 +19,7 @@
 	path = upstream/jq
 	url = https://github.com/jqlang/jq.git
 	shallow = true
+[submodule "upstream/curl"]
+	path = upstream/curl
+	url = https://github.com/curl/curl.git
+	shallow = true

@@ -34,6 +34,7 @@ jobs:
           GDB_TAG: ${{ steps.update.outputs.gdb_tag }}
           NMAP_REF: ${{ steps.update.outputs.nmap_ref }}
           JQ_TAG: ${{ steps.update.outputs.jq_tag }}
+          CURL_TAG: ${{ steps.update.outputs.curl_tag }}
         shell: bash
         run: |
           set -euo pipefail
@@ -51,6 +52,7 @@ jobs:
           - gdb: \`${GDB_TAG}\`
           - nmap: \`${NMAP_REF}\`
           - jq: \`${JQ_TAG}\`
+          - curl: \`${CURL_TAG}\`
 
           After this PR is merged, create and push any StaLiBs release tag when you want to publish a new bundle. The release will be built from the pinned submodule commits at that tag:
 

@@ -81,6 +81,8 @@ nmap_binary="$(find_tool_binary nmap)"
 nmap_buildinfo="$(find_tool_buildinfo nmap)"
 jq_binary="$(find_tool_binary jq)"
 jq_buildinfo="$(find_tool_buildinfo jq)"
+curl_binary="$(find_tool_binary curl)"
+curl_buildinfo="$(find_tool_buildinfo curl)"
 
 find_nmap_data() {
   local -a candidates=(
@@ -117,9 +119,11 @@ cp "$nmap_binary" "$staging_dir/bin/nmap"
 cp "$nmap_buildinfo" "$staging_dir/metadata/nmap.buildinfo.txt"
 cp "$jq_binary" "$staging_dir/bin/jq"
 cp "$jq_buildinfo" "$staging_dir/metadata/jq.buildinfo.txt"
+cp "$curl_binary" "$staging_dir/bin/curl"
+cp "$curl_buildinfo" "$staging_dir/metadata/curl.buildinfo.txt"
 cp -a "$nmap_data" "$staging_dir/share/nmap"
 cp scripts/install-release.sh "$staging_dir/install.sh"
-chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/nmap" "$staging_dir/bin/jq" "$staging_dir/install.sh"
+chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/nmap" "$staging_dir/bin/jq" "$staging_dir/bin/curl" "$staging_dir/install.sh"
 
 cp upstream/tcpdump/LICENSE "$staging_dir/licenses/tcpdump-LICENSE.txt"
 cp upstream/libpcap/LICENSE "$staging_dir/licenses/libpcap-LICENSE.txt"
@@ -141,6 +145,8 @@ cp upstream/nmap/libpcre/LICENCE.md "$staging_dir/licenses/nmap-libpcre-LICENCE.
 cp upstream/nmap/libz/LICENSE "$staging_dir/licenses/nmap-libz-LICENSE.txt"
 cp upstream/jq/COPYING "$staging_dir/licenses/jq-COPYING.txt"
 cp upstream/jq/vendor/oniguruma/COPYING "$staging_dir/licenses/jq-oniguruma-COPYING.txt"
+cp upstream/curl/COPYING "$staging_dir/licenses/curl-COPYING.txt"
+cp -a upstream/curl/LICENSES "$staging_dir/licenses/curl-LICENSES"
 cp LICENSE "$staging_dir/LICENSE.txt"
 cp LICENSES.md "$staging_dir/LICENSES.md"
 
@@ -158,6 +164,7 @@ Executables:
   bin/gdb
   bin/nmap
   bin/jq
+  bin/curl
 Runtime data:
   share/nmap
 

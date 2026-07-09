@@ -21,6 +21,8 @@ nmap_ref="$(git -C upstream/nmap describe --tags --exact-match 2>/dev/null || gi
 nmap_commit="$(git -C upstream/nmap rev-parse HEAD)"
 jq_tag="$(git -C upstream/jq describe --tags --exact-match 2>/dev/null || git -C upstream/jq describe --tags --always)"
 jq_commit="$(git -C upstream/jq rev-parse HEAD)"
+curl_tag="$(git -C upstream/curl describe --tags --exact-match 2>/dev/null || git -C upstream/curl describe --tags --always)"
+curl_commit="$(git -C upstream/curl rev-parse HEAD)"
 
 cat <<EOF_NOTES
 # StaLiBs $tag
@@ -33,7 +35,7 @@ Static platform bundles built by GitHub Actions from pinned upstream submodules.
 - \`$zip_aarch64\` - aarch64 Linux
 - \`$zip_armv7\` - ARMv7 hard-float Linux
 
-Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, \`bin/nmap\`, and \`bin/jq\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
+Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, \`bin/nmap\`, and \`bin/jq\` and \`bin/curl\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
 
 ## Installation
 
@@ -47,6 +49,7 @@ After extracting the archive, run \`sudo ./install.sh\` to install the tools sys
 - gdb: \`$gdb_tag\` (\`$gdb_commit\`)
 - nmap: \`$nmap_ref\` (\`$nmap_commit\`)
 - jq: \`$jq_tag\` (\`$jq_commit\`)
+- curl: \`$curl_tag\` (\`$curl_commit\`)
 
 ## Verification
 

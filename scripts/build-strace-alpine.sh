@@ -3,12 +3,12 @@ set -eu
 
 arch="${1:-${STALIBS_ARCH:-unknown}}"
 if [ "$arch" = "unknown" ]; then
-  echo "Usage: $0 <x86_64|aarch64|armv7>" >&2
+  echo "Usage: $0 <x86_64|aarch64|armv7|riscv64|ppc64le|s390x>" >&2
   exit 64
 fi
 
 case "$arch" in
-  x86_64|aarch64|armv7) ;;
+  x86_64|aarch64|armv7|riscv64|ppc64le|s390x) ;;
   *)
     echo "Unsupported architecture: $arch" >&2
     exit 64

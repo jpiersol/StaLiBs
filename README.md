@@ -8,7 +8,7 @@ The supported tools are `tcpdump`, `strace`, `gdb`, `nmap`, `jq`, `curl`, `opens
 
 - Produce portable Linux binaries that do not depend on host shared libraries.
 - Target Linux kernel 4.4 and newer.
-- Build x86_64 and ARM Linux artifacts from pinned upstream source submodules.
+- Build x86_64, ARM, RISC-V, PowerPC, and IBM Z Linux artifacts from pinned upstream source submodules.
 - Publish separate zip bundles per target platform.
 - Attach GitHub artifact attestations so consumers can verify that each platform bundle was built by this repository's CI for a given tag.
 
@@ -20,6 +20,9 @@ Release bundles are named from the Git tag that produced them (`/` and spaces ar
 stalibs-<tag>-linux-x86_64.zip
 stalibs-<tag>-linux-aarch64.zip
 stalibs-<tag>-linux-armv7.zip
+stalibs-<tag>-linux-riscv64.zip
+stalibs-<tag>-linux-ppc64le.zip
+stalibs-<tag>-linux-s390x.zip
 ```
 
 Each bundle extracts into a top-level directory named after the archive without `.zip`. That directory contains the executables for that platform, using the original upstream binary names, plus Nmap runtime data and the `jq` JSON processor:
@@ -58,6 +61,9 @@ Architecture targets:
 | `stalibs-*-linux-x86_64.zip` | 64-bit x86 Linux |
 | `stalibs-*-linux-aarch64.zip` | 64-bit ARM Linux |
 | `stalibs-*-linux-armv7.zip` | 32-bit ARMv7 hard-float Linux |
+| `stalibs-*-linux-riscv64.zip` | 64-bit RISC-V Linux |
+| `stalibs-*-linux-ppc64le.zip` | 64-bit little-endian PowerPC Linux |
+| `stalibs-*-linux-s390x.zip` | IBM Z s390x Linux |
 
 ## Upstream source
 
@@ -91,6 +97,9 @@ CI builds in Alpine Linux containers for each target architecture. It uses nativ
 | `x86_64` | `ubuntu-24.04` | `linux/amd64` | native |
 | `aarch64` | `ubuntu-24.04-arm` | `linux/arm64/v8` | native ARM64 runner, no QEMU |
 | `armv7` | `ubuntu-24.04` | `linux/arm/v7` | ARMv7 Alpine under QEMU; slower than cross-compilation but more target-compatible |
+| `riscv64` | `ubuntu-24.04` | `linux/riscv64` | RISC-V Alpine under QEMU |
+| `ppc64le` | `ubuntu-24.04` | `linux/ppc64le` | little-endian PowerPC Alpine under QEMU |
+| `s390x` | `ubuntu-24.04` | `linux/s390x` | IBM Z Alpine under QEMU |
 
 Build preferences:
 

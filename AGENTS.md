@@ -28,6 +28,9 @@ Supported targets:
 - `x86_64`
 - `aarch64`
 - `armv7` hard-float
+- `riscv64`
+- `ppc64le`
+- `s390x`
 
 The portability target is Linux kernel 4.4 and newer. Builds use Alpine/musl for static linking.
 
@@ -76,6 +79,9 @@ Release assets must be separate per platform, not one all-platform bundle:
 - `stalibs-<version>-linux-x86_64.zip`
 - `stalibs-<version>-linux-aarch64.zip`
 - `stalibs-<version>-linux-armv7.zip`
+- `stalibs-<version>-linux-riscv64.zip`
+- `stalibs-<version>-linux-ppc64le.zip`
+- `stalibs-<version>-linux-s390x.zip`
 
 Each zip must contain one top-level directory named after the zip without `.zip`. Within that directory, executables must use their original upstream names:
 
@@ -116,6 +122,9 @@ Use target-native Alpine userspaces for compatibility with Autoconf checks and t
 - `x86_64`: GitHub runner `ubuntu-24.04`, Docker platform `linux/amd64`, no QEMU
 - `aarch64`: GitHub runner `ubuntu-24.04-arm`, Docker platform `linux/arm64/v8`, no QEMU
 - `armv7`: GitHub runner `ubuntu-24.04`, Docker platform `linux/arm/v7`, QEMU required
+- `riscv64`: GitHub runner `ubuntu-24.04`, Docker platform `linux/riscv64`, QEMU required
+- `ppc64le`: GitHub runner `ubuntu-24.04`, Docker platform `linux/ppc64le`, QEMU required
+- `s390x`: GitHub runner `ubuntu-24.04`, Docker platform `linux/s390x`, QEMU required
 
 Avoid cross-compilation unless intentionally replacing the target-native strategy and updating the docs accordingly.
 
@@ -130,7 +139,7 @@ make package ARCH=x86_64 VERSION=v2026.07.0
 make verify ARCH=x86_64
 ```
 
-Use the same pattern for `aarch64` and `armv7`.
+Use the same pattern for `aarch64`, `armv7`, `riscv64`, `ppc64le`, and `s390x`.
 
 ## Validation before committing
 

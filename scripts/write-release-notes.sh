@@ -7,6 +7,9 @@ safe_tag="$(printf '%s' "$tag" | tr '/ ' '--')"
 zip_x86_64="stalibs-${safe_tag}-linux-x86_64.zip"
 zip_aarch64="stalibs-${safe_tag}-linux-aarch64.zip"
 zip_armv7="stalibs-${safe_tag}-linux-armv7.zip"
+zip_riscv64="stalibs-${safe_tag}-linux-riscv64.zip"
+zip_ppc64le="stalibs-${safe_tag}-linux-ppc64le.zip"
+zip_s390x="stalibs-${safe_tag}-linux-s390x.zip"
 bundle_x86_64="${zip_x86_64%.zip}"
 
 tcpdump_tag="$(git -C upstream/tcpdump describe --tags --exact-match 2>/dev/null || git -C upstream/tcpdump describe --tags --always)"
@@ -50,6 +53,9 @@ Static platform bundles built by GitHub Actions from pinned upstream submodules.
 - \`$zip_x86_64\` - x86_64 Linux
 - \`$zip_aarch64\` - aarch64 Linux
 - \`$zip_armv7\` - ARMv7 hard-float Linux
+- \`$zip_riscv64\` - RISC-V 64-bit Linux
+- \`$zip_ppc64le\` - PowerPC 64-bit little-endian Linux
+- \`$zip_s390x\` - IBM Z s390x Linux
 
 Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, \`bin/nmap\`, and \`bin/jq\` and \`bin/curl\` and \`bin/openssl\` and \`bin/socat\` and \`bin/dig\` and \`bin/mtr\` and \`bin/lsof\`, \`bin/ip\`, \`bin/ss\`, \`bin/bridge\`, and \`bin/tc\` and \`bin/tshark\` and \`bin/rg\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
 
@@ -86,5 +92,5 @@ cd $bundle_x86_64
 sha256sum -c SHA256SUMS
 \`\`\`
 
-Replace \`$zip_x86_64\` with the aarch64 or armv7 asset name as appropriate.
+Replace \`$zip_x86_64\` with the asset name for your platform as appropriate.
 EOF_NOTES

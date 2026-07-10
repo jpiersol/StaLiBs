@@ -31,6 +31,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -44,7 +57,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build tcpdump
         env:
@@ -85,6 +98,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -98,7 +124,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build strace
         env:
@@ -139,6 +165,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -152,7 +191,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build gdb
         env:
@@ -193,6 +232,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -209,7 +261,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build ripgrep
         env:
@@ -250,6 +302,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -266,7 +331,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build tshark
         env:
@@ -307,6 +372,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -323,7 +401,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build iproute2 tools
         env:
@@ -366,6 +444,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -382,7 +473,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build lsof
         env:
@@ -423,6 +514,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -439,7 +543,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build mtr
         env:
@@ -480,6 +584,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -498,7 +615,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build dig
         env:
@@ -539,6 +656,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -562,7 +692,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build socat
         env:
@@ -603,6 +733,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -619,7 +762,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build OpenSSL
         env:
@@ -660,6 +803,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -676,7 +832,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build curl
         env:
@@ -717,6 +873,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -733,7 +902,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build jq
         env:
@@ -774,6 +943,19 @@ jobs:
           - arch: armv7
             runner: ubuntu-24.04
             qemu: true
+            qemu_platform: arm
+          - arch: riscv64
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: riscv64
+          - arch: ppc64le
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: ppc64le
+          - arch: s390x
+            runner: ubuntu-24.04
+            qemu: true
+            qemu_platform: s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -787,7 +969,7 @@ jobs:
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
         with:
-          platforms: arm
+          platforms: ${{ matrix.qemu_platform }}
 
       - name: Build nmap
         env:
@@ -840,6 +1022,9 @@ jobs:
           - x86_64
           - aarch64
           - armv7
+          - riscv64
+          - ppc64le
+          - s390x
     steps:
       - name: Check out source
         uses: actions/checkout@v7

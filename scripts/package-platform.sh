@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [[ "$#" -lt 2 || "$#" -gt 4 ]]; then
-  echo "Usage: $0 <x86_64|aarch64|armv7> <version> [input-root] [output-dir]" >&2
+  echo "Usage: $0 <x86_64|aarch64|armv7|riscv64|ppc64le|s390x> <version> [input-root] [output-dir]" >&2
   exit 64
 fi
 
@@ -12,7 +12,7 @@ input_root="${3:-package-root}"
 out_dir="${4:-dist}"
 
 case "$arch" in
-  x86_64|aarch64|armv7) ;;
+  x86_64|aarch64|armv7|riscv64|ppc64le|s390x) ;;
   *)
     echo "Unsupported architecture: $arch" >&2
     exit 64

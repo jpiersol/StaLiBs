@@ -3,7 +3,7 @@ set -eu
 
 arch="${1:-${STALIBS_ARCH:-unknown}}"
 if [ "$arch" = "unknown" ]; then
-  echo "Usage: $0 <x86_64|aarch64|armv7>" >&2
+  echo "Usage: $0 <x86_64|aarch64|armv7|riscv64|ppc64le|s390x>" >&2
   exit 64
 fi
 
@@ -16,6 +16,15 @@ case "$arch" in
     ;;
   armv7)
     openssl_target=linux-armv4
+    ;;
+  riscv64)
+    openssl_target=linux64-riscv64
+    ;;
+  ppc64le)
+    openssl_target=linux-ppc64le
+    ;;
+  s390x)
+    openssl_target=linux64-s390x
     ;;
   *)
     echo "Unsupported architecture: $arch" >&2

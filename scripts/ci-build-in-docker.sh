@@ -15,6 +15,15 @@ case "$arch" in
   armv7)
     platform="linux/arm/v7"
     ;;
+  riscv64)
+    platform="linux/riscv64"
+    ;;
+  ppc64le)
+    platform="linux/ppc64le"
+    ;;
+  s390x)
+    platform="linux/s390x"
+    ;;
   *)
     echo "Unsupported architecture: $arch" >&2
     exit 64

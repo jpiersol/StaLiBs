@@ -1,0 +1,38 @@
+--- a/gdb/proc-service.c
++++ b/gdb/proc-service.c
+@@ -27,6 +27,9 @@
+ #include "gdb_proc_service.h"
+ 
+ #include <sys/procfs.h>
++#ifdef __s390__
++#include "s390-linux-tdep.h"
++#endif
+ 
+ /* Prototypes for supply_gregset etc.  */
+ #include "gregset.h"
+@@ -174,7 +177,12 @@
+   struct regcache *regcache = get_ps_regcache (ph, lwpid);
+ 
+   target_fetch_registers (regcache, -1);
++#ifdef __s390__
++  regcache_collect_regset (&s390_fpregset, regcache, -1, fpregset,
++                           sizeof (*fpregset));
++#else
+   fill_fpregset (regcache, (gdb_fpregset_t *) fpregset, -1);
++#endif
+ 
+   return PS_OK;
+ }
+@@ -189,7 +197,12 @@
+   struct regcache *regcache = get_ps_regcache (ph, lwpid);
+ 
++#ifdef __s390__
++  regcache_supply_regset (&s390_fpregset, regcache, -1, fpregset,
++                          sizeof (*fpregset));
++#else
+   supply_fpregset (regcache, (const gdb_fpregset_t *) fpregset);
++#endif
+   target_store_registers (regcache, -1);
+ 
+   return PS_OK;
+ }

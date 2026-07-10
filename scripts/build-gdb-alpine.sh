@@ -35,6 +35,7 @@ apk add --no-cache \
   mpfr-dev \
   ncurses-dev \
   ncurses-static \
+  patch \
   perl \
   pkgconf \
   python3 \
@@ -81,6 +82,13 @@ cp -a "$repo_root/upstream/gdb" "$src_dir/gdb"
 rm -rf "$src_dir/gdb/.git"
 
 gdb_src="$src_dir/gdb"
+
+if [ "$arch" = "s390x" ]; then
+  # Alpine's musl headers use fpregset_t for s390 while GDB's generic
+  # proc-service interface uses elf_fpregset_t.  Use GDB's s390 regset
+  # directly to avoid an unresolved legacy helper at link time.
+  patch -d "$gdb_src" -p1 < "$repo_root/scripts/patches/gdb-s390x-musl-proc-service.patch"
+fi
 
 export CFLAGS="${CFLAGS:--O3 -pipe}"
 export CXXFLAGS="${CXXFLAGS:-$CFLAGS}"

@@ -47,3 +47,7 @@
 	path = upstream/iproute2
 	url = https://github.com/iproute2/iproute2.git
 	shallow = true
+[submodule "upstream/wireshark"]
+	path = upstream/wireshark
+	url = https://github.com/wireshark/wireshark.git
+	shallow = true

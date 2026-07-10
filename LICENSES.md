@@ -17,5 +17,6 @@ The generated StaLiBs bundles contain software from upstream projects with their
 - mtr: see `upstream/mtr/COPYING` and `upstream/mtr/BSDCOPYING`
 - lsof: see `upstream/lsof/COPYING`
 - iproute2: see `upstream/iproute2/COPYING`
+- tshark/Wireshark: see `upstream/wireshark/COPYING`
 
 Release zip bundles include copies of the relevant upstream license files under `licenses/`.

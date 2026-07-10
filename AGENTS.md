@@ -20,6 +20,7 @@ Current tools:
 - `mtr`
 - `lsof`
 - `ip`, `ss`, `bridge`, and `tc` from iproute2
+- `tshark`
 
 Supported targets:
 
@@ -45,6 +46,7 @@ The portability target is Linux kernel 4.4 and newer. Builds use Alpine/musl for
 - `scripts/build-mtr-alpine.sh` - target-native mtr build inside Alpine
 - `scripts/build-lsof-alpine.sh` - target-native lsof build inside Alpine
 - `scripts/build-iproute2-alpine.sh` - target-native iproute2 build inside Alpine
+- `scripts/build-tshark-alpine.sh` - target-native tshark build inside Alpine
 - `scripts/ci-build-in-docker.sh` - Docker wrapper used locally and by CI
 - `scripts/package-platform.sh` - creates one platform zip containing original binary names
 - `scripts/verify-static.sh` - validates ELF binaries are static
@@ -61,6 +63,7 @@ The portability target is Linux kernel 4.4 and newer. Builds use Alpine/musl for
 - `upstream/mtr` - mtr submodule
 - `upstream/lsof` - lsof submodule
 - `upstream/iproute2` - iproute2 submodule
+- `upstream/wireshark` - Wireshark submodule used to build tshark
 - `tools/*/README.md` - tool-specific notes
 
 ## Artifact rules
@@ -88,6 +91,7 @@ Each zip must contain one top-level directory named after the zip without `.zip`
 - `bin/ss`
 - `bin/bridge`
 - `bin/tc`
+- `bin/tshark`
 
 Nmap runtime data should be included at `share/nmap`.
 
@@ -129,8 +133,8 @@ Use the same pattern for `aarch64` and `armv7`.
 Run syntax checks after shell/YAML changes:
 
 ```sh
-bash -n scripts/ci-build-in-docker.sh scripts/install-release.sh scripts/update-upstream-tags.sh scripts/write-release-notes.sh scripts/package-platform.sh scripts/build-curl-alpine.sh scripts/build-openssl-alpine.sh scripts/build-socat-alpine.sh scripts/build-dig-alpine.sh scripts/build-mtr-alpine.sh scripts/build-lsof-alpine.sh scripts/build-iproute2-alpine.sh
-sh -n scripts/build-tcpdump-alpine.sh scripts/build-strace-alpine.sh scripts/build-gdb-alpine.sh scripts/build-nmap-alpine.sh scripts/build-jq-alpine.sh scripts/build-curl-alpine.sh scripts/build-openssl-alpine.sh scripts/build-socat-alpine.sh scripts/build-dig-alpine.sh scripts/build-mtr-alpine.sh scripts/build-lsof-alpine.sh scripts/build-iproute2-alpine.sh scripts/verify-static.sh
+bash -n scripts/ci-build-in-docker.sh scripts/install-release.sh scripts/update-upstream-tags.sh scripts/write-release-notes.sh scripts/package-platform.sh scripts/build-curl-alpine.sh scripts/build-openssl-alpine.sh scripts/build-socat-alpine.sh scripts/build-dig-alpine.sh scripts/build-mtr-alpine.sh scripts/build-lsof-alpine.sh scripts/build-iproute2-alpine.sh scripts/build-tshark-alpine.sh
+sh -n scripts/build-tcpdump-alpine.sh scripts/build-strace-alpine.sh scripts/build-gdb-alpine.sh scripts/build-nmap-alpine.sh scripts/build-jq-alpine.sh scripts/build-curl-alpine.sh scripts/build-openssl-alpine.sh scripts/build-socat-alpine.sh scripts/build-dig-alpine.sh scripts/build-mtr-alpine.sh scripts/build-lsof-alpine.sh scripts/build-iproute2-alpine.sh scripts/build-tshark-alpine.sh scripts/verify-static.sh
 python3 - <<'PY'
 from pathlib import Path
 import yaml
@@ -183,6 +187,7 @@ Current submodule purposes:
 - `upstream/mtr`: mtr source, pinned to an official release tag
 - `upstream/lsof`: lsof source, pinned to an official release tag
 - `upstream/iproute2`: iproute2 source, pinned to an official release tag
+- `upstream/wireshark`: Wireshark source, pinned to an official release tag
 
 Use `scripts/update-upstream-tags.sh` or the scheduled workflow to update upstream pins.
 

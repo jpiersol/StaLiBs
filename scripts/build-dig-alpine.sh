@@ -21,6 +21,8 @@ apk add --no-cache \
   file \
   libcap-dev \
   libcap-static \
+  lmdb-dev \
+  lmdb-static \
   libuv-dev \
   libuv-static \
   linux-headers \

@@ -26,6 +26,7 @@ apk add --no-cache \
   flex \
   glib-dev \
   glib-static \
+  git \
   libgcrypt-dev \
   libgcrypt-static \
   libgpg-error-dev \
@@ -47,18 +48,14 @@ git config --global --add safe.directory "$repo_root/upstream/wireshark" 2>/dev/
 
 git_tag="$(git -C "$repo_root/upstream/wireshark" describe --tags --match 'v*' --exact-match 2>/dev/null || git -C "$repo_root/upstream/wireshark" describe --tags --match 'v*' --always 2>/dev/null || echo unknown)"
 work_dir="$repo_root/.build/$arch/tshark"
-src_dir="$work_dir/src"
 build_dir="$work_dir/build"
 dist_bin="$repo_root/dist/bin"
 dist_meta="$repo_root/dist/metadata"
 
 rm -rf "$work_dir"
-mkdir -p "$src_dir" "$dist_bin" "$dist_meta"
+mkdir -p "$dist_bin" "$dist_meta"
 
-cp -a "$repo_root/upstream/wireshark" "$src_dir/wireshark"
-rm -rf "$src_dir/wireshark/.git"
-
-wireshark_src="$src_dir/wireshark"
+wireshark_src="$repo_root/upstream/wireshark"
 
 export CFLAGS="${CFLAGS:--O3 -pipe}"
 export LDFLAGS="${LDFLAGS:--static}"

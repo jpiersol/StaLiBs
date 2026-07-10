@@ -28,6 +28,8 @@ apk add --no-cache \
   glib-static \
   libgcrypt-dev \
   libgcrypt-static \
+  libgpg-error-dev \
+  libgpg-error-static \
   libxml2-dev \
   libxml2-static \
   linux-headers \

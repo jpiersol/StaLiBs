@@ -38,6 +38,8 @@ apk add --no-cache \
   pcre2-dev \
   pkgconf \
   python3 \
+  xz-dev \
+  xz-static \
   zlib-dev \
   zlib-static
 

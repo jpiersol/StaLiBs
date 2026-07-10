@@ -63,6 +63,7 @@ printf '%s\n' "==> Building dig for $arch"
   cd "$bind_src"
   meson setup "$build_dir" \
     --buildtype=plain \
+    -Ddefault_library=static \
     -Db_lto=false \
     -Db_staticpic=true \
     -Dauto-validation=disabled \

@@ -90,6 +90,7 @@ cmake -S "$wireshark_src" -B "$build_dir" -G Ninja \
   -DBUILD_sdjournal=OFF \
   -DBUILD_udpdump=OFF \
   -DBUILD_SHARED_LIBS=OFF \
+  -DCMAKE_C_STANDARD_LIBRARIES=-llzma \
   -DUSE_STATIC=ON \
   -DENABLE_PLUGINS=OFF \
   -DENABLE_PCAP=OFF \

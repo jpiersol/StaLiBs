@@ -83,6 +83,9 @@ printf '%s\n' "==> Building dig for $arch"
     -Dtracing=disabled \
     -Dzlib=disabled \
     -Dprefer_static=true
+  # Alpine does not ship liblmdb.a. dig does not use LMDB directly, so omit
+  # its unconditional Meson link dependency from the final executable.
+  sed -i 's/[[:space:]]-llmdb//g' "$build_dir/build.ninja"
   ninja -C "$build_dir" -j "$jobs" dig
 )
 

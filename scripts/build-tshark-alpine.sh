@@ -124,7 +124,7 @@ cmake -S "$wireshark_src" -B "$build_dir" -G Ninja \
   -DENABLE_WERROR=OFF
 ninja -C "$build_dir" -j "$jobs" tshark
 
-binary="$build_dir/tshark"
+binary="$build_dir/run/tshark"
 out="$dist_bin/tshark-linux-$arch"
 cp "$binary" "$out"
 strip "$out" || true

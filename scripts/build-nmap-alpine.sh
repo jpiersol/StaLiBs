@@ -56,6 +56,17 @@ rm -rf "$src_dir/nmap/.git"
 
 nmap_src="$src_dir/nmap"
 
+# Nmap carries 2015-era config scripts that do not recognize riscv64.
+# Replace the top-level copies with the current versions shipped by automake
+# before configure runs its native build-system detection.
+for config_dir in /usr/share/automake-*; do
+  if [ -f "$config_dir/config.guess" ] && [ -f "$config_dir/config.sub" ]; then
+    cp "$config_dir/config.guess" "$nmap_src/config.guess"
+    cp "$config_dir/config.sub" "$nmap_src/config.sub"
+    break
+  fi
+done
+
 nmap_version="$(awk '/#define NMAP_MAJOR/ { major=$3 } /#define NMAP_MINOR/ { minor=$3 } /#define NMAP_SPECIAL/ { special=$3 } END { gsub(/\"/, "", special); if (major && minor) print major "." minor special; else print "unknown" }' "$nmap_src/nmap.h")"
 openssl_static_libs="$(pkg-config --static --libs openssl 2>/dev/null || echo '-lssl -lcrypto -lz')"
 

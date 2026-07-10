@@ -28,7 +28,9 @@ apk add --no-cache \
   perl \
   openssl-libs-static \
   pkgconf \
-  python3
+  python3 \
+  userspace-rcu-dev \
+  userspace-rcu-static
 
 jobs="${JOBS:-$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 2)}"
 repo_root="$(pwd)"

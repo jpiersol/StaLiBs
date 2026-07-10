@@ -52,6 +52,7 @@ printf '%s\n' "==> Building lsof for $arch"
 (
   cd "$lsof_src"
   ./Configure -n linux
+  sed -i 's/^CFGL=/CFGL= -static /' Makefile
   make -j"$jobs"
 )
 

@@ -17,11 +17,13 @@ esac
 
 apk add --no-cache \
   binutils \
+  bison \
   build-base \
   c-ares-dev \
   c-ares-static \
   cmake \
   file \
+  flex \
   glib-dev \
   glib-static \
   libgcrypt-dev \

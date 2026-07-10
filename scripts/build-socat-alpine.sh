@@ -52,7 +52,7 @@ export LDFLAGS="${LDFLAGS:--static}"
 printf '%s\n' "==> Building socat for $arch"
 (
   cd "$socat_src"
-  autoreconf -fi
+  autoconf -o configure configure.ac
   ./configure \
     --disable-libwrap \
     --disable-readline

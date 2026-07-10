@@ -22,7 +22,8 @@ apk add --no-cache \
   file \
   flex \
   linux-headers \
-  make
+  make \
+  pkgconf
 
 jobs="${JOBS:-$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 2)}"
 repo_root="$(pwd)"
@@ -49,12 +50,7 @@ export LDFLAGS="${LDFLAGS:--static}"
 printf '%s\n' "==> Building iproute2 tools for $arch"
 (
   cd "$iproute2_src"
-  make SHARED_LIBS=n config.mk
-  make -j"$jobs" SHARED_LIBS=n -C lib
-  make -j"$jobs" SHARED_LIBS=n -C ip ip
-  make -j"$jobs" SHARED_LIBS=n -C bridge bridge
-  make -j"$jobs" SHARED_LIBS=n -C tc tc
-  make -j"$jobs" SHARED_LIBS=n -C misc ss
+  make -j"$jobs" SHARED_LIBS=n
 )
 
 copy_binary() {

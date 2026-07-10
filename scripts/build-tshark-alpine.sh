@@ -18,14 +18,20 @@ esac
 apk add --no-cache \
   binutils \
   build-base \
+  c-ares-dev \
+  c-ares-static \
   cmake \
   file \
   glib-dev \
   glib-static \
   libgcrypt-dev \
   libgcrypt-static \
+  libxml2-dev \
+  libxml2-static \
   linux-headers \
   ninja \
+  pcre2-dev \
+  pcre2-static \
   pkgconf \
   python3 \
   zlib-dev \

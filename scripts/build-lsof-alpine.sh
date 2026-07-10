@@ -50,8 +50,7 @@ export LDFLAGS="${LDFLAGS:--static}"
 printf '%s\n' "==> Building lsof for $arch"
 (
   cd "$lsof_src"
-  autoreconf -fi
-  ./configure
+  ./Configure linux
   make -j"$jobs"
 )
 

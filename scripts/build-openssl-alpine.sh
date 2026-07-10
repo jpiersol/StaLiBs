@@ -21,7 +21,8 @@ apk add --no-cache \
   file \
   linux-headers \
   make \
-  perl
+  perl \
+  perl-text-template
 
 jobs="${JOBS:-$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 2)}"
 repo_root="$(pwd)"

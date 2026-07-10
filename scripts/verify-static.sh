@@ -26,7 +26,7 @@ for bin in "$@"; do
     exit 1
   fi
 
-  if ! file "$bin" | grep -qi 'statically linked'; then
+  if ! file "$bin" | grep -qiE 'statically linked|static-pie linked'; then
     echo "ERROR: file(1) did not report a statically linked binary" >&2
     exit 1
   fi

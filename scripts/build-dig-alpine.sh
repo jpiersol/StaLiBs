@@ -23,6 +23,7 @@ apk add --no-cache \
   meson \
   ninja \
   openssl-dev \
+  perl \
   openssl-libs-static \
   pkgconf \
   python3

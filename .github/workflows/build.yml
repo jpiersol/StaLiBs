@@ -544,7 +544,17 @@ jobs:
           fetch-depth: 0
 
       - name: Check out socat submodule
-        run: git submodule update --init --recursive upstream/socat
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if git submodule update --init --recursive upstream/socat; then
+              exit 0
+            fi
+            echo "socat submodule checkout attempt $attempt failed; retrying." >&2
+            sleep $((attempt * 10))
+          done
+          exit 1
 
       - name: Set up QEMU
         if: ${{ matrix.qemu }}

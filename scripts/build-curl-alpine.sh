@@ -68,7 +68,7 @@ printf '%s\n' "==> Building curl for $arch"
     --without-libssh2 \
     --without-nghttp2 \
     --without-zstd
-  make -j"$jobs"
+  make -j"$jobs" CURL_LDFLAGS_BIN=-all-static
 )
 
 binary="$curl_src/src/curl"

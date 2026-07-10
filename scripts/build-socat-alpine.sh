@@ -32,7 +32,7 @@ repo_root="$(pwd)"
 git config --global --add safe.directory "$repo_root" 2>/dev/null || true
 git config --global --add safe.directory "$repo_root/upstream/socat" 2>/dev/null || true
 
-git_tag="$(git -C "$repo_root/upstream/socat" describe --tags --exact-match 2>/dev/null || git -C "$repo_root/upstream/socat" describe --tags --always 2>/dev/null || echo unknown)"
+git_tag="tag-$(tr -d '"' < "$repo_root/upstream/socat/VERSION")"
 work_dir="$repo_root/.build/$arch/socat"
 src_dir="$work_dir/src"
 dist_bin="$repo_root/dist/bin"

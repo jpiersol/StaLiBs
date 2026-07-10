@@ -546,9 +546,6 @@ jobs:
       - name: Check out socat submodule
         run: git submodule update --init --recursive upstream/socat
 
-      - name: Fetch socat tags
-        run: git -C upstream/socat fetch --tags --force origin
-
       - name: Set up QEMU
         if: ${{ matrix.qemu }}
         uses: docker/setup-qemu-action@v4
@@ -973,7 +970,6 @@ jobs:
           git -C upstream/jq fetch --tags --force origin
           git -C upstream/curl fetch --tags --force origin
           git -C upstream/openssl fetch --tags --force origin
-          git -C upstream/socat fetch --tags --force origin
           git -C upstream/bind9 fetch --tags --force origin
           git -C upstream/mtr fetch --tags --force origin
           git -C upstream/lsof fetch --tags --force origin

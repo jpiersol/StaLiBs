@@ -48,7 +48,15 @@ printf '%s\n' "==> Building ripgrep for $arch"
   cd "$ripgrep_src"
   # Apply static CRT linking only to the final binary. Applying it globally
   # also makes Cargo build scripts static, which crashes under ARMv7 QEMU.
-  cargo rustc --release --locked --bin rg -- -C target-feature=+crt-static -C relocation-model=static
+  case "$arch" in
+    riscv64)
+      # Rust's RISC-V musl target omits libgcc from static final links.
+      cargo rustc --release --locked --bin rg -- -C target-feature=+crt-static -C relocation-model=static -C link-arg=-lgcc
+      ;;
+    *)
+      cargo rustc --release --locked --bin rg -- -C target-feature=+crt-static -C relocation-model=static
+      ;;
+  esac
 )
 
 binary="$ripgrep_src/target/release/rg"

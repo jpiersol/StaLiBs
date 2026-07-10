@@ -39,8 +39,10 @@ jobs="${JOBS:-$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 2)}"
 repo_root="$(pwd)"
 git config --global --add safe.directory "$repo_root" 2>/dev/null || true
 git config --global --add safe.directory "$repo_root/upstream/bind9" 2>/dev/null || true
+git config --global --add safe.directory "$repo_root/upstream/lmdb" 2>/dev/null || true
 
 git_tag="$(git -C "$repo_root/upstream/bind9" describe --tags --exact-match 2>/dev/null || git -C "$repo_root/upstream/bind9" describe --tags --always 2>/dev/null || echo unknown)"
+lmdb_tag="$(git -C "$repo_root/upstream/lmdb" describe --tags --exact-match 2>/dev/null || git -C "$repo_root/upstream/lmdb" describe --tags --always 2>/dev/null || echo unknown)"
 work_dir="$repo_root/.build/$arch/dig"
 src_dir="$work_dir/src"
 build_dir="$work_dir/build"
@@ -51,12 +53,26 @@ rm -rf "$work_dir"
 mkdir -p "$src_dir" "$dist_bin" "$dist_meta"
 
 cp -a "$repo_root/upstream/bind9" "$src_dir/bind9"
-rm -rf "$src_dir/bind9/.git"
+cp -a "$repo_root/upstream/lmdb" "$src_dir/lmdb"
+rm -rf "$src_dir/bind9/.git" "$src_dir/lmdb/.git"
 
 bind_src="$src_dir/bind9"
+lmdb_src="$src_dir/lmdb/libraries/liblmdb"
+pkg_config_dir="$work_dir/pkgconfig"
 
 export CFLAGS="${CFLAGS:--O3 -pipe}"
 export LDFLAGS="${LDFLAGS:--static}"
+
+make -C "$lmdb_src" -j"$jobs" CC=cc AR=ar XCFLAGS="-fPIC $CFLAGS" liblmdb.a
+mkdir -p "$pkg_config_dir"
+cat > "$pkg_config_dir/lmdb.pc" <<EOF
+Name: LMDB
+Description: Lightning Memory-Mapped Database
+Version: $lmdb_tag
+Libs: -L$lmdb_src -llmdb
+Cflags: -I$lmdb_src
+EOF
+export PKG_CONFIG_PATH="$pkg_config_dir${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 
 printf '%s\n' "==> Building dig for $arch"
 (
@@ -83,9 +99,6 @@ printf '%s\n' "==> Building dig for $arch"
     -Dtracing=disabled \
     -Dzlib=disabled \
     -Dprefer_static=true
-  # Alpine does not ship liblmdb.a. dig does not use LMDB directly, so omit
-  # its unconditional Meson link dependency from the final executable.
-  sed -i 's/[[:space:]]-llmdb//g' "$build_dir/build.ninja"
   ninja -C "$build_dir" -j "$jobs" dig
 )
 
@@ -111,6 +124,8 @@ buildinfo="$dist_meta/dig-linux-$arch.buildinfo.txt"
   echo "cc=$({ cc --version 2>/dev/null || true; } | head -n 1)"
   echo "bind9_tag=$git_tag"
   echo "bind9_commit=$(git -C "$repo_root/upstream/bind9" rev-parse HEAD 2>/dev/null || true)"
+  echo "lmdb_tag=$lmdb_tag"
+  echo "lmdb_commit=$(git -C "$repo_root/upstream/lmdb" rev-parse HEAD 2>/dev/null || true)"
   echo "repo_commit=$(git -C "$repo_root" rev-parse HEAD 2>/dev/null || true)"
   echo "file=$(file "$out")"
 } > "$buildinfo"

@@ -14,6 +14,7 @@ The generated StaLiBs bundles contain software from upstream projects with their
 - OpenSSL: see `upstream/openssl/LICENSE.txt`
 - socat: see `upstream/socat/COPYING` and `upstream/socat/COPYING.OpenSSL`
 - dig/BIND 9: see `upstream/bind9/COPYING` and `upstream/bind9/LICENSE`
+- LMDB (statically linked into dig): see `upstream/lmdb/LICENSE`
 - mtr: see `upstream/mtr/COPYING` and `upstream/mtr/BSDCOPYING`
 - lsof: see `upstream/lsof/COPYING`
 - iproute2: see `upstream/iproute2/COPYING`

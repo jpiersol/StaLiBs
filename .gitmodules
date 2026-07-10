@@ -55,3 +55,7 @@
 	path = upstream/ripgrep
 	url = https://github.com/BurntSushi/ripgrep.git
 	shallow = true
+[submodule "upstream/lmdb"]
+	path = upstream/lmdb
+	url = https://github.com/LMDB/lmdb.git
+	shallow = true

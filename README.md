@@ -73,6 +73,7 @@ Upstream projects are checked in as Git submodules:
 - `upstream/openssl`: <https://github.com/openssl/openssl.git>
 - `upstream/socat`: <https://repo.or.cz/socat.git>
 - `upstream/bind9`: <https://github.com/isc-projects/bind9.git>
+- `upstream/lmdb`: <https://github.com/LMDB/lmdb.git> (static BIND dependency)
 - `upstream/mtr`: <https://github.com/traviscross/mtr.git>
 - `upstream/lsof`: <https://github.com/lsof-org/lsof.git>
 - `upstream/iproute2`: <https://github.com/iproute2/iproute2.git>

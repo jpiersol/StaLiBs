@@ -18,6 +18,7 @@ esac
 apk add --no-cache \
   autoconf \
   automake \
+  bash \
   binutils \
   build-base \
   file \
@@ -50,7 +51,7 @@ export LDFLAGS="${LDFLAGS:--static}"
 printf '%s\n' "==> Building lsof for $arch"
 (
   cd "$lsof_src"
-  ./Configure linux
+  ./Configure -n linux
   make -j"$jobs"
 )
 

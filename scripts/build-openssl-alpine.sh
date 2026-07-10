@@ -8,7 +8,15 @@ if [ "$arch" = "unknown" ]; then
 fi
 
 case "$arch" in
-  x86_64|aarch64|armv7) ;;
+  x86_64)
+    openssl_target=linux-x86_64
+    ;;
+  aarch64)
+    openssl_target=linux-aarch64
+    ;;
+  armv7)
+    openssl_target=linux-armv4
+    ;;
   *)
     echo "Unsupported architecture: $arch" >&2
     exit 64
@@ -49,7 +57,7 @@ export LDFLAGS="${LDFLAGS:--static}"
 printf '%s\n' "==> Building OpenSSL for $arch"
 (
   cd "$openssl_src"
-  ./Configure linux-musl no-shared no-tests --prefix=/usr --openssldir=/etc/ssl
+  ./Configure "$openssl_target" no-shared no-tests --prefix=/usr --openssldir=/etc/ssl
   make -j"$jobs" build_sw
 )
 

@@ -41,12 +41,14 @@ rm -rf "$src_dir/ripgrep/.git"
 ripgrep_src="$src_dir/ripgrep"
 
 export CFLAGS="${CFLAGS:--O3 -pipe}"
-export RUSTFLAGS="${RUSTFLAGS:--C target-feature=+crt-static}"
+rustflags="${RUSTFLAGS:--C target-feature=+crt-static}"
 
 printf '%s\n' "==> Building ripgrep for $arch"
 (
   cd "$ripgrep_src"
-  cargo build --release --locked --bin rg
+  # Apply static CRT linking only to the final binary. Applying it globally
+  # also makes Cargo build scripts static, which crashes under ARMv7 QEMU.
+  cargo rustc --release --locked --bin rg -- -C target-feature=+crt-static
 )
 
 binary="$ripgrep_src/target/release/rg"
@@ -68,7 +70,7 @@ buildinfo="$dist_meta/rg-linux-$arch.buildinfo.txt"
   echo "libc=musl"
   echo "alpine_version=$(cat /etc/alpine-release 2>/dev/null || true)"
   echo "cflags=$CFLAGS"
-  echo "rustflags=$RUSTFLAGS"
+  echo "rustflags=$rustflags"
   echo "rustc=$(rustc --version 2>/dev/null || true)"
   echo "ripgrep_tag=$git_tag"
   echo "ripgrep_commit=$(git -C "$repo_root/upstream/ripgrep" rev-parse HEAD 2>/dev/null || true)"

@@ -31,7 +31,6 @@ apk add --no-cache \
   linux-headers \
   ninja \
   pcre2-dev \
-  pcre2-static \
   pkgconf \
   python3 \
   zlib-dev \

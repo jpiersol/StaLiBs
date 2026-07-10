@@ -19,6 +19,8 @@ apk add --no-cache \
   binutils \
   build-base \
   file \
+  libuv-dev \
+  libuv-static \
   linux-headers \
   meson \
   ninja \

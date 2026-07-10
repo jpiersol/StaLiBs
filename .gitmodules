@@ -51,3 +51,7 @@
 	path = upstream/wireshark
 	url = https://github.com/wireshark/wireshark.git
 	shallow = true
+[submodule "upstream/ripgrep"]
+	path = upstream/ripgrep
+	url = https://github.com/BurntSushi/ripgrep.git
+	shallow = true

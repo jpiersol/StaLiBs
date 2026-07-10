@@ -37,6 +37,8 @@ iproute2_tag="$(git -C upstream/iproute2 describe --tags --exact-match 2>/dev/nu
 iproute2_commit="$(git -C upstream/iproute2 rev-parse HEAD)"
 wireshark_tag="$(git -C upstream/wireshark describe --tags --match 'v*' --exact-match 2>/dev/null || git -C upstream/wireshark describe --tags --match 'v*' --always)"
 wireshark_commit="$(git -C upstream/wireshark rev-parse HEAD)"
+ripgrep_tag="$(git -C upstream/ripgrep describe --tags --exact-match 2>/dev/null || git -C upstream/ripgrep describe --tags --always)"
+ripgrep_commit="$(git -C upstream/ripgrep rev-parse HEAD)"
 
 cat <<EOF_NOTES
 # StaLiBs $tag
@@ -49,7 +51,7 @@ Static platform bundles built by GitHub Actions from pinned upstream submodules.
 - \`$zip_aarch64\` - aarch64 Linux
 - \`$zip_armv7\` - ARMv7 hard-float Linux
 
-Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, \`bin/nmap\`, and \`bin/jq\` and \`bin/curl\` and \`bin/openssl\` and \`bin/socat\` and \`bin/dig\` and \`bin/mtr\` and \`bin/lsof\`, \`bin/ip\`, \`bin/ss\`, \`bin/bridge\`, and \`bin/tc\` and \`bin/tshark\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
+Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, \`bin/nmap\`, and \`bin/jq\` and \`bin/curl\` and \`bin/openssl\` and \`bin/socat\` and \`bin/dig\` and \`bin/mtr\` and \`bin/lsof\`, \`bin/ip\`, \`bin/ss\`, \`bin/bridge\`, and \`bin/tc\` and \`bin/tshark\` and \`bin/rg\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
 
 ## Installation
 
@@ -71,6 +73,7 @@ After extracting the archive, run \`sudo ./install.sh\` to install the tools sys
 - lsof: \`$lsof_tag\` (\`$lsof_commit\`)
 - iproute2: \`$iproute2_tag\` (\`$iproute2_commit\`)
 - Wireshark/tshark: \`$wireshark_tag\` (\`$wireshark_commit\`)
+- ripgrep: \`$ripgrep_tag\` (\`$ripgrep_commit\`)
 
 ## Verification
 

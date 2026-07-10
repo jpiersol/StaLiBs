@@ -42,6 +42,7 @@ jobs:
           LSOF_TAG: ${{ steps.update.outputs.lsof_tag }}
           IPROUTE2_TAG: ${{ steps.update.outputs.iproute2_tag }}
           WIRESHARK_TAG: ${{ steps.update.outputs.wireshark_tag }}
+          RIPGREP_TAG: ${{ steps.update.outputs.ripgrep_tag }}
         shell: bash
         run: |
           set -euo pipefail
@@ -67,6 +68,7 @@ jobs:
           - lsof: \`${LSOF_TAG}\`
           - iproute2: \`${IPROUTE2_TAG}\`
           - Wireshark/tshark: \`${WIRESHARK_TAG}\`
+          - ripgrep: \`${RIPGREP_TAG}\`
 
           After this PR is merged, create and push any StaLiBs release tag when you want to publish a new bundle. The release will be built from the pinned submodule commits at that tag:
 

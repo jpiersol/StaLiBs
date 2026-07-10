@@ -15,6 +15,7 @@ mtr_repo="https://github.com/traviscross/mtr.git"
 lsof_repo="https://github.com/lsof-org/lsof.git"
 iproute2_repo="https://github.com/iproute2/iproute2.git"
 wireshark_repo="https://github.com/wireshark/wireshark.git"
+ripgrep_repo="https://github.com/BurntSushi/ripgrep.git"
 
 latest_tag() {
   local repo="$1"
@@ -42,8 +43,9 @@ latest_mtr="$(latest_tag "$mtr_repo" 'v*' '^v[0-9]+\.[0-9]+$')"
 latest_lsof="$(latest_tag "$lsof_repo" '*' '^[0-9]+\.[0-9]+\.[0-9]+$')"
 latest_iproute2="$(latest_tag "$iproute2_repo" 'v*' '^v[0-9]+\.[0-9]+\.[0-9]+$')"
 latest_wireshark="$(latest_tag "$wireshark_repo" 'v*' '^v[0-9]+\.[0-9]+\.[0-9]+$')"
+latest_ripgrep="$(latest_tag "$ripgrep_repo" '*' '^[0-9]+\.[0-9]+\.[0-9]+$')"
 
-if [[ -z "$latest_tcpdump" || -z "$latest_libpcap" || -z "$latest_strace" || -z "$latest_gdb" || -z "$latest_nmap" || -z "$latest_jq" || -z "$latest_curl" || -z "$latest_openssl" || -z "$latest_socat" || -z "$latest_bind9" || -z "$latest_mtr" || -z "$latest_lsof" || -z "$latest_iproute2" || -z "$latest_wireshark" ]]; then
+if [[ -z "$latest_tcpdump" || -z "$latest_libpcap" || -z "$latest_strace" || -z "$latest_gdb" || -z "$latest_nmap" || -z "$latest_jq" || -z "$latest_curl" || -z "$latest_openssl" || -z "$latest_socat" || -z "$latest_bind9" || -z "$latest_mtr" || -z "$latest_lsof" || -z "$latest_iproute2" || -z "$latest_wireshark" || -z "$latest_ripgrep" ]]; then
   echo "ERROR: failed to resolve latest upstream tags" >&2
   exit 1
 fi
@@ -62,6 +64,7 @@ current_mtr="$(git -C upstream/mtr describe --tags --exact-match 2>/dev/null || 
 current_lsof="$(git -C upstream/lsof describe --tags --exact-match 2>/dev/null || true)"
 current_iproute2="$(git -C upstream/iproute2 describe --tags --exact-match 2>/dev/null || true)"
 current_wireshark="$(git -C upstream/wireshark describe --tags --match 'v*' --exact-match 2>/dev/null || true)"
+current_ripgrep="$(git -C upstream/ripgrep describe --tags --exact-match 2>/dev/null || true)"
 
 echo "Current tcpdump: ${current_tcpdump:-unknown}"
 echo "Latest tcpdump:  $latest_tcpdump"
@@ -91,6 +94,8 @@ echo "Current iproute2: ${current_iproute2:-unknown}"
 echo "Latest iproute2:  $latest_iproute2"
 echo "Current Wireshark: ${current_wireshark:-unknown}"
 echo "Latest Wireshark:  $latest_wireshark"
+echo "Current ripgrep:  ${current_ripgrep:-unknown}"
+echo "Latest ripgrep:   $latest_ripgrep"
 
 git -C upstream/tcpdump fetch --tags --force origin
 git -C upstream/libpcap fetch --tags --force origin
@@ -106,6 +111,7 @@ git -C upstream/mtr fetch --tags --force origin
 git -C upstream/lsof fetch --tags --force origin
 git -C upstream/iproute2 fetch --tags --force origin
 git -C upstream/wireshark fetch --tags --force origin
+git -C upstream/ripgrep fetch --tags --force origin
 git -C upstream/tcpdump checkout -q "$latest_tcpdump"
 git -C upstream/libpcap checkout -q "$latest_libpcap"
 git -C upstream/strace checkout -q "$latest_strace"
@@ -120,11 +126,12 @@ git -C upstream/mtr checkout -q "$latest_mtr"
 git -C upstream/lsof checkout -q "$latest_lsof"
 git -C upstream/iproute2 checkout -q "$latest_iproute2"
 git -C upstream/wireshark checkout -q "$latest_wireshark"
+git -C upstream/ripgrep checkout -q "$latest_ripgrep"
 
-git add upstream/tcpdump upstream/libpcap upstream/strace upstream/gdb upstream/nmap upstream/jq upstream/curl upstream/openssl upstream/socat upstream/bind9 upstream/mtr upstream/lsof upstream/iproute2 upstream/wireshark
+git add upstream/tcpdump upstream/libpcap upstream/strace upstream/gdb upstream/nmap upstream/jq upstream/curl upstream/openssl upstream/socat upstream/bind9 upstream/mtr upstream/lsof upstream/iproute2 upstream/wireshark upstream/ripgrep
 
 changed=false
-if ! git diff --cached --quiet -- upstream/tcpdump upstream/libpcap upstream/strace upstream/gdb upstream/nmap upstream/jq upstream/curl upstream/openssl upstream/socat upstream/bind9 upstream/mtr upstream/lsof upstream/iproute2 upstream/wireshark; then
+if ! git diff --cached --quiet -- upstream/tcpdump upstream/libpcap upstream/strace upstream/gdb upstream/nmap upstream/jq upstream/curl upstream/openssl upstream/socat upstream/bind9 upstream/mtr upstream/lsof upstream/iproute2 upstream/wireshark upstream/ripgrep; then
   changed=true
 fi
 
@@ -145,6 +152,7 @@ if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
     echo "lsof_tag=$latest_lsof"
     echo "iproute2_tag=$latest_iproute2"
     echo "wireshark_tag=$latest_wireshark"
+    echo "ripgrep_tag=$latest_ripgrep"
   } >> "$GITHUB_OUTPUT"
 fi
 

@@ -929,7 +929,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: ripgrep-linux-${{ matrix.arch }}
-          path: package-root/ripgrep
+          path: package-root/rg
 
       - name: List downloaded artifacts
         run: find package-root -maxdepth 4 -type f -print | sort

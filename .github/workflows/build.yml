@@ -486,11 +486,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check out BIND submodule
-        run: git submodule update --init --recursive upstream/bind9
+      - name: Check out BIND and LMDB submodules
+        run: git submodule update --init --recursive upstream/bind9 upstream/lmdb
 
-      - name: Fetch BIND tags
-        run: git -C upstream/bind9 fetch --tags --force origin
+      - name: Fetch BIND and LMDB tags
+        run: |
+          git -C upstream/bind9 fetch --tags --force origin
+          git -C upstream/lmdb fetch --tags --force origin
 
       - name: Set up QEMU
         if: ${{ matrix.qemu }}
@@ -981,6 +983,7 @@ jobs:
           git -C upstream/curl fetch --tags --force origin
           git -C upstream/openssl fetch --tags --force origin
           git -C upstream/bind9 fetch --tags --force origin
+          git -C upstream/lmdb fetch --tags --force origin
           git -C upstream/mtr fetch --tags --force origin
           git -C upstream/lsof fetch --tags --force origin
           git -C upstream/iproute2 fetch --tags --force origin

@@ -102,7 +102,7 @@ printf '%s\n' "==> Building dig for $arch"
   ninja -C "$build_dir" -j "$jobs" dig
 )
 
-binary="$build_dir/bin/dig"
+binary="$build_dir/dig"
 out="$dist_bin/dig-linux-$arch"
 cp "$binary" "$out"
 strip "$out" || true

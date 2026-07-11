@@ -197,7 +197,7 @@ The resulting binaries are written to `dist/bin/` as architecture-qualified work
 
 ## Releasing
 
-1. Merge an upstream-update PR, or manually pin submodules to the desired upstream commits or tags.
+1. The daily upstream-update PR is automatically merged after its required checks pass, or manually pin submodules to the desired upstream commits or tags.
 2. Create and push any StaLiBs release tag:
 
    ```sh
@@ -209,4 +209,4 @@ The resulting binaries are written to `dist/bin/` as architecture-qualified work
 
 ## Upstream release detection
 
-`.github/workflows/upstream-releases.yml` runs daily and can also be run manually. It checks for new stable upstream release tags and the latest Nmap `master` commit, updates the submodules, and opens or updates a PR.
+`.github/workflows/upstream-releases.yml` runs daily and can also be run manually. It checks for new stable upstream release tags and the latest Nmap `master` commit, updates the submodules, and opens or updates a PR with auto-merge enabled. The PR is merged automatically after its required checks pass.

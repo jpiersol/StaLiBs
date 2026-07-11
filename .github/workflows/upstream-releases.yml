@@ -24,7 +24,7 @@ jobs:
         id: update
         run: ./scripts/update-upstream-tags.sh
 
-      - name: Open or update PR
+      - name: Open or update PR and enable auto-merge
         if: steps.update.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -90,3 +90,11 @@ jobs:
           else
             gh pr create --base main --head "$branch" --title "$title" --body-file "$body_file"
           fi
+
+          pr_number="$(gh pr list --head "$branch" --json number --jq '.[0].number // empty')"
+          if [[ -z "$pr_number" ]]; then
+            echo "ERROR: failed to find upstream update PR" >&2
+            exit 1
+          fi
+
+          gh pr merge "$pr_number" --auto --squash --delete-branch

@@ -19,12 +19,14 @@ case "$arch" in
     ;;
 esac
 
-safe_version="$(printf '%s' "$version" | tr '/ ' '--')"
-zip_name="stalibs-${safe_version}-linux-${arch}.zip"
+# Release assets have stable platform names.  Keep the version argument for
+# compatibility with local callers, but do not use it to create another
+# archive/folder name inside the platform bundle.
+zip_name="stalibs-linux-${arch}.zip"
 bundle_name="${zip_name%.zip}"
 zip_path="${out_dir}/${zip_name}"
 zip_abs_path="$(pwd)/${zip_path}"
-staging_parent=".build/package/${safe_version}/linux-${arch}"
+staging_parent=".build/package/${arch}"
 staging_dir="${staging_parent}/${bundle_name}"
 
 find_tool_binary() {

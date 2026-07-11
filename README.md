@@ -14,21 +14,21 @@ The supported tools are `tcpdump`, `strace`, `gdb`, `nmap`, `jq`, `curl`, `opens
 
 ## Current artifact contents
 
-Release bundles are named from the Git tag that produced them (`/` and spaces are written as `-` in filenames):
+Release bundles use one stable asset name per platform:
 
 ```text
-stalibs-<tag>-linux-x86_64.zip
-stalibs-<tag>-linux-aarch64.zip
-stalibs-<tag>-linux-armv7.zip
-stalibs-<tag>-linux-riscv64.zip
-stalibs-<tag>-linux-ppc64le.zip
-stalibs-<tag>-linux-s390x.zip
+stalibs-linux-x86_64.zip
+stalibs-linux-aarch64.zip
+stalibs-linux-armv7.zip
+stalibs-linux-riscv64.zip
+stalibs-linux-ppc64le.zip
+stalibs-linux-s390x.zip
 ```
 
 Each bundle extracts into a top-level directory named after the archive without `.zip`. That directory contains the executables for that platform, using the original upstream binary names, plus Nmap runtime data and the `jq` JSON processor:
 
 ```text
-stalibs-<tag>-linux-<arch>/
+stalibs-linux-<arch>/
 ├── bin/tcpdump
 ├── bin/strace
 ├── bin/gdb
@@ -128,14 +128,14 @@ Build preferences:
 Download the zip for your platform from the GitHub Release, then verify the GitHub artifact attestation:
 
 ```sh
-gh attestation verify ./stalibs-v2026.07.0-linux-x86_64.zip --repo jpiersol/StaLiBs
+gh attestation verify ./stalibs-linux-x86_64.zip --repo jpiersol/StaLiBs
 ```
 
 Then verify the internal checksums:
 
 ```sh
-unzip stalibs-v2026.07.0-linux-x86_64.zip
-cd stalibs-v2026.07.0-linux-x86_64
+unzip stalibs-linux-x86_64.zip
+cd stalibs-linux-x86_64
 sha256sum -c SHA256SUMS
 ```
 
@@ -144,8 +144,8 @@ sha256sum -c SHA256SUMS
 Extract the archive, then run its installer:
 
 ```sh
-unzip stalibs-v2026.07.0-linux-x86_64.zip
-cd stalibs-v2026.07.0-linux-x86_64
+unzip stalibs-linux-x86_64.zip
+cd stalibs-linux-x86_64
 sudo ./install.sh # installs binaries in /usr/local/bin
 ```
 

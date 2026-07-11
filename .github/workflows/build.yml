@@ -1125,13 +1125,9 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
-            version="$GITHUB_REF_NAME"
-          else
-            version="tcpdump-${GITHUB_SHA::12}"
-          fi
-
-          ./scripts/package-platform.sh '${{ matrix.arch }}' "$version" package-root dist
+          # The platform asset and its top-level directory deliberately use
+          # the same stable name, independent of the release tag.
+          ./scripts/package-platform.sh '${{ matrix.arch }}' release package-root dist
 
       - name: Upload platform bundle artifact
         uses: actions/upload-artifact@v7

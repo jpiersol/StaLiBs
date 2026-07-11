@@ -2,14 +2,12 @@
 set -euo pipefail
 
 tag="${1:?usage: write-release-notes.sh <tag>}"
-safe_tag="$(printf '%s' "$tag" | tr '/ ' '--')"
-
-zip_x86_64="stalibs-${safe_tag}-linux-x86_64.zip"
-zip_aarch64="stalibs-${safe_tag}-linux-aarch64.zip"
-zip_armv7="stalibs-${safe_tag}-linux-armv7.zip"
-zip_riscv64="stalibs-${safe_tag}-linux-riscv64.zip"
-zip_ppc64le="stalibs-${safe_tag}-linux-ppc64le.zip"
-zip_s390x="stalibs-${safe_tag}-linux-s390x.zip"
+zip_x86_64="stalibs-linux-x86_64.zip"
+zip_aarch64="stalibs-linux-aarch64.zip"
+zip_armv7="stalibs-linux-armv7.zip"
+zip_riscv64="stalibs-linux-riscv64.zip"
+zip_ppc64le="stalibs-linux-ppc64le.zip"
+zip_s390x="stalibs-linux-s390x.zip"
 bundle_x86_64="${zip_x86_64%.zip}"
 
 tcpdump_tag="$(git -C upstream/tcpdump describe --tags --exact-match 2>/dev/null || git -C upstream/tcpdump describe --tags --always)"

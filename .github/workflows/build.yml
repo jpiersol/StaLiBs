@@ -265,7 +265,9 @@ jobs:
 
       - name: Build ripgrep
         env:
-          ALPINE_VERSION: '3.20'
+          # ripgrep 15 uses Rust 2024 and requires Cargo >= 1.85;
+          # Alpine 3.20 only provides Cargo 1.78.
+          ALPINE_VERSION: '3.22'
           CFLAGS: -O3 -pipe
         run: ./scripts/ci-build-in-docker.sh '${{ matrix.arch }}' scripts/build-ripgrep-alpine.sh
 

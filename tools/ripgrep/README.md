@@ -8,7 +8,7 @@ The release zip for each platform contains the statically linked executable as `
 
 Current build notes:
 
-- built from the official `14.1.1` release tag;
+- built from the official `15.1.0` release tag;
 - statically linked against musl;
 - optimized with `-O3 -pipe`.
 

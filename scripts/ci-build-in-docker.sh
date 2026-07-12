@@ -3,7 +3,15 @@ set -euo pipefail
 
 arch="${1:-x86_64}"
 build_script="${2:-scripts/build-tcpdump-alpine.sh}"
-alpine_version="${ALPINE_VERSION:-3.20}"
+if [[ -n "${ALPINE_VERSION:-}" ]]; then
+  alpine_version="$ALPINE_VERSION"
+elif [[ "$build_script" == "scripts/build-ripgrep-alpine.sh" ]]; then
+  # ripgrep 15 uses Rust 2024, which needs Cargo >= 1.85. Alpine 3.20
+  # ships Cargo 1.78, while 3.22 provides a compatible toolchain.
+  alpine_version="3.22"
+else
+  alpine_version="3.20"
+fi
 
 case "$arch" in
   x86_64)

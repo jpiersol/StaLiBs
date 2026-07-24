@@ -9,7 +9,7 @@ nmap_repo="https://github.com/nmap/nmap.git"
 jq_repo="https://github.com/jqlang/jq.git"
 curl_repo="https://github.com/curl/curl.git"
 openssl_repo="https://github.com/openssl/openssl.git"
-socat_repo="https://repo.or.cz/socat.git"
+socat_repo="https://third-party-mirror.googlesource.com/socat/"
 bind9_repo="https://github.com/isc-projects/bind9.git"
 lmdb_repo="https://github.com/LMDB/lmdb.git"
 mtr_repo="https://github.com/traviscross/mtr.git"
@@ -110,7 +110,7 @@ git -C upstream/nmap fetch --depth 1 origin master
 git -C upstream/jq fetch --tags --force origin
 git -C upstream/curl fetch --tags --force origin
 git -C upstream/openssl fetch --tags --force origin
-git -C upstream/socat fetch --tags --force origin
+git -C upstream/socat fetch --tags --force origin refs/heads/upstream/master:refs/remotes/origin/upstream/master
 git -C upstream/bind9 fetch --tags --force origin
 git -C upstream/lmdb fetch --tags --force origin
 git -C upstream/mtr fetch --tags --force origin

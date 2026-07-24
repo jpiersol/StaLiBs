@@ -77,7 +77,7 @@ Upstream projects are checked in as Git submodules:
 - `upstream/jq`: <https://github.com/jqlang/jq.git>
 - `upstream/curl`: <https://github.com/curl/curl.git>
 - `upstream/openssl`: <https://github.com/openssl/openssl.git>
-- `upstream/socat`: <https://repo.or.cz/socat.git>
+- `upstream/socat`: <https://third-party-mirror.googlesource.com/socat/> (use the `upstream/master` branch; the mirror's `main` branch is stale)
 - `upstream/bind9`: <https://github.com/isc-projects/bind9.git>
 - `upstream/lmdb`: <https://github.com/LMDB/lmdb.git> (static BIND dependency)
 - `upstream/mtr`: <https://github.com/traviscross/mtr.git>

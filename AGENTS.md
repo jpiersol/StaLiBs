@@ -11,6 +11,7 @@ Current tools:
 - `tcpdump`, built with local static `libpcap`
 - `strace`
 - `gdb`
+- `gdbserver`
 - `nmap`
 - `jq`
 - `curl`
@@ -88,6 +89,7 @@ Each zip must contain one top-level directory named after the zip without `.zip`
 - `bin/tcpdump`
 - `bin/strace`
 - `bin/gdb`
+- `bin/gdbserver`
 - `bin/nmap`
 - `bin/jq`
 - `bin/curl`
@@ -105,7 +107,7 @@ Each zip must contain one top-level directory named after the zip without `.zip`
 
 Nmap runtime data should be included at `share/nmap`.
 
-Do not put architecture-qualified executable names inside release zips. Architecture-qualified names such as `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, and `nmap-linux-x86_64` are acceptable only as intermediate files in `dist/bin/`.
+Do not put architecture-qualified executable names inside release zips. Architecture-qualified names such as `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, `gdbserver-linux-x86_64`, and `nmap-linux-x86_64` are acceptable only as intermediate files in `dist/bin/`.
 
 Each zip should also contain:
 
@@ -190,7 +192,7 @@ Current submodule purposes:
 - `upstream/tcpdump`: tcpdump source
 - `upstream/libpcap`: static libpcap for tcpdump
 - `upstream/strace`: strace source
-- `upstream/gdb`: binutils-gdb source for gdb
+- `upstream/gdb`: binutils-gdb source for gdb and gdbserver
 - `upstream/nmap`: nmap source; upstream does not publish Git release tags, so automation tracks the pinned master commit
 - `upstream/jq`: jq source, pinned to an official release tag
 - `upstream/curl`: curl source, pinned to an official release tag

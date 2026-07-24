@@ -55,7 +55,7 @@ Static platform bundles built by GitHub Actions from pinned upstream submodules.
 - \`$zip_ppc64le\` - PowerPC 64-bit little-endian Linux
 - \`$zip_s390x\` - IBM Z s390x Linux
 
-Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, \`bin/nmap\`, and \`bin/jq\` and \`bin/curl\` and \`bin/openssl\` and \`bin/socat\` and \`bin/dig\` and \`bin/mtr\` and \`bin/lsof\`, \`bin/ip\`, \`bin/ss\`, \`bin/bridge\`, and \`bin/tc\` and \`bin/tshark\` and \`bin/rg\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
+Each zip extracts into a directory named after the archive without \`.zip\`. That directory contains platform-specific executables at \`bin/tcpdump\`, \`bin/strace\`, \`bin/gdb\`, \`bin/gdbserver\`, \`bin/nmap\`, and \`bin/jq\` and \`bin/curl\` and \`bin/openssl\` and \`bin/socat\` and \`bin/dig\` and \`bin/mtr\` and \`bin/lsof\`, \`bin/ip\`, \`bin/ss\`, \`bin/bridge\`, and \`bin/tc\` and \`bin/tshark\` and \`bin/rg\`, Nmap runtime data under \`share/nmap\`, build metadata, upstream licenses, and SHA256 checksums.
 
 ## Installation
 

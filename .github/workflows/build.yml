@@ -206,6 +206,8 @@ jobs:
           mkdir -p artifact-root/bin artifact-root/metadata
           cp 'dist/bin/gdb-linux-${{ matrix.arch }}' artifact-root/bin/gdb
           cp 'dist/metadata/gdb-linux-${{ matrix.arch }}.buildinfo.txt' artifact-root/metadata/gdb.buildinfo.txt
+          cp 'dist/bin/gdbserver-linux-${{ matrix.arch }}' artifact-root/bin/gdbserver
+          cp 'dist/metadata/gdbserver-linux-${{ matrix.arch }}.buildinfo.txt' artifact-root/metadata/gdbserver.buildinfo.txt
 
       - name: Upload gdb artifact
         uses: actions/upload-artifact@v7

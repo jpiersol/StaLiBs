@@ -99,52 +99,72 @@ export PKG_CONFIG_ALLOW_SYSTEM_LIBS=1
 
 configure_args="--disable-gdb-compile --disable-gdbtk --disable-nls --disable-rpath --disable-shared --disable-source-highlight --disable-werror --enable-static --with-curses --with-expat=yes --with-gmp=/usr --with-lzma=auto --with-mpfr=/usr --with-static-standard-libraries --with-system-readline --with-system-zlib --with-xxhash=auto --with-zstd=auto --without-babeltrace --without-debuginfod --without-guile --without-intel-pt --without-libunwind-ia64 --without-python"
 
-printf '%s\n' "==> Building gdb for $arch"
+printf '%s\n' "==> Building gdb and gdbserver for $arch"
 (
   cd "$build_dir"
   # shellcheck disable=SC2086 # intentional word splitting for configure args
   "$gdb_src/configure" $configure_args
-  make -j"$jobs" all-gdb
+  make -j"$jobs" all-gdb all-gdbserver
 )
 
-# The GDB link uses libtool, which consumes the compiler-driver -static flag
-# without necessarily making the final executable fully static.  Relink the
-# final executable with libtool's -all-static option after dependencies are
-# built so verify-static.sh can enforce the portable artifact contract.
+# The GDB and GDBserver links use libtool/compiler-driver flags that may not
+# produce fully static executables by themselves.  Relink both final
+# executables with static flags so verify-static.sh can enforce the portable
+# artifact contract.
 gdb_final_ldflags="$LDFLAGS -static-libstdc++ -static-libgcc -all-static"
-rm -f "$build_dir/gdb/gdb"
+# gdbserver links directly with the compiler rather than through libtool, so
+# it needs the compiler/linker static flags but not libtool's -all-static.
+gdbserver_final_ldflags="$LDFLAGS -static-libstdc++ -static-libgcc"
+rm -f "$build_dir/gdb/gdb" "$build_dir/gdbserver/gdbserver"
 make -j"$jobs" -C "$build_dir/gdb" LDFLAGS="$gdb_final_ldflags" gdb
+make -j"$jobs" -C "$build_dir/gdbserver" LDFLAGS="$gdbserver_final_ldflags" gdbserver
 
-binary="$build_dir/gdb/gdb"
-out="$dist_bin/gdb-linux-$arch"
-cp "$binary" "$out"
-strip "$out" || true
-chmod 0755 "$out"
+gdb_binary="$build_dir/gdb/gdb"
+gdb_out="$dist_bin/gdb-linux-$arch"
+cp "$gdb_binary" "$gdb_out"
+strip "$gdb_out" || true
+chmod 0755 "$gdb_out"
 
-"$repo_root/scripts/verify-static.sh" "$out"
-"$out" --version
-"$out" --nx --batch -ex 'show configuration' >/dev/null
+gdbserver_binary="$build_dir/gdbserver/gdbserver"
+gdbserver_out="$dist_bin/gdbserver-linux-$arch"
+cp "$gdbserver_binary" "$gdbserver_out"
+strip "$gdbserver_out" || true
+chmod 0755 "$gdbserver_out"
 
-buildinfo="$dist_meta/gdb-linux-$arch.buildinfo.txt"
-{
-  echo "tool=gdb"
-  echo "artifact=gdb-linux-$arch"
-  echo "arch=$arch"
-  echo "kernel_target=Linux >= 4.4"
-  echo "libc=musl"
-  echo "alpine_version=$(cat /etc/alpine-release 2>/dev/null || true)"
-  echo "cflags=$CFLAGS"
-  echo "cxxflags=$CXXFLAGS"
-  echo "ldflags=$LDFLAGS"
-  echo "gdb_final_ldflags=$gdb_final_ldflags"
-  echo "configure_args=$configure_args"
-  echo "cc=$({ cc --version 2>/dev/null || true; } | head -n 1)"
-  echo "cxx=$({ c++ --version 2>/dev/null || true; } | head -n 1)"
-  echo "gdb_tag=$gdb_tag"
-  echo "gdb_commit=$(git -C "$repo_root/upstream/gdb" rev-parse HEAD 2>/dev/null || true)"
-  echo "repo_commit=$(git -C "$repo_root" rev-parse HEAD 2>/dev/null || true)"
-  echo "file=$(file "$out")"
-} > "$buildinfo"
+"$repo_root/scripts/verify-static.sh" "$gdb_out" "$gdbserver_out"
+"$gdb_out" --version
+"$gdb_out" --nx --batch -ex 'show configuration' >/dev/null
+"$gdbserver_out" --version
+
+write_buildinfo() {
+  tool="$1"
+  artifact="$2"
+  binary_path="$3"
+  final_ldflags="$4"
+  buildinfo="$dist_meta/$artifact.buildinfo.txt"
+  {
+    echo "tool=$tool"
+    echo "artifact=$artifact"
+    echo "arch=$arch"
+    echo "kernel_target=Linux >= 4.4"
+    echo "libc=musl"
+    echo "alpine_version=$(cat /etc/alpine-release 2>/dev/null || true)"
+    echo "cflags=$CFLAGS"
+    echo "cxxflags=$CXXFLAGS"
+    echo "ldflags=$LDFLAGS"
+    echo "${tool}_final_ldflags=$final_ldflags"
+    echo "configure_args=$configure_args"
+    echo "cc=$({ cc --version 2>/dev/null || true; } | head -n 1)"
+    echo "cxx=$({ c++ --version 2>/dev/null || true; } | head -n 1)"
+    echo "gdb_tag=$gdb_tag"
+    echo "gdb_commit=$(git -C "$repo_root/upstream/gdb" rev-parse HEAD 2>/dev/null || true)"
+    echo "repo_commit=$(git -C "$repo_root" rev-parse HEAD 2>/dev/null || true)"
+    echo "file=$(file "$binary_path")"
+  } > "$buildinfo"
+}
+
+write_buildinfo gdb "gdb-linux-$arch" "$gdb_out" "$gdb_final_ldflags"
+write_buildinfo gdbserver "gdbserver-linux-$arch" "$gdbserver_out" "$gdbserver_final_ldflags"
 
 if [ -n "${HOST_UID:-}" ] && [ -n "${HOST_GID:-}" ]; then
   chown -R "$HOST_UID:$HOST_GID" "$repo_root/dist" "$repo_root/.build/$arch" 2>/dev/null || true

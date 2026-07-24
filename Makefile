@@ -51,7 +51,7 @@ package:
 	./scripts/package-platform.sh $(ARCH) $(VERSION) dist dist
 
 verify:
-	./scripts/verify-static.sh dist/bin/tcpdump-linux-$(ARCH) dist/bin/strace-linux-$(ARCH) dist/bin/gdb-linux-$(ARCH) dist/bin/nmap-linux-$(ARCH) dist/bin/jq-linux-$(ARCH) dist/bin/curl-linux-$(ARCH) dist/bin/openssl-linux-$(ARCH) dist/bin/socat-linux-$(ARCH) dist/bin/dig-linux-$(ARCH) dist/bin/mtr-linux-$(ARCH) dist/bin/lsof-linux-$(ARCH) dist/bin/ip-linux-$(ARCH) dist/bin/ss-linux-$(ARCH) dist/bin/bridge-linux-$(ARCH) dist/bin/tc-linux-$(ARCH) dist/bin/tshark-linux-$(ARCH) dist/bin/rg-linux-$(ARCH)
+	./scripts/verify-static.sh dist/bin/tcpdump-linux-$(ARCH) dist/bin/strace-linux-$(ARCH) dist/bin/gdb-linux-$(ARCH) dist/bin/gdbserver-linux-$(ARCH) dist/bin/nmap-linux-$(ARCH) dist/bin/jq-linux-$(ARCH) dist/bin/curl-linux-$(ARCH) dist/bin/openssl-linux-$(ARCH) dist/bin/socat-linux-$(ARCH) dist/bin/dig-linux-$(ARCH) dist/bin/mtr-linux-$(ARCH) dist/bin/lsof-linux-$(ARCH) dist/bin/ip-linux-$(ARCH) dist/bin/ss-linux-$(ARCH) dist/bin/bridge-linux-$(ARCH) dist/bin/tc-linux-$(ARCH) dist/bin/tshark-linux-$(ARCH) dist/bin/rg-linux-$(ARCH)
 
 update-upstream:
 	./scripts/update-upstream-tags.sh

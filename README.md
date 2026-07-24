@@ -2,7 +2,7 @@
 
 **Sta**tically **Li**nked **B**inarie**s** built from visible upstream source with GitHub Actions provenance.
 
-The supported tools are `tcpdump`, `strace`, `gdb`, `nmap`, `jq`, `curl`, `openssl`, `socat`, `dig`, `mtr`, `lsof`, `tshark`, `rg`, and the `iproute2` commands `ip`, `ss`, `bridge`, and `tc`.
+The supported tools are `tcpdump`, `strace`, `gdb`, `gdbserver`, `nmap`, `jq`, `curl`, `openssl`, `socat`, `dig`, `mtr`, `lsof`, `tshark`, `rg`, and the `iproute2` commands `ip`, `ss`, `bridge`, and `tc`.
 
 ## Goals
 
@@ -32,6 +32,7 @@ stalibs-linux-<arch>/
 ├── bin/tcpdump
 ├── bin/strace
 ├── bin/gdb
+├── bin/gdbserver
 ├── bin/nmap
 ├── bin/jq
 ├── bin/curl
@@ -110,7 +111,7 @@ Build preferences:
   - Linux USB, Bluetooth, D-Bus, RDMA, libnl, OpenSSL, libcap-ng, and libsmi support are attempted when static Alpine packages are available.
   - Vendor/proprietary capture SDKs such as DAG, DPDK, Septel, SNF, and TurboCap are not bundled by default.
 - strace is built statically with `--enable-mpers=check`, so multiple-personality decoding is enabled when the target build environment can support it.
-- gdb is built statically without Python, Guile, debuginfod, Intel PT, Babeltrace, or the GDB compile subsystem to keep the binary self-contained. LZMA, Zstd, and xxHash support are enabled when Alpine static packages are available.
+- gdb and gdbserver are built statically without Python, Guile, debuginfod, Intel PT, Babeltrace, or the GDB compile subsystem to keep the binaries self-contained. LZMA, Zstd, and xxHash support are enabled when Alpine static packages are available.
 - nmap is built statically with bundled libpcap, libdnet, liblinear, liblua, and libpcre, plus Alpine's static OpenSSL and zlib libraries. Ncat, Ndiff, Nping, Zenmap, and libssh2 are not bundled by default. Nmap runtime data is included under `share/nmap`.
 - jq is built statically with its vendored Oniguruma regular-expression library.
 - curl is built statically with OpenSSL, while optional protocol and compression libraries are disabled for portability.
@@ -155,6 +156,7 @@ Without `sudo`, the installer uses `~/.local/bin` and installs Nmap data in `~/.
 tcpdump -i any
 strace -V
 gdb --version
+gdbserver --version
 nmap --version
 jq --version
 curl --version
@@ -193,7 +195,7 @@ make build ARCH=armv7
 make package ARCH=armv7 VERSION=v2026.07.0
 ```
 
-The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, `nmap-linux-x86_64`, `jq-linux-x86_64`, `curl-linux-x86_64`, `openssl-linux-x86_64`, `socat-linux-x86_64`, `dig-linux-x86_64`, `mtr-linux-x86_64`, `lsof-linux-x86_64`, `ip-linux-x86_64`, `ss-linux-x86_64`, `bridge-linux-x86_64`, `tc-linux-x86_64`, `tshark-linux-x86_64`, and `rg-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
+The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, `gdbserver-linux-x86_64`, `nmap-linux-x86_64`, `jq-linux-x86_64`, `curl-linux-x86_64`, `openssl-linux-x86_64`, `socat-linux-x86_64`, `dig-linux-x86_64`, `mtr-linux-x86_64`, `lsof-linux-x86_64`, `ip-linux-x86_64`, `ss-linux-x86_64`, `bridge-linux-x86_64`, `tc-linux-x86_64`, `tshark-linux-x86_64`, and `rg-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
 
 ## Releasing
 

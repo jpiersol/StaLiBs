@@ -34,6 +34,8 @@ find_tool_binary() {
   local -a candidates=(
     "${input_root}/${tool}/bin/${tool}"
     "${input_root}/${tool}/artifact-root/bin/${tool}"
+    "${input_root}/gdb/bin/${tool}"
+    "${input_root}/gdb/artifact-root/bin/${tool}"
     "${input_root}/iproute2/bin/${tool}"
     "${input_root}/iproute2/artifact-root/bin/${tool}"
     "${input_root}/bin/${tool}"
@@ -58,6 +60,8 @@ find_tool_buildinfo() {
   local -a candidates=(
     "${input_root}/${tool}/metadata/${tool}.buildinfo.txt"
     "${input_root}/${tool}/artifact-root/metadata/${tool}.buildinfo.txt"
+    "${input_root}/gdb/metadata/${tool}.buildinfo.txt"
+    "${input_root}/gdb/artifact-root/metadata/${tool}.buildinfo.txt"
     "${input_root}/iproute2/metadata/${tool}.buildinfo.txt"
     "${input_root}/iproute2/artifact-root/metadata/${tool}.buildinfo.txt"
     "${input_root}/metadata/${tool}.buildinfo.txt"
@@ -83,6 +87,8 @@ strace_binary="$(find_tool_binary strace)"
 strace_buildinfo="$(find_tool_buildinfo strace)"
 gdb_binary="$(find_tool_binary gdb)"
 gdb_buildinfo="$(find_tool_buildinfo gdb)"
+gdbserver_binary="$(find_tool_binary gdbserver)"
+gdbserver_buildinfo="$(find_tool_buildinfo gdbserver)"
 nmap_binary="$(find_tool_binary nmap)"
 nmap_buildinfo="$(find_tool_buildinfo nmap)"
 jq_binary="$(find_tool_binary jq)"
@@ -143,6 +149,8 @@ cp "$strace_binary" "$staging_dir/bin/strace"
 cp "$strace_buildinfo" "$staging_dir/metadata/strace.buildinfo.txt"
 cp "$gdb_binary" "$staging_dir/bin/gdb"
 cp "$gdb_buildinfo" "$staging_dir/metadata/gdb.buildinfo.txt"
+cp "$gdbserver_binary" "$staging_dir/bin/gdbserver"
+cp "$gdbserver_buildinfo" "$staging_dir/metadata/gdbserver.buildinfo.txt"
 cp "$nmap_binary" "$staging_dir/bin/nmap"
 cp "$nmap_buildinfo" "$staging_dir/metadata/nmap.buildinfo.txt"
 cp "$jq_binary" "$staging_dir/bin/jq"
@@ -173,7 +181,7 @@ cp "$rg_binary" "$staging_dir/bin/rg"
 cp "$rg_buildinfo" "$staging_dir/metadata/rg.buildinfo.txt"
 cp -a "$nmap_data" "$staging_dir/share/nmap"
 cp scripts/install-release.sh "$staging_dir/install.sh"
-chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/nmap" "$staging_dir/bin/jq" "$staging_dir/bin/curl" "$staging_dir/bin/openssl" "$staging_dir/bin/socat" "$staging_dir/bin/dig" "$staging_dir/bin/mtr" "$staging_dir/bin/lsof" "$staging_dir/bin/ip" "$staging_dir/bin/ss" "$staging_dir/bin/bridge" "$staging_dir/bin/tc" "$staging_dir/bin/tshark" "$staging_dir/bin/rg" "$staging_dir/install.sh"
+chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/gdbserver" "$staging_dir/bin/nmap" "$staging_dir/bin/jq" "$staging_dir/bin/curl" "$staging_dir/bin/openssl" "$staging_dir/bin/socat" "$staging_dir/bin/dig" "$staging_dir/bin/mtr" "$staging_dir/bin/lsof" "$staging_dir/bin/ip" "$staging_dir/bin/ss" "$staging_dir/bin/bridge" "$staging_dir/bin/tc" "$staging_dir/bin/tshark" "$staging_dir/bin/rg" "$staging_dir/install.sh"
 
 cp upstream/tcpdump/LICENSE "$staging_dir/licenses/tcpdump-LICENSE.txt"
 cp upstream/libpcap/LICENSE "$staging_dir/licenses/libpcap-LICENSE.txt"
@@ -226,6 +234,7 @@ Executables:
   bin/tcpdump
   bin/strace
   bin/gdb
+  bin/gdbserver
   bin/nmap
   bin/jq
   bin/curl

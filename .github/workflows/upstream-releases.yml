@@ -2,7 +2,8 @@ name: Check upstream releases
 
 on:
   schedule:
-    - cron: '17 4 * * *'
+    # 04:17 UTC every Wednesday.
+    - cron: '17 4 * * 3'
   workflow_dispatch:
 
 permissions:

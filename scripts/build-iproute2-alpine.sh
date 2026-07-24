@@ -81,14 +81,14 @@ copy_binary() {
   } > "$buildinfo"
 }
 
+copy_binary bridge "$iproute2_src/bridge/bridge"
 copy_binary ip "$iproute2_src/ip/ip"
 copy_binary ss "$iproute2_src/misc/ss"
-copy_binary bridge "$iproute2_src/bridge/bridge"
 copy_binary tc "$iproute2_src/tc/tc"
 
+"$dist_bin/bridge-linux-$arch" -V
 "$dist_bin/ip-linux-$arch" -Version
 "$dist_bin/ss-linux-$arch" -V
-"$dist_bin/bridge-linux-$arch" -V
 "$dist_bin/tc-linux-$arch" -V
 
 if [ -n "${HOST_UID:-}" ] && [ -n "${HOST_GID:-}" ]; then

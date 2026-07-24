@@ -2,7 +2,7 @@
 
 **Sta**tically **Li**nked **B**inarie**s** built from visible upstream source with GitHub Actions provenance.
 
-The supported tools are `tcpdump`, `strace`, `gdb`, `gdbserver`, `nmap`, `jq`, `curl`, `openssl`, `socat`, `dig`, `mtr`, `lsof`, `tshark`, `rg`, and the `iproute2` commands `ip`, `ss`, `bridge`, and `tc`.
+The supported tools are `bridge`, `curl`, `dig`, `gdb`, `gdbserver`, `ip`, `jq`, `lsof`, `mtr`, `nmap`, `openssl`, `rg`, `socat`, `ss`, `strace`, `tc`, `tcpdump`, and `tshark`.
 
 ## Goals
 
@@ -29,24 +29,24 @@ Each bundle extracts into a top-level directory named after the archive without 
 
 ```text
 stalibs-linux-<arch>/
-├── bin/tcpdump
-├── bin/strace
+├── bin/bridge
+├── bin/curl
+├── bin/dig
 ├── bin/gdb
 ├── bin/gdbserver
-├── bin/nmap
-├── bin/jq
-├── bin/curl
-├── bin/openssl
-├── bin/socat
-├── bin/dig
-├── bin/mtr
-├── bin/lsof
 ├── bin/ip
-├── bin/ss
-├── bin/bridge
-├── bin/tc
-├── bin/tshark
+├── bin/jq
+├── bin/lsof
+├── bin/mtr
+├── bin/nmap
+├── bin/openssl
 ├── bin/rg
+├── bin/socat
+├── bin/ss
+├── bin/strace
+├── bin/tc
+├── bin/tcpdump
+├── bin/tshark
 ├── share/nmap/*
 ├── metadata/*.buildinfo.txt
 ├── licenses/*
@@ -106,23 +106,23 @@ Build preferences:
 
 - `-O3 -pipe` for runtime performance.
 - Static link verification with `file` and `readelf`.
-- Best-effort full tcpdump/libpcap feature coverage:
+- curl is built statically with OpenSSL, while optional protocol and compression libraries are disabled for portability.
+- `dig` is built statically from BIND 9 with optional server, resolver, and documentation features disabled.
+- gdb and gdbserver are built statically without Python, Guile, debuginfod, Intel PT, Babeltrace, or the GDB compile subsystem to keep the binaries self-contained. LZMA, Zstd, and xxHash support are enabled when Alpine static packages are available.
+- iproute2 supplies statically linked `bridge`, `ip`, `ss`, and `tc` commands without dynamically loaded plugins.
+- jq is built statically with its vendored Oniguruma regular-expression library.
+- lsof is built statically for Linux from the upstream portable source.
+- mtr is built statically with its terminal interface and without GTK or JSON output.
+- nmap is built statically with bundled libpcap, libdnet, liblinear, liblua, and libpcre, plus Alpine's static OpenSSL and zlib libraries. Ncat, Ndiff, Nping, Zenmap, and libssh2 are not bundled by default. Nmap runtime data is included under `share/nmap`.
+- OpenSSL is built as a statically linked `openssl` command with shared libraries, tests, and runtime modules disabled.
+- ripgrep (`rg`) is built as a statically linked Rust binary.
+- socat is built statically with OpenSSL support and without readline or libwrap.
+- strace is built statically with `--enable-mpers=check`, so multiple-personality decoding is enabled when the target build environment can support it.
+- `tcpdump` is built with local static `libpcap` and best-effort full feature coverage:
   - libpcap remote capture is enabled.
   - Linux USB, Bluetooth, D-Bus, RDMA, libnl, OpenSSL, libcap-ng, and libsmi support are attempted when static Alpine packages are available.
   - Vendor/proprietary capture SDKs such as DAG, DPDK, Septel, SNF, and TurboCap are not bundled by default.
-- strace is built statically with `--enable-mpers=check`, so multiple-personality decoding is enabled when the target build environment can support it.
-- gdb and gdbserver are built statically without Python, Guile, debuginfod, Intel PT, Babeltrace, or the GDB compile subsystem to keep the binaries self-contained. LZMA, Zstd, and xxHash support are enabled when Alpine static packages are available.
-- nmap is built statically with bundled libpcap, libdnet, liblinear, liblua, and libpcre, plus Alpine's static OpenSSL and zlib libraries. Ncat, Ndiff, Nping, Zenmap, and libssh2 are not bundled by default. Nmap runtime data is included under `share/nmap`.
-- jq is built statically with its vendored Oniguruma regular-expression library.
-- curl is built statically with OpenSSL, while optional protocol and compression libraries are disabled for portability.
-- OpenSSL is built as a statically linked `openssl` command with shared libraries, tests, and runtime modules disabled.
-- socat is built statically with OpenSSL support and without readline or libwrap.
-- `dig` is built statically from BIND 9 with optional server, resolver, and documentation features disabled.
-- mtr is built statically with its terminal interface and without GTK or JSON output.
-- lsof is built statically for Linux from the upstream portable source.
-- iproute2 supplies statically linked `ip`, `ss`, `bridge`, and `tc` commands without dynamically loaded plugins.
 - tshark is built statically from Wireshark as an offline packet-analysis tool with plugins, capture, and optional external protocol libraries disabled.
-- ripgrep (`rg`) is built as a statically linked Rust binary.
 
 ## Verifying a release
 
@@ -153,24 +153,24 @@ sudo ./install.sh # installs binaries in /usr/local/bin
 Without `sudo`, the installer uses `~/.local/bin` and installs Nmap data in `~/.local/share/nmap`. Ensure `~/.local/bin` is on your `PATH`; the installer prints the required `PATH` setting when it is not.
 
 ```sh
-tcpdump -i any
-strace -V
+bridge -V
+curl --version
+dig -v
 gdb --version
 gdbserver --version
-nmap --version
-jq --version
-curl --version
-openssl version
-socat -V
-dig -v
-mtr --version
-lsof -v
 ip -Version
-ss -V
-bridge -V
-tc -V
-tshark --version
+jq --version
+lsof -v
+mtr --version
+nmap --version
+openssl version
 rg --version
+socat -V
+ss -V
+strace -V
+tc -V
+tcpdump -i any
+tshark --version
 ```
 
 Packet capture and some Nmap scan modes generally require root or Linux capabilities:
@@ -195,7 +195,7 @@ make build ARCH=armv7
 make package ARCH=armv7 VERSION=v2026.07.0
 ```
 
-The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, `gdbserver-linux-x86_64`, `nmap-linux-x86_64`, `jq-linux-x86_64`, `curl-linux-x86_64`, `openssl-linux-x86_64`, `socat-linux-x86_64`, `dig-linux-x86_64`, `mtr-linux-x86_64`, `lsof-linux-x86_64`, `ip-linux-x86_64`, `ss-linux-x86_64`, `bridge-linux-x86_64`, `tc-linux-x86_64`, `tshark-linux-x86_64`, and `rg-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
+The resulting binaries are written to `dist/bin/` as architecture-qualified working files, for example `bridge-linux-x86_64`, `curl-linux-x86_64`, `dig-linux-x86_64`, `gdb-linux-x86_64`, `gdbserver-linux-x86_64`, `ip-linux-x86_64`, `jq-linux-x86_64`, `lsof-linux-x86_64`, `mtr-linux-x86_64`, `nmap-linux-x86_64`, `openssl-linux-x86_64`, `rg-linux-x86_64`, `socat-linux-x86_64`, `ss-linux-x86_64`, `strace-linux-x86_64`, `tc-linux-x86_64`, `tcpdump-linux-x86_64`, and `tshark-linux-x86_64`. Nmap runtime data is written to `dist/share/nmap/`. Platform zips are written to `dist/` and contain original binary names under `bin/`.
 
 ## Releasing
 

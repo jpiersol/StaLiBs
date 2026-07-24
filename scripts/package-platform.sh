@@ -81,42 +81,42 @@ find_tool_buildinfo() {
   return 1
 }
 
-tcpdump_binary="$(find_tool_binary tcpdump)"
-tcpdump_buildinfo="$(find_tool_buildinfo tcpdump)"
-strace_binary="$(find_tool_binary strace)"
-strace_buildinfo="$(find_tool_buildinfo strace)"
+bridge_binary="$(find_tool_binary bridge)"
+bridge_buildinfo="$(find_tool_buildinfo bridge)"
+curl_binary="$(find_tool_binary curl)"
+curl_buildinfo="$(find_tool_buildinfo curl)"
+dig_binary="$(find_tool_binary dig)"
+dig_buildinfo="$(find_tool_buildinfo dig)"
 gdb_binary="$(find_tool_binary gdb)"
 gdb_buildinfo="$(find_tool_buildinfo gdb)"
 gdbserver_binary="$(find_tool_binary gdbserver)"
 gdbserver_buildinfo="$(find_tool_buildinfo gdbserver)"
-nmap_binary="$(find_tool_binary nmap)"
-nmap_buildinfo="$(find_tool_buildinfo nmap)"
-jq_binary="$(find_tool_binary jq)"
-jq_buildinfo="$(find_tool_buildinfo jq)"
-curl_binary="$(find_tool_binary curl)"
-curl_buildinfo="$(find_tool_buildinfo curl)"
-openssl_binary="$(find_tool_binary openssl)"
-openssl_buildinfo="$(find_tool_buildinfo openssl)"
-socat_binary="$(find_tool_binary socat)"
-socat_buildinfo="$(find_tool_buildinfo socat)"
-dig_binary="$(find_tool_binary dig)"
-dig_buildinfo="$(find_tool_buildinfo dig)"
-mtr_binary="$(find_tool_binary mtr)"
-mtr_buildinfo="$(find_tool_buildinfo mtr)"
-lsof_binary="$(find_tool_binary lsof)"
-lsof_buildinfo="$(find_tool_buildinfo lsof)"
 ip_binary="$(find_tool_binary ip)"
 ip_buildinfo="$(find_tool_buildinfo ip)"
-ss_binary="$(find_tool_binary ss)"
-ss_buildinfo="$(find_tool_buildinfo ss)"
-bridge_binary="$(find_tool_binary bridge)"
-bridge_buildinfo="$(find_tool_buildinfo bridge)"
-tc_binary="$(find_tool_binary tc)"
-tc_buildinfo="$(find_tool_buildinfo tc)"
-tshark_binary="$(find_tool_binary tshark)"
-tshark_buildinfo="$(find_tool_buildinfo tshark)"
+jq_binary="$(find_tool_binary jq)"
+jq_buildinfo="$(find_tool_buildinfo jq)"
+lsof_binary="$(find_tool_binary lsof)"
+lsof_buildinfo="$(find_tool_buildinfo lsof)"
+mtr_binary="$(find_tool_binary mtr)"
+mtr_buildinfo="$(find_tool_buildinfo mtr)"
+nmap_binary="$(find_tool_binary nmap)"
+nmap_buildinfo="$(find_tool_buildinfo nmap)"
+openssl_binary="$(find_tool_binary openssl)"
+openssl_buildinfo="$(find_tool_buildinfo openssl)"
 rg_binary="$(find_tool_binary rg)"
 rg_buildinfo="$(find_tool_buildinfo rg)"
+socat_binary="$(find_tool_binary socat)"
+socat_buildinfo="$(find_tool_buildinfo socat)"
+ss_binary="$(find_tool_binary ss)"
+ss_buildinfo="$(find_tool_buildinfo ss)"
+strace_binary="$(find_tool_binary strace)"
+strace_buildinfo="$(find_tool_buildinfo strace)"
+tc_binary="$(find_tool_binary tc)"
+tc_buildinfo="$(find_tool_buildinfo tc)"
+tcpdump_binary="$(find_tool_binary tcpdump)"
+tcpdump_buildinfo="$(find_tool_buildinfo tcpdump)"
+tshark_binary="$(find_tool_binary tshark)"
+tshark_buildinfo="$(find_tool_buildinfo tshark)"
 
 find_nmap_data() {
   local -a candidates=(
@@ -143,45 +143,45 @@ nmap_data="$(find_nmap_data)"
 rm -rf "$staging_dir"
 mkdir -p "$staging_dir/bin" "$staging_dir/metadata" "$staging_dir/licenses" "$staging_dir/share" "$out_dir"
 
-cp "$tcpdump_binary" "$staging_dir/bin/tcpdump"
-cp "$tcpdump_buildinfo" "$staging_dir/metadata/tcpdump.buildinfo.txt"
-cp "$strace_binary" "$staging_dir/bin/strace"
-cp "$strace_buildinfo" "$staging_dir/metadata/strace.buildinfo.txt"
+cp "$bridge_binary" "$staging_dir/bin/bridge"
+cp "$bridge_buildinfo" "$staging_dir/metadata/bridge.buildinfo.txt"
+cp "$curl_binary" "$staging_dir/bin/curl"
+cp "$curl_buildinfo" "$staging_dir/metadata/curl.buildinfo.txt"
+cp "$dig_binary" "$staging_dir/bin/dig"
+cp "$dig_buildinfo" "$staging_dir/metadata/dig.buildinfo.txt"
 cp "$gdb_binary" "$staging_dir/bin/gdb"
 cp "$gdb_buildinfo" "$staging_dir/metadata/gdb.buildinfo.txt"
 cp "$gdbserver_binary" "$staging_dir/bin/gdbserver"
 cp "$gdbserver_buildinfo" "$staging_dir/metadata/gdbserver.buildinfo.txt"
-cp "$nmap_binary" "$staging_dir/bin/nmap"
-cp "$nmap_buildinfo" "$staging_dir/metadata/nmap.buildinfo.txt"
-cp "$jq_binary" "$staging_dir/bin/jq"
-cp "$jq_buildinfo" "$staging_dir/metadata/jq.buildinfo.txt"
-cp "$curl_binary" "$staging_dir/bin/curl"
-cp "$curl_buildinfo" "$staging_dir/metadata/curl.buildinfo.txt"
-cp "$openssl_binary" "$staging_dir/bin/openssl"
-cp "$openssl_buildinfo" "$staging_dir/metadata/openssl.buildinfo.txt"
-cp "$socat_binary" "$staging_dir/bin/socat"
-cp "$socat_buildinfo" "$staging_dir/metadata/socat.buildinfo.txt"
-cp "$dig_binary" "$staging_dir/bin/dig"
-cp "$dig_buildinfo" "$staging_dir/metadata/dig.buildinfo.txt"
-cp "$mtr_binary" "$staging_dir/bin/mtr"
-cp "$mtr_buildinfo" "$staging_dir/metadata/mtr.buildinfo.txt"
-cp "$lsof_binary" "$staging_dir/bin/lsof"
-cp "$lsof_buildinfo" "$staging_dir/metadata/lsof.buildinfo.txt"
 cp "$ip_binary" "$staging_dir/bin/ip"
 cp "$ip_buildinfo" "$staging_dir/metadata/ip.buildinfo.txt"
-cp "$ss_binary" "$staging_dir/bin/ss"
-cp "$ss_buildinfo" "$staging_dir/metadata/ss.buildinfo.txt"
-cp "$bridge_binary" "$staging_dir/bin/bridge"
-cp "$bridge_buildinfo" "$staging_dir/metadata/bridge.buildinfo.txt"
-cp "$tc_binary" "$staging_dir/bin/tc"
-cp "$tc_buildinfo" "$staging_dir/metadata/tc.buildinfo.txt"
-cp "$tshark_binary" "$staging_dir/bin/tshark"
-cp "$tshark_buildinfo" "$staging_dir/metadata/tshark.buildinfo.txt"
+cp "$jq_binary" "$staging_dir/bin/jq"
+cp "$jq_buildinfo" "$staging_dir/metadata/jq.buildinfo.txt"
+cp "$lsof_binary" "$staging_dir/bin/lsof"
+cp "$lsof_buildinfo" "$staging_dir/metadata/lsof.buildinfo.txt"
+cp "$mtr_binary" "$staging_dir/bin/mtr"
+cp "$mtr_buildinfo" "$staging_dir/metadata/mtr.buildinfo.txt"
+cp "$nmap_binary" "$staging_dir/bin/nmap"
+cp "$nmap_buildinfo" "$staging_dir/metadata/nmap.buildinfo.txt"
+cp "$openssl_binary" "$staging_dir/bin/openssl"
+cp "$openssl_buildinfo" "$staging_dir/metadata/openssl.buildinfo.txt"
 cp "$rg_binary" "$staging_dir/bin/rg"
 cp "$rg_buildinfo" "$staging_dir/metadata/rg.buildinfo.txt"
+cp "$socat_binary" "$staging_dir/bin/socat"
+cp "$socat_buildinfo" "$staging_dir/metadata/socat.buildinfo.txt"
+cp "$ss_binary" "$staging_dir/bin/ss"
+cp "$ss_buildinfo" "$staging_dir/metadata/ss.buildinfo.txt"
+cp "$strace_binary" "$staging_dir/bin/strace"
+cp "$strace_buildinfo" "$staging_dir/metadata/strace.buildinfo.txt"
+cp "$tc_binary" "$staging_dir/bin/tc"
+cp "$tc_buildinfo" "$staging_dir/metadata/tc.buildinfo.txt"
+cp "$tcpdump_binary" "$staging_dir/bin/tcpdump"
+cp "$tcpdump_buildinfo" "$staging_dir/metadata/tcpdump.buildinfo.txt"
+cp "$tshark_binary" "$staging_dir/bin/tshark"
+cp "$tshark_buildinfo" "$staging_dir/metadata/tshark.buildinfo.txt"
 cp -a "$nmap_data" "$staging_dir/share/nmap"
 cp scripts/install-release.sh "$staging_dir/install.sh"
-chmod 0755 "$staging_dir/bin/tcpdump" "$staging_dir/bin/strace" "$staging_dir/bin/gdb" "$staging_dir/bin/gdbserver" "$staging_dir/bin/nmap" "$staging_dir/bin/jq" "$staging_dir/bin/curl" "$staging_dir/bin/openssl" "$staging_dir/bin/socat" "$staging_dir/bin/dig" "$staging_dir/bin/mtr" "$staging_dir/bin/lsof" "$staging_dir/bin/ip" "$staging_dir/bin/ss" "$staging_dir/bin/bridge" "$staging_dir/bin/tc" "$staging_dir/bin/tshark" "$staging_dir/bin/rg" "$staging_dir/install.sh"
+chmod 0755 "$staging_dir/bin/bridge" "$staging_dir/bin/curl" "$staging_dir/bin/dig" "$staging_dir/bin/gdb" "$staging_dir/bin/gdbserver" "$staging_dir/bin/ip" "$staging_dir/bin/jq" "$staging_dir/bin/lsof" "$staging_dir/bin/mtr" "$staging_dir/bin/nmap" "$staging_dir/bin/openssl" "$staging_dir/bin/rg" "$staging_dir/bin/socat" "$staging_dir/bin/ss" "$staging_dir/bin/strace" "$staging_dir/bin/tc" "$staging_dir/bin/tcpdump" "$staging_dir/bin/tshark" "$staging_dir/install.sh"
 
 cp upstream/tcpdump/LICENSE "$staging_dir/licenses/tcpdump-LICENSE.txt"
 cp upstream/libpcap/LICENSE "$staging_dir/licenses/libpcap-LICENSE.txt"
@@ -231,24 +231,24 @@ Git sha: ${GITHUB_SHA:-unknown}
 Target platform: linux-${arch}
 Kernel target: Linux >= 4.4
 Executables:
-  bin/tcpdump
-  bin/strace
+  bin/bridge
+  bin/curl
+  bin/dig
   bin/gdb
   bin/gdbserver
-  bin/nmap
-  bin/jq
-  bin/curl
-  bin/openssl
-  bin/socat
-  bin/dig
-  bin/mtr
-  bin/lsof
   bin/ip
-  bin/ss
-  bin/bridge
-  bin/tc
-  bin/tshark
+  bin/jq
+  bin/lsof
+  bin/mtr
+  bin/nmap
+  bin/openssl
   bin/rg
+  bin/socat
+  bin/ss
+  bin/strace
+  bin/tc
+  bin/tcpdump
+  bin/tshark
 Runtime data:
   share/nmap
 

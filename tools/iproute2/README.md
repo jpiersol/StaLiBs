@@ -6,9 +6,9 @@ StaLiBs builds selected commands from the pinned iproute2 submodule in:
 
 Each release zip contains these statically linked executables:
 
+- `bin/bridge`
 - `bin/ip`
 - `bin/ss`
-- `bin/bridge`
 - `bin/tc`
 
 Current build notes:

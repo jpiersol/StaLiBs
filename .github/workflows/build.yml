@@ -1001,20 +1001,20 @@ jobs:
     name: Package bundle (${{ matrix.arch }})
     runs-on: ubuntu-24.04
     needs:
-      - build-tcpdump
-      - build-strace
-      - build-gdb
-      - build-nmap
-      - build-jq
       - build-curl
-      - build-openssl
-      - build-socat
       - build-dig
-      - build-mtr
-      - build-lsof
+      - build-gdb
       - build-iproute2
-      - build-tshark
+      - build-jq
+      - build-lsof
+      - build-mtr
+      - build-nmap
+      - build-openssl
       - build-ripgrep
+      - build-socat
+      - build-strace
+      - build-tcpdump
+      - build-tshark
     permissions:
       contents: read
       id-token: write
@@ -1036,53 +1036,11 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Download tcpdump artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: tcpdump-linux-${{ matrix.arch }}
-          path: package-root/tcpdump
-
-      - name: Download strace artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: strace-linux-${{ matrix.arch }}
-          path: package-root/strace
-
-      - name: Download gdb artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: gdb-linux-${{ matrix.arch }}
-          path: package-root/gdb
-
-      - name: Download nmap artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: nmap-linux-${{ matrix.arch }}
-          path: package-root/nmap
-
-      - name: Download jq artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: jq-linux-${{ matrix.arch }}
-          path: package-root/jq
-
       - name: Download curl artifact
         uses: actions/download-artifact@v8
         with:
           name: curl-linux-${{ matrix.arch }}
           path: package-root/curl
-
-      - name: Download OpenSSL artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: openssl-linux-${{ matrix.arch }}
-          path: package-root/openssl
-
-      - name: Download socat artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: socat-linux-${{ matrix.arch }}
-          path: package-root/socat
 
       - name: Download dig artifact
         uses: actions/download-artifact@v8
@@ -1090,17 +1048,11 @@ jobs:
           name: dig-linux-${{ matrix.arch }}
           path: package-root/dig
 
-      - name: Download mtr artifact
+      - name: Download gdb artifact
         uses: actions/download-artifact@v8
         with:
-          name: mtr-linux-${{ matrix.arch }}
-          path: package-root/mtr
-
-      - name: Download lsof artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: lsof-linux-${{ matrix.arch }}
-          path: package-root/lsof
+          name: gdb-linux-${{ matrix.arch }}
+          path: package-root/gdb
 
       - name: Download iproute2 artifact
         uses: actions/download-artifact@v8
@@ -1108,17 +1060,65 @@ jobs:
           name: iproute2-linux-${{ matrix.arch }}
           path: package-root/iproute2
 
-      - name: Download tshark artifact
+      - name: Download jq artifact
         uses: actions/download-artifact@v8
         with:
-          name: tshark-linux-${{ matrix.arch }}
-          path: package-root/tshark
+          name: jq-linux-${{ matrix.arch }}
+          path: package-root/jq
+
+      - name: Download lsof artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: lsof-linux-${{ matrix.arch }}
+          path: package-root/lsof
+
+      - name: Download mtr artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: mtr-linux-${{ matrix.arch }}
+          path: package-root/mtr
+
+      - name: Download nmap artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: nmap-linux-${{ matrix.arch }}
+          path: package-root/nmap
+
+      - name: Download OpenSSL artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: openssl-linux-${{ matrix.arch }}
+          path: package-root/openssl
 
       - name: Download ripgrep artifact
         uses: actions/download-artifact@v8
         with:
           name: ripgrep-linux-${{ matrix.arch }}
           path: package-root/rg
+
+      - name: Download socat artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: socat-linux-${{ matrix.arch }}
+          path: package-root/socat
+
+      - name: Download strace artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: strace-linux-${{ matrix.arch }}
+          path: package-root/strace
+
+      - name: Download tcpdump artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: tcpdump-linux-${{ matrix.arch }}
+          path: package-root/tcpdump
+
+      - name: Download tshark artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: tshark-linux-${{ matrix.arch }}
+          path: package-root/tshark
 
       - name: List downloaded artifacts
         run: find package-root -maxdepth 4 -type f -print | sort

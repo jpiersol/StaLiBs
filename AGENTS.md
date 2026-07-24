@@ -8,21 +8,24 @@ StaLiBs (**Sta**tically **Li**nked **B**inarie**s**) builds portable, statically
 
 Current tools:
 
-- `tcpdump`, built with local static `libpcap`
-- `strace`
+- `bridge` from iproute2
+- `curl`
+- `dig`
 - `gdb`
 - `gdbserver`
-- `nmap`
+- `ip` from iproute2
 - `jq`
-- `curl`
-- `openssl`
-- `socat`
-- `dig`
-- `mtr`
 - `lsof`
-- `ip`, `ss`, `bridge`, and `tc` from iproute2
-- `tshark`
+- `mtr`
+- `nmap`
+- `openssl`
 - `rg` (ripgrep)
+- `socat`
+- `ss` from iproute2
+- `strace`
+- `tc` from iproute2
+- `tcpdump`, built with local static `libpcap`
+- `tshark`
 
 Supported targets:
 
@@ -86,28 +89,28 @@ Release assets must be separate per platform, not one all-platform bundle:
 
 Each zip must contain one top-level directory named after the zip without `.zip`. Within that directory, executables must use their original upstream names:
 
-- `bin/tcpdump`
-- `bin/strace`
+- `bin/bridge`
+- `bin/curl`
+- `bin/dig`
 - `bin/gdb`
 - `bin/gdbserver`
-- `bin/nmap`
-- `bin/jq`
-- `bin/curl`
-- `bin/openssl`
-- `bin/socat`
-- `bin/dig`
-- `bin/mtr`
-- `bin/lsof`
 - `bin/ip`
-- `bin/ss`
-- `bin/bridge`
-- `bin/tc`
-- `bin/tshark`
+- `bin/jq`
+- `bin/lsof`
+- `bin/mtr`
+- `bin/nmap`
+- `bin/openssl`
 - `bin/rg`
+- `bin/socat`
+- `bin/ss`
+- `bin/strace`
+- `bin/tc`
+- `bin/tcpdump`
+- `bin/tshark`
 
 Nmap runtime data should be included at `share/nmap`.
 
-Do not put architecture-qualified executable names inside release zips. Architecture-qualified names such as `tcpdump-linux-x86_64`, `strace-linux-x86_64`, `gdb-linux-x86_64`, `gdbserver-linux-x86_64`, and `nmap-linux-x86_64` are acceptable only as intermediate files in `dist/bin/`.
+Do not put architecture-qualified executable names inside release zips. Architecture-qualified names such as `bridge-linux-x86_64`, `curl-linux-x86_64`, `dig-linux-x86_64`, `gdb-linux-x86_64`, `gdbserver-linux-x86_64`, `ip-linux-x86_64`, `jq-linux-x86_64`, `lsof-linux-x86_64`, `mtr-linux-x86_64`, `nmap-linux-x86_64`, `openssl-linux-x86_64`, `rg-linux-x86_64`, `socat-linux-x86_64`, `ss-linux-x86_64`, `strace-linux-x86_64`, `tc-linux-x86_64`, `tcpdump-linux-x86_64`, and `tshark-linux-x86_64` are acceptable only as intermediate files in `dist/bin/`.
 
 Each zip should also contain:
 

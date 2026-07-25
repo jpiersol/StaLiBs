@@ -41,6 +41,7 @@ The portability target is Linux kernel 4.4 and newer. Builds use Alpine/musl for
 ## Repository layout
 
 - `.github/workflows/build.yml` - CI build, package, attestation, and release flow
+- `.github/workflows/monthly-release.yml` - monthly sequential release tag creation and tagged build dispatch
 - `.github/workflows/upstream-releases.yml` - scheduled upstream tag detection and PR creation
 - `scripts/build-tcpdump-alpine.sh` - target-native tcpdump/libpcap build inside Alpine
 - `scripts/build-strace-alpine.sh` - target-native strace build inside Alpine
@@ -175,12 +176,7 @@ gh run view <run-id> --repo jpiersol/StaLiBs --log-failed
 
 ## Release rules
 
-StaLiBs publishes release assets for every pushed Git tag, e.g.:
-
-```sh
-git tag -a v2026.07.0 -m "StaLiBs v2026.07.0"
-git push origin v2026.07.0
-```
+StaLiBs creates sequential release tags (`v2`, `v3`, and so on) on the 25th of each month through `.github/workflows/monthly-release.yml`. The workflow dispatches the tagged build, which publishes the platform assets.
 
 Release assets are built from the pinned submodule commits in the repository at that tag.
 

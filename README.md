@@ -200,14 +200,8 @@ The resulting binaries are written to `dist/bin/` as architecture-qualified work
 ## Releasing
 
 1. The weekly upstream-update PR is automatically merged after its required checks pass, or manually pin submodules to the desired upstream commits or tags.
-2. Create and push any StaLiBs release tag:
-
-   ```sh
-   git tag -a v2026.07.0 -m "StaLiBs v2026.07.0"
-   git push origin v2026.07.0
-   ```
-
-3. The build workflow runs for every pushed tag, publishes one zip asset per target platform to the matching GitHub Release, and creates GitHub artifact attestations for those zips.
+2. `.github/workflows/monthly-release.yml` creates and pushes the next sequential release tag (`v2`, then `v3`, and so on) at 04:17 UTC on the 25th of each month. It can also be run manually.
+3. The tagged build workflow publishes one zip asset per target platform to the matching GitHub Release and creates GitHub artifact attestations for those zips.
 
 ## Upstream release detection
 

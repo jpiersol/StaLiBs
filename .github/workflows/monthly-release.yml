@@ -1,0 +1,57 @@
+name: Monthly release
+
+on:
+  schedule:
+    # 04:17 UTC on the 25th of every month.
+    - cron: '17 4 25 * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+concurrency:
+  group: monthly-release
+  cancel-in-progress: false
+
+jobs:
+  create-release-tag:
+    name: Create monthly release tag
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Create and push next release tag
+        id: tag
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          latest_number="$({
+            git tag --list 'v[0-9]*' |
+              grep -E '^v[0-9]+$' |
+              sed 's/^v//' |
+              sort -n |
+              tail -n 1
+          } || true)"
+          next_number=$(( ${latest_number:-1} + 1 ))
+          tag="v${next_number}"
+
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
+            echo "Release tag already exists; reusing it: $tag"
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git tag -a "$tag" -m "StaLiBs $tag"
+            git push origin "refs/tags/$tag"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch tagged build and release
+        run: gh workflow run build.yml --repo "$GITHUB_REPOSITORY" --ref "${{ steps.tag.outputs.tag }}"

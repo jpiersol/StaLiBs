@@ -103,8 +103,12 @@ printf '%s\n' "==> Building gdb and gdbserver for $arch"
 (
   cd "$build_dir"
   # shellcheck disable=SC2086 # intentional word splitting for configure args
-  "$gdb_src/configure" $configure_args
-  make -j"$jobs" all-gdb all-gdbserver
+  # Build the intermediate targets without global static-link flags.  GDB's
+  # in-process tracing agent is a shared object, so passing -static here makes
+  # its link fail on x86_64.  The final executables are relinked statically
+  # below.
+  LDFLAGS= "$gdb_src/configure" $configure_args
+  LDFLAGS= make -j"$jobs" all-gdb all-gdbserver
 )
 
 # The GDB and GDBserver links use libtool/compiler-driver flags that may not
@@ -170,4 +174,4 @@ if [ -n "${HOST_UID:-}" ] && [ -n "${HOST_GID:-}" ]; then
   chown -R "$HOST_UID:$HOST_GID" "$repo_root/dist" "$repo_root/.build/$arch" 2>/dev/null || true
 fi
 
-printf '%s\n' "Built $out"
+printf '%s\n' "Built $gdb_out and $gdbserver_out"

@@ -52,7 +52,23 @@ fi
 
 mkdir -p "$repo_root/dist/bin" "$repo_root/dist/metadata"
 
-docker run --rm \
+# Docker Hub occasionally times out while a runner is pulling an Alpine
+# manifest.  Pull explicitly with retries so a transient registry failure does
+# not turn into a failed build, then prevent docker run from doing a second
+# unprotected pull.
+image="alpine:${alpine_version}"
+for attempt in 1 2 3; do
+  if docker pull --platform "$platform" "$image"; then
+    break
+  fi
+  if [[ "$attempt" == 3 ]]; then
+    echo "Unable to pull $image for $platform after $attempt attempts." >&2
+    exit 1
+  fi
+  sleep $((attempt * 10))
+done
+
+docker run --pull=never --rm \
   --platform "$platform" \
   -e "STALIBS_ARCH=$arch" \
   -e "CFLAGS=${CFLAGS:--O3 -pipe}" \
@@ -61,5 +77,5 @@ docker run --rm \
   -e "HOST_GID=$(id -g)" \
   -v "$repo_root:/work" \
   -w /work \
-  "alpine:${alpine_version}" \
+  "$image" \
   /bin/sh -c "'$build_script' '$arch'"

@@ -199,10 +199,10 @@ The resulting binaries are written to `dist/bin/` as architecture-qualified work
 
 ## Releasing
 
-1. The weekly upstream-update PR is automatically merged after its required checks pass, or manually pin submodules to the desired upstream commits or tags.
+1. The weekly upstream-update workflow commits new upstream pins directly to `main`, or you can manually pin submodules to the desired upstream commits or tags.
 2. `.github/workflows/monthly-release.yml` creates and pushes the next sequential release tag (`v2`, then `v3`, and so on) at 04:17 UTC on the 25th of each month. It can also be run manually.
 3. The tagged build workflow publishes one zip asset per target platform to the matching GitHub Release and creates GitHub artifact attestations for those zips.
 
 ## Upstream release detection
 
-`.github/workflows/upstream-releases.yml` runs early Wednesday mornings and can also be run manually. It checks for new stable upstream release tags and the latest Nmap `master` commit, updates the submodules, and opens or updates a PR with auto-merge enabled. The PR is merged automatically after its required checks pass.
+`.github/workflows/upstream-releases.yml` runs early Wednesday mornings and can also be run manually. It checks for new stable upstream release tags and the latest Nmap `master` commit, updates the submodules, and commits changed upstream pins directly to `main`.

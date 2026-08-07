@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   check-upstream:
@@ -19,83 +18,21 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          ref: main
           submodules: recursive
 
       - name: Update submodules to latest stable upstream tags
         id: update
         run: ./scripts/update-upstream-tags.sh
 
-      - name: Open or update PR and enable auto-merge
+      - name: Commit upstream updates to main
         if: steps.update.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TCPDUMP_TAG: ${{ steps.update.outputs.tcpdump_tag }}
-          LIBPCAP_TAG: ${{ steps.update.outputs.libpcap_tag }}
-          STRACE_TAG: ${{ steps.update.outputs.strace_tag }}
-          GDB_TAG: ${{ steps.update.outputs.gdb_tag }}
-          NMAP_REF: ${{ steps.update.outputs.nmap_ref }}
-          JQ_TAG: ${{ steps.update.outputs.jq_tag }}
-          CURL_TAG: ${{ steps.update.outputs.curl_tag }}
-          OPENSSL_TAG: ${{ steps.update.outputs.openssl_tag }}
-          SOCAT_TAG: ${{ steps.update.outputs.socat_tag }}
-          BIND9_TAG: ${{ steps.update.outputs.bind9_tag }}
-          MTR_TAG: ${{ steps.update.outputs.mtr_tag }}
-          LSOF_TAG: ${{ steps.update.outputs.lsof_tag }}
-          IPROUTE2_TAG: ${{ steps.update.outputs.iproute2_tag }}
-          WIRESHARK_TAG: ${{ steps.update.outputs.wireshark_tag }}
-          RIPGREP_TAG: ${{ steps.update.outputs.ripgrep_tag }}
         shell: bash
         run: |
           set -euo pipefail
 
-          branch="automation/update-upstreams"
-          title="Update upstream static binary sources"
-          body_file="/tmp/upstream-update-pr.md"
-
-          cat > "$body_file" <<EOF_BODY
-          Updates upstream submodules to the latest stable release tags or branch heads detected by CI.
-
-          - tcpdump: \`${TCPDUMP_TAG}\`
-          - libpcap: \`${LIBPCAP_TAG}\`
-          - strace: \`${STRACE_TAG}\`
-          - gdb: \`${GDB_TAG}\`
-          - nmap: \`${NMAP_REF}\`
-          - jq: \`${JQ_TAG}\`
-          - curl: \`${CURL_TAG}\`
-          - openssl: \`${OPENSSL_TAG}\`
-          - socat: \`${SOCAT_TAG}\`
-          - BIND 9: \`${BIND9_TAG}\`
-          - mtr: \`${MTR_TAG}\`
-          - lsof: \`${LSOF_TAG}\`
-          - iproute2: \`${IPROUTE2_TAG}\`
-          - Wireshark/tshark: \`${WIRESHARK_TAG}\`
-          - ripgrep: \`${RIPGREP_TAG}\`
-
-          After this PR is merged, create and push any StaLiBs release tag when you want to publish a new bundle. The release will be built from the pinned submodule commits at that tag:
-
-          \`\`\`sh
-          git tag -a vYYYY.MM.DD -m "StaLiBs vYYYY.MM.DD"
-          git push origin vYYYY.MM.DD
-          \`\`\`
-          EOF_BODY
-
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git checkout -B "$branch"
           git commit -m "Update upstream static binary sources"
-          git push --force-with-lease origin "$branch"
-
-          existing_pr="$(gh pr list --head "$branch" --json number --jq '.[0].number // empty')"
-          if [[ -n "$existing_pr" ]]; then
-            gh pr edit "$existing_pr" --title "$title" --body-file "$body_file"
-          else
-            gh pr create --base main --head "$branch" --title "$title" --body-file "$body_file"
-          fi
-
-          pr_number="$(gh pr list --head "$branch" --json number --jq '.[0].number // empty')"
-          if [[ -z "$pr_number" ]]; then
-            echo "ERROR: failed to find upstream update PR" >&2
-            exit 1
-          fi
-
-          gh pr merge "$pr_number" --auto --squash --delete-branch
+          git pull --rebase origin main
+          git push origin HEAD:main
